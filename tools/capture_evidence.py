@@ -88,6 +88,14 @@ def docker_version() -> str:
     return out.strip() if out else "installed, daemon not answering"
 
 
+def sandbox_image() -> str:
+    """Which sandbox image ran, when there is one: the deliberately vulnerable code executes inside it."""
+    if not shutil.which("docker"):
+        return "n/a"
+    out = _run(["docker", "image", "inspect", "vtb-sandbox", "--format", "{{.Id}} created {{.Created}}"])
+    return out.strip() if out else "n/a (image vtb-sandbox not built)"
+
+
 def normalise(text: str) -> str:
     """Keep local paths out of a public repo: the repo root becomes <repo>, the home directory ~.
 
@@ -120,6 +128,7 @@ def build_header(evidence_id: str, command: list[str], exit_label: str) -> str:
         f"# python: {platform.python_version()}",
         f"# libzbar0: {libzbar_version()}",
         f"# docker: {docker_version()}",
+        f"# sandbox image: {sandbox_image()}",
         f"# packages: {package_versions()}",
         "# paths normalised: repo root -> <repo>, home and any /Users/<name> or /home/<name> -> ~",
         f"# command: {shlex.join(command)}",
