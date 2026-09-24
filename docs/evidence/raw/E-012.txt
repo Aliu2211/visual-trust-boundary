@@ -1,0 +1,22 @@
+# evidence: E-012
+# captured: 2026-09-24T20:31:17Z
+# code commit: afd24e0dcf164caa9cb574387dacbb89f86626d5 (working tree dirty: no)
+# host label: unlabelled
+# platform: Linux-6.12.76-linuxkit-x86_64-with-glibc2.36 x86_64
+# python: 3.11.16
+# libzbar0: 0.23.92-7+deb12u1
+# packages: pydantic 2.13.5, pyyaml 6.0.3, pillow 12.3.0, pyzbar 0.1.9, qrcode 8.2, python-barcode 0.16.1, pytest 9.1.1, opencv-python-headless not installed
+# paths normalised: repo root -> <repo>, home and any ~ or ~ -> ~
+# command: python tools/probes/sqlite_injection_limits.py
+# exit: 0
+--- stdout ---
+python 3.11.16 | sqlite 3.40.1
+stacked statement (second statement: DROP TABLE)     rejected: ProgrammingError: You can only execute one statement at a time.
+table still exists after the stacked attempt         True
+load_extension through SQL                           rejected: OperationalError: not authorized
+ATTACH smuggled after a SELECT                       rejected: ProgrammingError: You can only execute one statement at a time.
+file created by the ATTACH attempt                   False
+Connection.enable_load_extension exists              True
+PRAGMA via a single injected statement (allowed kind) ACCEPTED
+--- stderr ---
+# sha256-of-above: 5f3f3eeff50976e92687e866a944c032ea5f5ee985371ceff8dfb2ded772fa2f

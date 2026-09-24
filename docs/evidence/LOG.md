@@ -33,6 +33,7 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 | E-009 | Upstream zbar source for the text-conversion flag | design | D5 |
 | E-010 | Full suite green in the Bookworm image | dev-observation | Methods |
 | E-011 | Decode success by symbology and decoder mode | dev-observation | P1.2 acceptance, D14 |
+| E-012 | What an injected string can do through Python's sqlite3 | dev-observation | D12, gate G2 |
 
 ## Entries
 
@@ -145,6 +146,16 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 - **Evidence:** [raw/E-011.txt](raw/E-011.txt), sha256 `66b0ed36241c1009186834ac5c09bed5c93e9dbaef9ab3369274775be6ae198e`. Code commit `9204be4c4e9ab6ab6ce112c80a4a0e560a56f800`, working tree clean. Linux x86_64 container, Python 3.11.16, `libzbar0 0.23.92-7+deb12u1`. Probe: `tools/probes/roundtrip_rate.py`.
 - **Caveats:** 100 per symbology, so zero failures bounds the failure rate at roughly 3% (rule of three), not at zero. The non-ASCII set is 3 texts: an illustration, not a rate. Clean synthetic renders, no camera. This is not the benign set of at least 1000 items that decision D14 requires; that comes in P3. One zbar build; the Pi run is still to do. This capture replaces one taken earlier the same day at a commit that was later rewritten (see Corrections); the figures were identical.
 - **Paper use:** Methods (decoder validation). It becomes a Results figure only when repeated on the Pi as a `result-of-record`.
+
+### E-012 What an injected string can do through Python's sqlite3
+
+- **Date and step:** 2026-09-24, planning the containment design (decision D12, gate G2).
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** through `Connection.execute()`, a string-built query cannot stack a second statement, cannot load a native extension, and cannot `ATTACH` a file, so SQL injection in the vulnerable Tier 1 handler stays inside the database.
+- **Result:** Python `3.11.16`, SQLite `3.40.1`. A second statement (`DROP TABLE`) was `rejected: ProgrammingError: You can only execute one statement at a time.` and the table still existed afterwards (`True`). `select load_extension('x')` was `rejected: OperationalError: not authorized`. An `ATTACH DATABASE` appended after a `SELECT` was rejected for the same one-statement reason, and the file was not created (`False`). `Connection.enable_load_extension` exists (`True`) but was not called, so extension loading stayed at its default. A single standalone `pragma table_info(badges)` was accepted, which is the probe's positive control showing it can observe acceptance.
+- **Evidence:** [raw/E-012.txt](raw/E-012.txt), sha256 `5f3f3eeff50976e92687e866a944c032ea5f5ee985371ceff8dfb2ded772fa2f`. Code commit `afd24e0dcf164caa9cb574387dacbb89f86626d5`, working tree clean. Linux x86_64 container, Python 3.11.16. Probe: `tools/probes/sqlite_injection_limits.py`.
+- **Caveats:** only `execute()` was probed; `executescript()` accepts multiple statements, so the vulnerable handler must not use it. The injected string controls part of one statement, not the whole, so single-statement forms such as a `UNION` that discloses another table are still possible and are what the Tier 1 oracle signals target; they were not probed here. One SQLite and Python build; the Pi's versions are unchecked and the probe should be repeated there.
+- **Paper use:** Methods (why the SQL sink is contained, and what the Tier 1 SQL oracle can and cannot see).
 
 ## Corrections and tooling notes
 
