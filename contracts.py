@@ -116,7 +116,7 @@ _ATTACK_VERDICTS = frozenset(
 )
 
 # Payload ids become file names and canary names, so no separators, dots or uppercase.
-_ID_PATTERN = r"^[a-z0-9][a-z0-9_-]{0,62}$"
+ID_PATTERN = r"^[a-z0-9][a-z0-9_-]{0,62}$"
 _LOOPBACK_HOSTS = frozenset({"127.0.0.1", "::1", "localhost"})
 
 
@@ -174,7 +174,7 @@ class PayloadSpec(_Frozen):
     tier 3, the scenario) in the harness ground truth.
     """
 
-    id: str = Field(pattern=_ID_PATTERN)
+    id: str = Field(pattern=ID_PATTERN)
     family: Family
     subset: Subset
     target_tiers: tuple[TierId, ...] = Field(min_length=1)
@@ -237,7 +237,7 @@ class PayloadRecord(_Frozen):
     """
 
     run_id: str = Field(min_length=1)
-    payload_id: str | None = Field(default=None, pattern=_ID_PATTERN)
+    payload_id: str | None = Field(default=None, pattern=ID_PATTERN)
     raw_bytes_b64: str | None = None
     text: str | None = None
     decode_status: DecodeStatus
@@ -304,7 +304,7 @@ class TierOutcome(_Frozen):
 
     tier: TierId
     mode: Mode
-    payload_id: str = Field(pattern=_ID_PATTERN)
+    payload_id: str = Field(pattern=ID_PATTERN)
     rep: int = Field(ge=0)
     blocked: bool = False  # the validator refused the input
     gated: bool = False  # the gate refused the action
