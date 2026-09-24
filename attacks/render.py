@@ -29,7 +29,9 @@ def render_qr(data: bytes, path: Path | str, *, ecc: Ecc = "M", box_size: int = 
 
 
 def render_code128(text: str, path: Path | str) -> None:
-    """Write a Code 128 barcode. Code 128 carries ASCII only; anything else raises from python-barcode."""
+    """Write a Code 128 barcode. Code 128 carries ASCII only (anything else raises from python-barcode) and cannot be empty."""
+    if not text:
+        raise ValueError("Code 128 cannot encode an empty string")
     code = barcode.get("code128", text, writer=ImageWriter(format="PNG"))
     with open(path, "wb") as fh:
         code.write(fh, options={"write_text": False, "dpi": 300, "module_width": 0.3, "quiet_zone": 6.5})

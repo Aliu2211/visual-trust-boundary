@@ -31,6 +31,12 @@ def test_qr_capacity_limit_at_ecc_l_is_2953_bytes(tmp_path):
         render_qr(b"a" * 2954, tmp_path / "over.png", ecc="L")
 
 
+def test_code128_rejects_an_empty_string_with_a_clear_error(tmp_path):
+    # python-barcode raises a bare IndexError here; the probe found it.
+    with pytest.raises(ValueError, match="empty"):
+        render_code128("", tmp_path / "x.png")
+
+
 def test_code128_rejects_non_ascii(tmp_path):
     with pytest.raises(barcode.errors.IllegalCharacterError):
         render_code128("José", tmp_path / "x.png")
