@@ -104,6 +104,20 @@ def test_local_paths_are_normalised_out_of_the_capture(tmp_path):
     assert str(ce.Path.home()) not in text
 
 
+@pytest.mark.parametrize(
+    "raw,expected",
+    [
+        ("/Users/someone/Work/x/tests/t.py:50: AssertionError", "~/Work/x/tests/t.py:50: AssertionError"),
+        ("File '/home/pi/vtb/decode.py', line 3", "File '~/vtb/decode.py', line 3"),
+        ("a /Users/a/b and /home/c/d", "a ~/b and ~/d"),
+        ("/usr/lib/python3.11/site-packages/x.py", "/usr/lib/python3.11/site-packages/x.py"),
+    ],
+)
+def test_foreign_home_paths_are_scrubbed_too(raw, expected):
+    # A container once printed a host path (from bytecode compiled on the host) into a public capture.
+    assert ce.normalise(raw) == expected
+
+
 def test_main_returns_the_command_exit_code_and_verify_reports(tmp_path, capsys):
     rc = ce.main(["--out-dir", str(tmp_path), "E-010", "--", sys.executable, "-c", "import sys; sys.exit(5)"])
     assert rc == 5

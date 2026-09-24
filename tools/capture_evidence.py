@@ -77,11 +77,21 @@ def libzbar_version() -> str:
     return out.strip() if out else "not installed"
 
 
+HOME_PATH = re.compile(r"/(?:Users|home)/[^/\s:'\"]+")
+
+
 def normalise(text: str) -> str:
-    """Keep local paths out of a public repo: the repo root becomes <repo>, the home directory ~."""
+    """Keep local paths out of a public repo: the repo root becomes <repo>, the home directory ~.
+
+    Any other /Users/<name> or /home/<name> prefix is scrubbed to ~ as well. A container can print
+    host paths (it reused bytecode compiled on the host, once), which the two replacements above
+    would miss.
+    """
     text = text.replace(str(ROOT), "<repo>")
     home = str(Path.home())
-    return text.replace(home, "~") if home not in ("", "/") else text
+    if home not in ("", "/"):
+        text = text.replace(home, "~")
+    return HOME_PATH.sub("~", text)
 
 
 def _as_text(data: bytes | str | None) -> str:
@@ -102,7 +112,7 @@ def build_header(evidence_id: str, command: list[str], exit_label: str) -> str:
         f"# python: {platform.python_version()}",
         f"# libzbar0: {libzbar_version()}",
         f"# packages: {package_versions()}",
-        "# paths normalised: repo root -> <repo>, home -> ~",
+        "# paths normalised: repo root -> <repo>, home and any /Users/<name> or /home/<name> -> ~",
         f"# command: {shlex.join(command)}",
         f"# exit: {exit_label}",
     ]
