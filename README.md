@@ -6,21 +6,31 @@ A lab testbed on a Raspberry Pi 5 that traces one crafted machine-readable code 
 
 ## Status
 
-Early: phase P0 of [plan.md](plan.md). What exists today:
+Early: phase P1 of [plan.md](plan.md) is in progress. What exists today:
 
-- [contracts.py](contracts.py): the data contracts every module will share.
-- [docs/oracles.md](docs/oracles.md): the definition of "crossed", per family and tier.
+- [contracts.py](contracts.py): the data contracts every module shares.
+- [docs/oracles.md](docs/oracles.md): the definition of "crossed", per family and tier (draft, awaiting gate G1).
+- [decode/](decode/): the decode stage. zbar sits behind an interface; replay and live capture turn images into records.
+- [attacks/render.py](attacks/render.py): deterministic QR and Code 128 rendering.
 - [config.yaml](config.yaml): run settings, validated against the contracts.
 
-Progress and decisions are logged in [status.md](status.md). The original proposal is kept at [docs/source-plan.md](docs/source-plan.md).
+Progress, decisions and open blockers are logged in [status.md](status.md). The original proposal is kept at [docs/source-plan.md](docs/source-plan.md).
 
-## Development setup (laptop)
+## Development setup
 
-The Pi runs Python 3.11, so develop on 3.11 too.
+The Pi runs Python 3.11 on Debian Bookworm, so develop on 3.11.
 
     uv venv --python 3.11 .venv
     source .venv/bin/activate
     uv pip install -r requirements-dev.txt
     pytest
 
-Hardware bring-up (webcam, zbar, Ollama) is Pi-only and tracked in plan.md as Track H.
+Decoding needs the system library `libzbar` in addition to the Python packages (`apt install libzbar0` on Debian and the Pi). Without it the tests that need the real decoder are skipped, and the skip reason is shown. Set `VTB_REQUIRE_ZBAR=1` where zbar must be present (the Pi) so those tests fail instead of skipping.
+
+`requirements-live.txt` adds OpenCV for webcam capture only; replay experiments do not need it.
+
+Smoke test on a machine with zbar:
+
+    python -m decode.capture replay <folder of .png files>
+
+Hardware bring-up on the Pi (Track H) is described in plan.md.

@@ -99,3 +99,42 @@ The three open items from the previous entry were not answered, so the plan's de
 **Commit conventions confirmed:** all six commits use Conventional Commits, carry no co-author or generated-by trailer (checked with a grep over the full history), and are authored by the configured git identity. Nothing needed rewriting.
 
 **Visibility:** the repo is PUBLIC. Everything in it is now readable by anyone: the plans, `docs/oracles.md`, `ethics/LAB_ONLY.md`, and the contracts. There are no payloads, credentials or secrets in the tree. Commit metadata includes the author email from the git identity. If public was not intended, switch the repo to private in GitHub settings.
+
+---
+
+## 2026-09-24: P1 partly done; blocked on a real libzbar
+
+**Actor:** Claude, after the user said "lets continue". G1 is still open. "lets continue" was not treated as G1 approval; P1 was started because it does not depend on any G1 decision (G1 gates tier code and the oracle contents).
+
+**Commits (local `main`, not pushed):** `8229964` refactor(contracts): public `ID_PATTERN`; `37c3925` chore(deps); `feadee7` feat(decode); `d2f5c15` feat(attacks): renderer.
+
+**Step 1.1 (interface, zbar adapter, replay, live): written. Steps 1.2 and 1.3 (real round trips, edge cases): NOT done. P1 acceptance ("100% round trip on laptop and Pi") is NOT met.**
+
+**Verified:**
+- 77 tests pass on CPython 3.11.15: the record policy (no symbol and multiple symbols fail closed, invalid UTF-8 reported not repaired, NUL and empty payloads kept), replay ordering and pre-flight errors, renderer determinism, and the QR capacity limit (2953 bytes at ECC L renders, 2954 raises).
+- The calls in `PyzbarDecoder` were checked against the pyzbar 0.1.9 source, not executed: tuple `(pixels, width, height)` input with 8 bits per pixel, `symbols=` takes an iterable of `ZBarSymbol`, `Decoded.type` is the enum name string (`"QRCODE"`, `"CODE128"`), and `data` is read with `string_at(pointer, length)`, so pyzbar itself does not truncate at a NUL byte.
+
+**Not verified (each needs libzbar or a webcam):** any real decode, the edge cases (NUL bytes, invalid UTF-8, empty payload, maximum-capacity QR, multi-symbol images), the `python -m decode.capture` CLI, and the OpenCV frame source.
+
+**Defect found and fixed:** `qrcode` reports an oversized payload as `ValueError("Invalid version (was 41, ...)")`, not `DataOverflowError` as I had documented. The renderer now raises a clear `ValueError`.
+
+**Findings:**
+1. **Colour frames.** pyzbar reduces a 3-channel array to its first channel (`image[:, :, 0]`). For an OpenCV BGR frame that is the blue channel, not luminance. This answers part of H1 from source; our decoder converts to grayscale explicitly. Confirm on the Pi.
+2. **Debian patches to zbar.** Bookworm's zbar 0.23.92-7+deb12u1 carries four patches. Correction to what I said in chat: I described two of them as QR-decoder fixes, but only CVE-2023-40889 is in `qrdec.c` (QR). CVE-2023-40890 is in `databar.c` (DataBar), which our decoder does not enable. So one QR out-of-bounds fix matters directly: this testbed feeds crafted QR codes to that code. Consequence: results depend on the exact zbar build, so record the `libzbar0` package version in run metadata (D13) and do not compare malformed-family results across zbar builds.
+
+**Blocker: no libzbar on the laptop.** Tried and stopped:
+- Homebrew `zbar`: the formula pulls in ImageMagick plus about 16 more formulae. Not installed (cost, and this connection is slow).
+- Building from the Debian upstream tarball: checksum verified against the `.dsc`, and Debian's CVE patches applied cleanly, but the tarball has no `configure` and this machine lacks autoconf, automake, GNU libtool and gettext. Stopped.
+- Docker Desktop (would give the exact Bookworm `libzbar0`): launched with `open -a Docker`, but the engine never came up in over 15 minutes. Only a backend process ran and no UI process, so it likely needs a manual start.
+- The network here is slow and flaky (a 5 MB wheel took 3m41s; GitHub API calls timed out on the TLS handshake).
+
+**Side effects on the user's machine:** my `open -a Docker` left Docker Desktop's backend process running; quit it if unwanted. The zbar source, patches and `probe.py` are in the session scratchpad, not in the repo.
+
+**Held back, uncommitted, because unverified:** `Dockerfile`, `.dockerignore`, `tests/conftest.py` and `tests/test_decode_zbar.py` (7 tests that skip without zbar; the round-trip, replay, multi-symbol, ignored-symbology, blank-image and CLI tests). They are in the working tree.
+
+**To unblock, any one of:**
+1. Start Docker Desktop by hand, then `docker build -t vtb-dev .` and `docker run --rm -v "$PWD":/work vtb-dev`. I then run the edge-case probe, write `docs/decode.md` and the measured-behaviour tests, and commit the held files.
+2. Run the same tests on the Pi (Track H1) with `libzbar0` installed and `VTB_REQUIRE_ZBAR=1`.
+3. `brew install zbar` (heavy).
+
+**Next after P1:** P2 needs G1 (oracles) and G2 (containment) approved.
