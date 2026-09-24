@@ -22,7 +22,7 @@ Only QR and Code 128 are enabled. Other symbologies in an image are ignored (an 
 | `default` | Guesses a text encoding and returns UTF-8. Upstream source tries SJIS, Latin-1, Big5 and UTF-8 with heuristics. | What an unmodified reader does. |
 | `raw` | Sets `ZBAR_CFG_BINARY` ("don't convert binary data to text") and returns the symbol's bytes untouched. | Isolates the boundary layer from decoder rewriting; the only mode in which the `encoding` control can see invalid UTF-8. |
 
-`config.yaml` selects the mode (`decode.decoder_mode`, default `default`); every run's `RunMetadata` records it. Code 128 is unaffected by the mode.
+`config.yaml` lists the modes each tier runs under (`decoder_modes`, see the decision below); every result row and every run's `RunMetadata` records the mode. Code 128 is unaffected by the mode.
 
 ## Measured behaviour
 
@@ -61,9 +61,16 @@ Totals: default mode 22 exact, 8 different; raw mode 30 exact, 0 different. The 
 
 `qrdectxt.c` reads `ZBAR_CFG_BINARY` (line 79) and otherwise opens converters for SJIS, Latin-1, Big-5 and UTF-8 (lines 85 to 91; the initial order is set at 188 to 191), which it then reorders with rules such as "if there was data encoded in kanji mode, assume it's SJIS" and "if the text is 8-bit clean, prefer UTF-8 over SJIS". That the two bytes `c3 a9` of `José` came out as one different character is consistent with a Big-5 reading, but which converter ran was not confirmed.
 
-## Decision needed (gate G1)
+## Decision (recorded 2026-09-24)
 
-Which mode(s) do results of record use? Recommendation: **`default` as the primary condition** (it is what an unmodified reader does, and it keeps the decoder's behaviour inside the measurement) with an ASCII-only benign set, **and `raw` as a documented second condition** for Tiers 1 and 2, where runs are deterministic and cheap, so the `encoding` control and the invalid-UTF-8 cases are exercised. Tier 3 would run in `default` only. This doubles the Tier 1 and 2 correctness matrix; it does not change the plan's structure. The alternative, `raw` only, is simpler but measures a decoder configuration few deployments use.
+Accepted by the user: **`default` is the primary condition, and `raw` is a second condition for Tiers 1 and 2; Tier 3 runs in `default` only.** `default` is what an unmodified reader does and keeps the decoder's behaviour inside the measurement; `raw` exercises the `encoding` control and the invalid-UTF-8 cases, and is cheap because Tier 1 and 2 runs are deterministic. The cost is that the Tier 1 and 2 correctness matrix doubles. The alternative, `raw` only, would have measured a decoder configuration few deployments use.
+
+What follows from it:
+
+- `config.yaml` lists `decoder_modes` per tier. The config rejects Tier 3 with `raw` and any enabled tier that lacks `default`.
+- Every result row carries `decoder_mode`, and each condition is a separate run. Results are reported per condition, not pooled.
+- The benign set is ASCII-only in `default`. Non-ASCII benign texts and invalid-UTF-8 malformed payloads run in `raw` only. Payload specs will need a field saying which decoder conditions each payload applies to; it is added in P3 when `payloads.yaml` is written.
+- A length bound in the boundary applies to the decoder's output (point 4 above).
 
 ## Reproduce
 
