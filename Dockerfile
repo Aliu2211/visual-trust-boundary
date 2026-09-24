@@ -13,5 +13,7 @@ COPY requirements.txt requirements-dev.txt ./
 RUN pip install --no-cache-dir -r requirements-dev.txt
 
 # Tests that need zbar fail here instead of skipping if the library is missing.
-ENV VTB_REQUIRE_ZBAR=1 PYTHONDONTWRITEBYTECODE=1
+# PYTHONPYCACHEPREFIX keeps Python from reading bytecode the host compiled into the bind-mounted
+# __pycache__ directories, which put host paths into tracebacks (and into evidence captures) once.
+ENV VTB_REQUIRE_ZBAR=1 PYTHONDONTWRITEBYTECODE=1 PYTHONPYCACHEPREFIX=/tmp/pycache
 CMD ["python", "-m", "pytest", "-p", "no:cacheprovider"]
