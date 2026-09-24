@@ -1,0 +1,18 @@
+# evidence: E-010
+# captured: 2026-09-24T20:17:41Z
+# code commit: 92b2f4ffe75adc1996b45cfb026a84a573636f9c (working tree dirty: no)
+# host label: unlabelled
+# platform: Linux-6.12.76-linuxkit-x86_64-with-glibc2.36 x86_64
+# python: 3.11.16
+# libzbar0: 0.23.92-7+deb12u1
+# packages: pydantic 2.13.5, pyyaml 6.0.3, pillow 12.3.0, pyzbar 0.1.9, qrcode 8.2, python-barcode 0.16.1, pytest 9.1.1, opencv-python-headless not installed
+# paths normalised: repo root -> <repo>, home and any ~ or ~ -> ~
+# command: python -m pytest -p no:cacheprovider -q
+# exit: 0
+--- stdout ---
+........................................................................ [ 42%]
+........................................................................ [ 85%]
+........................                                                 [100%]
+168 passed in 10.11s
+--- stderr ---
+# sha256-of-above: ab31c6d31b85d88536a9cc0f93969d4b2f580c2e3da8ab34a4bdf88e7e9c5062

@@ -31,6 +31,7 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 | E-007 | First real zbar run: non-ASCII round trip fails | dev-observation | D5, D14 |
 | E-008 | zbar edge-case probe, default vs binary mode | dev-observation | D5, D14 |
 | E-009 | Upstream zbar source for the text-conversion flag | design | D5 |
+| E-010 | Full suite green in the Bookworm image | dev-observation | Methods |
 
 ## Entries
 
@@ -123,6 +124,16 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 - **Evidence:** [raw/E-009.txt](raw/E-009.txt), sha256 `5bf4e750c807ce44f3e261bde80326362111a4cb00e954131c6bb1d285e454d1`. Code commit `a6d9470e9b770e8151a73e28a5c1f025ea4920fa`, working tree clean (captured on the host; it reads upstream source, not the Debian build).
 - **Caveats:** three inferences are not in the capture. First, the flag's value is 4 by enumeration order (the capture prints only some members), which E-008 supports because library config 4 was accepted and changed results. Second, that Debian's build has an identical `qrdectxt.c`: E-004 shows the Debian patches touch `qrdec.c` and `databar.c`, and the other two patches (perl shebang, Python enum) are assumed not to. Third, that `José` returning one different character is a Big-5 reading of `c3 a9` is consistent with the converter list but was not confirmed.
 - **Paper use:** Methods (why raw mode exists), Threats to validity.
+
+### E-010 Full test suite in the Bookworm image
+
+- **Date and step:** 2026-09-24, P1.
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** the whole suite, including every decoder test in both decoder modes, passes against the same `libzbar0` package the Pi's OS uses, with none skipped.
+- **Result:** `168 passed in 10.11s`, exit 0. The image sets `VTB_REQUIRE_ZBAR=1`, so a missing library would have failed the zbar tests rather than skipped them. The suite pins the bytes measured in E-008, so this run also shows those measurements reproduce.
+- **Evidence:** [raw/E-010.txt](raw/E-010.txt), sha256 `ab31c6d31b85d88536a9cc0f93969d4b2f580c2e3da8ab34a4bdf88e7e9c5062`. Code commit `92b2f4ffe75adc1996b45cfb026a84a573636f9c`, working tree clean. Linux x86_64 container (Docker Desktop VM on macOS), Python 3.11.16, `libzbar0 0.23.92-7+deb12u1`.
+- **Caveats:** x86_64, not the Pi's aarch64, so it says nothing about the Pi's CPU or that the same zbar build behaves identically there; the Pi run is still to do. The pinned byte expectations were written from E-008, so agreement with E-008 is expected. This capture replaces one taken earlier the same day at a commit that was later rewritten (see Corrections). The test count changes as tests are added; the paper should cite the release-commit capture.
+- **Paper use:** Methods (software quality), only via the release-commit capture.
 
 ## Corrections and tooling notes
 
