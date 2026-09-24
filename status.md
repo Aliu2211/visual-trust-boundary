@@ -29,3 +29,61 @@ Append-only. One entry per step or event, newest at the bottom. Never edit or de
 3. Do you have the Pi and webcam in hand now? Track H can start immediately if so.
 
 **Nothing committed.** `plan.md` and `status.md` are new and untracked.
+
+---
+
+## 2026-09-24: Plan approved; assumptions recorded
+
+**Actor:** Claude, on the user's instruction ("lets start and fix all the problems").
+**Effect:** `plan.md` status changed from DRAFT to APPROVED (one-line header edit; the body is unchanged). This is the only edit made to `plan.md`; everything else is recorded here.
+
+The three open items from the previous entry were not answered, so the plan's defaults apply:
+- **Ethics (G3):** stays before P7, as written. If sign-off is needed before development-scale work, G3 moves before P2 and the user should say so.
+- **Pi and webcam:** unknown. Track H is a `[HUMAN_TASK]` and waits on the user. P0 to P4 run entirely on the laptop.
+- **Ollama install method:** not needed until H3.
+
+---
+
+## 2026-09-24: P0 complete, halted at G1
+
+**Actor:** Claude
+**Steps:** 0.1 to 0.4 (bootstrap, contracts, oracles, lab-only statement).
+**Commits (local `main`, not pushed, no remote):**
+- `dd7a73e` docs: source plan, execution plan, status log
+- `4f080d8` chore: repo scaffolding
+- `5ddf819` docs(ethics): lab-only statement
+- `ae9219e` docs(oracles): verdicts and oracles for the nine (family, tier) pairs
+- `38d5e05` feat(contracts): data contracts, config schema, tests
+
+**Verification:** 61 tests pass on CPython 3.11.15 (x86_64 laptop). The oracle-document consistency test was mutation-checked: renaming one oracle heading makes it fail, and restoring it passes. Not verified: anything on the Pi (aarch64 wheels for pydantic-core and pyyaml are expected to exist but are unconfirmed until H1).
+
+**Defect found and fixed during P0:** PyYAML follows YAML 1.1, so an unquoted `off` in `config.yaml` parsed as boolean `False` and the mode enum rejected it. The same trap applies to payload text such as `no` or `on` in `payloads.yaml`. Fixed at the root with a shared loader (`read_yaml`, only `true`/`false` are booleans) rather than quoting one file; three regression tests cover it. All YAML in this repo must be read with `read_yaml`, not `yaml.safe_load`.
+
+**Environment:** dependencies installed in `.venv` (gitignored) on a uv-managed CPython 3.11.15 in `~/.local/share/uv`, not the system Python. Installed: pydantic 2.13.5, pyyaml 6.0.3, and for dev only pytest 9.1.1. PyPI wheel downloads are slow from this machine (about 30 s for two small wheels); a first install attempt was killed too early and had to be rerun.
+
+**Amendments to plan.md** (refinements found while writing the contracts; none changes a decision D1 to D15):
+1. **A1, verdict on the row.** `ResultRow` carries `run_id`, `family`, `subset`, `decode_status` and a single `verdict` (six values, defined in `docs/oracles.md`). `crossed` is a property of the verdict, not a separate column, so a row cannot contradict itself. Plan section 2 listed `crossed` as a field.
+2. **A2, metadata once per run.** Run metadata (D13) is a `RunMetadata` record written once per run and keyed by `run_id`, not repeated on every CSV row as section 2 implied.
+3. **A3, canary design.** D6's "nonce-tagged canary" becomes "canary is the payload id, with state reset before every call", because payload images are generated once and reused across repetitions, so a per-call nonce cannot be embedded.
+4. **A4, tighter outcome rules.** A tier can only `gate` in tier 3, and can only `block` in a mode that validates. This encodes the default that the gate applies to Tier 3 only.
+5. **A5, no empty stubs.** The package directories `decode/`, `tiers/`, `defense/`, `attacks/`, `harness/` are not scaffolded yet. Git does not track empty directories and placeholder modules would be noise; each phase creates what it fills.
+6. **A6, requirements files, not extras.** D2's "optional `analysis` extra" is realised as `requirements-dev.txt` now and a `requirements-analysis.txt` created in P7. The project is not a packaged distribution, so `pyproject.toml` extras do not apply.
+
+**Where the source plan's problems now stand:**
+
+| Problem | Status |
+|---|---|
+| Wrong Ollama tag (D3) | Corrected in `config.yaml` (candidate `qwen3-vl:2b`, digest null); confirmed on the Pi in H3 |
+| pyzbar risk (D4) | Open: needs H1 and P1 |
+| Lossy decode (D5) | Fixed in the `PayloadRecord` contract (raw bytes plus strict text) |
+| Undefined crossing (D6) | Drafted in `docs/oracles.md`; awaits G1 |
+| Tautological defense (D7) | Subsets encoded in the contract; the sets themselves are P3 and P6 |
+| Confounded on/off switch (D8) | Four modes encoded and validated per tier |
+| Exceptions as control flow (D9) | `Decision` value type in the contract |
+| Tier 3 input design and competence (D10, D11) | Drafted in oracles; awaits G1 and G4 |
+| Uncontained vulnerable code (D12) | Loopback-only enforced in config; the sandbox itself awaits G2 |
+| Pi measurement hygiene (D13) | `RunMetadata` contract done; capture needs P3 and hardware |
+| FPR and workflow definitions (D14) | Defined in `docs/oracles.md` section 2 |
+| Scope contradiction (D15) | Resolved in `ethics/LAB_ONLY.md`; awaits G3 |
+
+**HUMAN_GATE G1 is open.** Nothing from P1 onward has been started. Needed from the user: approve or redline `docs/oracles.md`, in particular section 8 (eight overridable defaults), the mode matrix in section 3, and the Tier 3 hybrid input design (D10).
