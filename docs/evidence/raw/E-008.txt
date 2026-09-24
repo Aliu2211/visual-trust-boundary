@@ -1,0 +1,85 @@
+# evidence: E-008
+# captured: 2026-09-24T19:59:50Z
+# code commit: a6d9470e9b770e8151a73e28a5c1f025ea4920fa (working tree dirty: no)
+# host label: unlabelled
+# platform: Linux-6.12.76-linuxkit-x86_64-with-glibc2.36 x86_64
+# python: 3.11.16
+# libzbar0: 0.23.92-7+deb12u1
+# packages: pydantic 2.13.5, pyyaml 6.0.3, pillow 12.3.0, pyzbar 0.1.9, qrcode 8.2, python-barcode 0.16.1, pytest 9.1.1, opencv-python-headless not installed
+# paths normalised: repo root -> <repo>, home -> ~
+# command: python tools/probes/decode_edge_cases.py
+# exit: 0
+--- stdout ---
+config 4 set_config return codes (0 means accepted), one per enabled symbology: [0, 0]
+--- mode: default
+default  qr ascii                           1 symbol(s): QRCODE b'BADGE-0001' EXACT
+default  qr numeric mode, leading zeros     1 symbol(s): QRCODE b'0012345' EXACT
+default  qr apostrophe                      1 symbol(s): QRCODE b"O'BRIEN" EXACT
+default  qr padded spaces                   1 symbol(s): QRCODE b'  padded  ' EXACT
+default  qr utf-8 accent (Jose)             1 symbol(s): QRCODE b'Jos\xe7\x9f\x87' DIFFERENT (returned 6 bytes, rendered 5, first difference at byte 3)
+default  qr utf-8 CJK                       1 symbol(s): QRCODE b'\xe8\xad\x9a\xe6\x9c\xb1\xe5\xb3\xad' DIFFERENT (returned 9 bytes, rendered 6, first difference at byte 0)
+default  qr utf-8 mixed                     1 symbol(s): QRCODE b"Zo\xe7\xa6\xb1 O'Neil-Smith" DIFFERENT (returned 18 bytes, rendered 17, first difference at byte 2)
+default  qr control chars CR LF TAB ESC     1 symbol(s): QRCODE b'a\r\nb\tc\x1b[0m' EXACT
+default  qr NUL in the middle               1 symbol(s): QRCODE b'a\x00b' EXACT
+default  qr NUL first                       1 symbol(s): QRCODE b'\x00abc' EXACT
+default  qr NUL last                        1 symbol(s): QRCODE b'abc\x00' EXACT
+default  qr only NULs                       1 symbol(s): QRCODE b'\x00\x00\x00' EXACT
+default  qr invalid utf-8 (ff fe)           1 symbol(s): QRCODE b'ab\xc3\xbf\xc3\xbe' DIFFERENT (returned 6 bytes, rendered 4, first difference at byte 2)
+default  qr latin-1 (caf e9)                1 symbol(s): QRCODE b'caf\xc3\xa9' DIFFERENT (returned 5 bytes, rendered 4, first difference at byte 3)
+default  qr lone continuation byte          1 symbol(s): QRCODE b'a\xc2\x80b' DIFFERENT (returned 4 bytes, rendered 3, first difference at byte 1)
+default  qr all 256 byte values             1 symbol(s): QRCODE 384 bytes, head b'\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17', sha256 9799e3eb6096a48f DIFFERENT (returned 384 bytes, rendered 256, first difference at byte 128)
+default  qr empty                           1 symbol(s): QRCODE b'' EXACT
+default  qr 1000 bytes                      1 symbol(s): QRCODE 1000 bytes, head b'aaaaaaaaaaaaaaaaaaaaaaaa', sha256 41edece42d63e8d9 EXACT
+default  qr 2331 bytes (max at ECC M)       1 symbol(s): QRCODE 2331 bytes, head b'aaaaaaaaaaaaaaaaaaaaaaaa', sha256 c3fb448f99ae3c71 EXACT
+default  qr 2953 bytes (max at ECC L)       1 symbol(s): QRCODE 2953 bytes, head b'aaaaaaaaaaaaaaaaaaaaaaaa', sha256 dc769525582fd34f EXACT
+default  qr 2953 mixed bytes (ECC L)        1 symbol(s): QRCODE 4426 bytes, head b'\x03\n\x11\x18\x1f&-4;BIPW^elsz\xc2\x81\xc2\x88\xc2\x8f', sha256 c3449dd3267b74a0 DIFFERENT (returned 4426 bytes, rendered 2953, first difference at byte 18)
+default  c128 ascii                         1 symbol(s): CODE128 b'BADGE-0001' EXACT
+default  c128 digits                        1 symbol(s): CODE128 b'0012345' EXACT
+default  c128 apostrophe                    1 symbol(s): CODE128 b"O'BRIEN" EXACT
+default  c128 tab                           1 symbol(s): CODE128 b'a\tb' EXACT
+default  c128 newline                       1 symbol(s): CODE128 b'a\nb' EXACT
+default  c128 NUL                           1 symbol(s): CODE128 b'a\x00b' EXACT
+default  c128 ESC                           1 symbol(s): CODE128 b'a\x1bb' EXACT
+default  c128 DEL                           1 symbol(s): CODE128 b'a\x7fb' EXACT
+default  c128 empty                         cannot be rendered: ValueError: Code 128 cannot encode an empty string
+default  c128 200 chars                     1 symbol(s): CODE128 200 bytes, head b'AAAAAAAAAAAAAAAAAAAAAAAA', sha256 70d3bf8b0b9d83a6 EXACT
+default  two QR codes side by side          2 symbol(s): QRCODE b'RIGHT' | QRCODE b'LEFT'
+default  EAN-13 (symbology not enabled)     0 symbols
+default  blank image                        0 symbols
+--- mode: config4
+config4  qr ascii                           1 symbol(s): QRCODE b'BADGE-0001' EXACT
+config4  qr numeric mode, leading zeros     1 symbol(s): QRCODE b'0012345' EXACT
+config4  qr apostrophe                      1 symbol(s): QRCODE b"O'BRIEN" EXACT
+config4  qr padded spaces                   1 symbol(s): QRCODE b'  padded  ' EXACT
+config4  qr utf-8 accent (Jose)             1 symbol(s): QRCODE b'Jos\xc3\xa9' EXACT
+config4  qr utf-8 CJK                       1 symbol(s): QRCODE b'\xe6\x9d\x8e\xe9\x9b\xb7' EXACT
+config4  qr utf-8 mixed                     1 symbol(s): QRCODE b"Zo\xc3\xab O'Neil-Smith" EXACT
+config4  qr control chars CR LF TAB ESC     1 symbol(s): QRCODE b'a\r\nb\tc\x1b[0m' EXACT
+config4  qr NUL in the middle               1 symbol(s): QRCODE b'a\x00b' EXACT
+config4  qr NUL first                       1 symbol(s): QRCODE b'\x00abc' EXACT
+config4  qr NUL last                        1 symbol(s): QRCODE b'abc\x00' EXACT
+config4  qr only NULs                       1 symbol(s): QRCODE b'\x00\x00\x00' EXACT
+config4  qr invalid utf-8 (ff fe)           1 symbol(s): QRCODE b'ab\xff\xfe' EXACT
+config4  qr latin-1 (caf e9)                1 symbol(s): QRCODE b'caf\xe9' EXACT
+config4  qr lone continuation byte          1 symbol(s): QRCODE b'a\x80b' EXACT
+config4  qr all 256 byte values             1 symbol(s): QRCODE 256 bytes, head b'\x00\x01\x02\x03\x04\x05\x06\x07\x08\t\n\x0b\x0c\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17', sha256 40aff2e9d2d8922e EXACT
+config4  qr empty                           1 symbol(s): QRCODE b'' EXACT
+config4  qr 1000 bytes                      1 symbol(s): QRCODE 1000 bytes, head b'aaaaaaaaaaaaaaaaaaaaaaaa', sha256 41edece42d63e8d9 EXACT
+config4  qr 2331 bytes (max at ECC M)       1 symbol(s): QRCODE 2331 bytes, head b'aaaaaaaaaaaaaaaaaaaaaaaa', sha256 c3fb448f99ae3c71 EXACT
+config4  qr 2953 bytes (max at ECC L)       1 symbol(s): QRCODE 2953 bytes, head b'aaaaaaaaaaaaaaaaaaaaaaaa', sha256 dc769525582fd34f EXACT
+config4  qr 2953 mixed bytes (ECC L)        1 symbol(s): QRCODE 2953 bytes, head b'\x03\n\x11\x18\x1f&-4;BIPW^elsz\x81\x88\x8f\x96\x9d\xa4', sha256 f9395732cf99b12b EXACT
+config4  c128 ascii                         1 symbol(s): CODE128 b'BADGE-0001' EXACT
+config4  c128 digits                        1 symbol(s): CODE128 b'0012345' EXACT
+config4  c128 apostrophe                    1 symbol(s): CODE128 b"O'BRIEN" EXACT
+config4  c128 tab                           1 symbol(s): CODE128 b'a\tb' EXACT
+config4  c128 newline                       1 symbol(s): CODE128 b'a\nb' EXACT
+config4  c128 NUL                           1 symbol(s): CODE128 b'a\x00b' EXACT
+config4  c128 ESC                           1 symbol(s): CODE128 b'a\x1bb' EXACT
+config4  c128 DEL                           1 symbol(s): CODE128 b'a\x7fb' EXACT
+config4  c128 empty                         cannot be rendered: ValueError: Code 128 cannot encode an empty string
+config4  c128 200 chars                     1 symbol(s): CODE128 200 bytes, head b'AAAAAAAAAAAAAAAAAAAAAAAA', sha256 70d3bf8b0b9d83a6 EXACT
+config4  two QR codes side by side          2 symbol(s): QRCODE b'RIGHT' | QRCODE b'LEFT'
+config4  EAN-13 (symbology not enabled)     0 symbols
+config4  blank image                        0 symbols
+--- stderr ---
+# sha256-of-above: 157910806c5ce62facd8fe382a63d508491250be54294702802e202e9c28c0ed

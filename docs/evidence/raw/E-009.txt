@@ -1,0 +1,46 @@
+# evidence: E-009
+# captured: 2026-09-24T19:59:55Z
+# code commit: a6d9470e9b770e8151a73e28a5c1f025ea4920fa (working tree dirty: no)
+# host label: unlabelled
+# platform: macOS-26.5.2-x86_64-i386-64bit x86_64
+# python: 3.11.15
+# libzbar0: n/a (no dpkg on this platform)
+# packages: pydantic 2.13.5, pyyaml 6.0.3, pillow 12.3.0, pyzbar 0.1.9, qrcode 8.2, python-barcode 0.16.1, pytest 9.1.1, opencv-python-headless not installed
+# paths normalised: repo root -> <repo>, home -> ~
+# command: sh -c '
+d=$(mktemp -d) && cd "$d" && curl -sS --max-time 300 -O https://deb.debian.org/debian/pool/main/z/zbar/zbar_0.23.92.orig.tar.gz &&
+echo "-- sha256 of the tarball" && shasum -a 256 zbar_0.23.92.orig.tar.gz &&
+echo "-- include/zbar.h: the config enum" && tar -xzOf zbar_0.23.92.orig.tar.gz zbar-0.23.92/include/zbar.h | grep -nE "zbar_config_e|ZBAR_CFG_(ENABLE|ASCII|BINARY|NUM)" &&
+echo "-- zbar/qrcode/qrdectxt.c: where the flag is read and which encodings the guess tries" &&
+tar -xzOf zbar_0.23.92.orig.tar.gz zbar-0.23.92/zbar/qrcode/qrdectxt.c | grep -nE "raw_binary|iconv_open|enc_list\[[0-9]\]=|prefer UTF-8|assume it.s SJIS|configured with ZBAR_CFG_BINARY"
+'
+# exit: 0
+--- stdout ---
+-- sha256 of the tarball
+dffc16695cb6e42fa318a4946fd42866c0f5ab735f7eaf450b108d1c3a19b4ba  zbar_0.23.92.orig.tar.gz
+-- include/zbar.h: the config enum
+169:typedef enum zbar_config_e {
+170:    ZBAR_CFG_ENABLE = 0,        /**< enable symbology/feature */
+173:    ZBAR_CFG_ASCII,             /**< enable full ASCII character set */
+174:    ZBAR_CFG_BINARY,            /**< don't convert binary data to text */
+175:    ZBAR_CFG_NUM,               /**< number of boolean decoder configs */
+-- zbar/qrcode/qrdectxt.c: where the flag is read and which encodings the guess tries
+60:    _enc_list[0]=_enc;
+78:  int                  raw_binary = 0;
+79:  zbar_image_scanner_get_config(iscn, ZBAR_QRCODE, ZBAR_CFG_BINARY, &raw_binary);
+85:  latin1_cd=iconv_open("UTF-8","ISO8859-1");
+87:  sjis_cd=iconv_open("UTF-8","SJIS");
+89:  utf8_cd=iconv_open("UTF-8","UTF-8");
+91:  big5_cd=iconv_open("UTF-8","BIG-5");
+188:    enc_list[0]=sjis_cd;
+189:    enc_list[1]=latin1_cd;
+190:    enc_list[2]=big5_cd;
+191:    enc_list[3]=utf8_cd;
+251:              unless configured with ZBAR_CFG_BINARY.*/
+253:              if (raw_binary) {
+261:              /*If there was data encoded in kanji mode, assume it's SJIS.*/
+284:              /*If the text is 8-bit clean, prefer UTF-8 over SJIS, since
+311:                  enc_list[3]=latin1_cd;
+416:            eci_cd=iconv_open("UTF-8",enc);
+--- stderr ---
+# sha256-of-above: 5bf4e750c807ce44f3e261bde80326362111a4cb00e954131c6bb1d285e454d1

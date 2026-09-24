@@ -5,7 +5,7 @@ Implementation results for the paper, each backed by a raw capture in [raw/](raw
 ## Rules
 
 1. **Capture first, write second.** Run `python tools/capture_evidence.py E-0NN -- <command>`, then write the entry using numbers copied from the captured file. A raw file records the code commit, whether the working tree was dirty (and which files), platform, Python, package versions, the `libzbar0` package version where there is one, the exact command, the exit code, and a SHA-256 of the file.
-2. **Append only.** A raw file is never edited or overwritten. A correction is a new entry that says which one it supersedes. Check integrity with `python tools/capture_evidence.py --verify docs/evidence/raw/E-0NN.txt`. A test also checks that this ledger's hashes match the raw files.
+2. **Append only.** A raw file is never edited or overwritten, with one exception: a privacy redaction (a local path or name that must not be published), which must be recorded under Corrections below with the original and new hashes. A correction is a new entry that says which one it supersedes. Check integrity with `python tools/capture_evidence.py --verify docs/evidence/raw/E-0NN.txt`. A test also checks that this ledger's hashes match the raw files.
 3. **Record failures and surprises**, not only successes.
 4. **Every entry has a class.** Only `result-of-record` may back a quantitative result in the paper.
 
@@ -28,6 +28,9 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 | E-004 | Debian zbar source and patches | design | D4, D13 |
 | E-005 | pyzbar pixel and data handling | dev-observation | D5 |
 | E-006 | QR payload capacity | dev-observation | Malformed family |
+| E-007 | First real zbar run: non-ASCII round trip fails | dev-observation | D5, D14 |
+| E-008 | zbar edge-case probe, default vs binary mode | dev-observation | D5, D14 |
+| E-009 | Upstream zbar source for the text-conversion flag | design | D5 |
 
 ## Entries
 
@@ -91,10 +94,42 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 - **Caveats:** these are the renderer's limits with 0x61 bytes, which use byte mode. Numeric and alphanumeric payloads hold more. Whether zbar can decode a maximum-capacity code has not been tested.
 - **Paper use:** Methods (payload size bounds for the malformed family).
 
+### E-007 First real zbar run: non-ASCII QR payloads do not round-trip
+
+- **Date and step:** 2026-09-24, P1.2.
+- **Class:** dev-observation. **Confidence:** verified (re-runnable, but the test that produced it has since been rewritten around this finding).
+- **Claim:** in zbar's default mode, non-ASCII UTF-8 QR payloads came back with different bytes, while the 100 ASCII payloads came back exactly. This was a failure of my own expectation, which was that a QR round trip is exact for any UTF-8 text.
+- **Result:** `1 failed, 1 passed, 6 deselected in 2.05s`. The failing assertion reads `3/103 QR round trips differ` and lists `José` returned as `b'Jos\xe7\x9f\x87'`, `李雷` returned as `b'\xe8\xad\x9a\xe6\x9c\xb1\xe5\xb3\xad'`, and `Zoë O'Neil-Smith` returned as `b"Zo\xe7\xa6\xb1 O'Neil-Smith"`. The Code 128 round-trip test passed.
+- **Evidence:** [raw/E-007.txt](raw/E-007.txt), sha256 `3353024e45d66ed7fcc9639239f6097d11a07e864c63c05c020118b825018b66` (redacted once after capture and before its first commit, see Corrections; the original hash was `8b0d3e58690964e29420b626d9e36a3224e45cd347942d8d03f5c0d78a50f319`). Code commit `57f49f0e2c10b1b2877867cb36c73a58e753bd05`, working tree dirty (the decode tests and Dockerfile were not yet committed; the capture records only "dirty: yes" because git is not installed in the container). Linux x86_64 container, Python 3.11.16, `libzbar0 0.23.92-7+deb12u1`, pyzbar 0.1.9.
+- **Caveats:** this capture shows that the bytes differ, not why or how widely; E-008 and E-009 do that. The first version of the test is no longer in the tree, so re-running this exact command now runs the rewritten tests (which pass); the capture is the record of the first run.
+- **Paper use:** Threats to validity (decoder-level rewriting), motivation for E-008.
+
+### E-008 zbar edge-case probe: default mode versus binary mode
+
+- **Date and step:** 2026-09-24, P1.3 (decisions D5 and D14).
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** in default mode zbar returns different bytes for 8 of the 30 probe cases that return one symbol, all of them QR payloads containing bytes at or above 0x80; with scanner config 4 set it returns exact bytes for all 30. ASCII, NUL bytes, control characters, an empty payload and maximum-capacity payloads are exact in both modes.
+- **Result:** 34 cases per mode. Default: 22 exact, 8 different, 2 no symbol (EAN-13 not enabled; blank image), 1 image with two symbols (`RIGHT` returned before `LEFT`), 1 case not rendered (empty Code 128: `ValueError: Code 128 cannot encode an empty string`). Config 4: 30 exact, 0 different, the same other 4. Config 4 was accepted by the library (`set_config return codes ... [0, 0]`). The 8 default-mode differences, as returned versus rendered bytes: `José` 6 vs 5; `李雷` 9 vs 6; `Zoë O'Neil-Smith` 18 vs 17; invalid UTF-8 `ab\xff\xfe` 6 vs 4 (`ab\xc3\xbf\xc3\xbe`, valid UTF-8); `caf\xe9` 5 vs 4 (`caf\xc3\xa9`); `a\x80b` 4 vs 3 (`a\xc2\x80b`); all 256 byte values 384 vs 256; 2953 pseudo-random bytes at ECC L 4426 vs 2953. Exact in both modes: 1000, 2331 and 2953 ASCII bytes; NUL first, middle, last and only NULs; CR LF TAB ESC; an empty QR payload (one symbol, zero bytes); Code 128 including TAB, LF, NUL, ESC and DEL.
+- **Evidence:** [raw/E-008.txt](raw/E-008.txt), sha256 `157910806c5ce62facd8fe382a63d508491250be54294702802e202e9c28c0ed`. Code commit `a6d9470e9b770e8151a73e28a5c1f025ea4920fa`, working tree clean. Linux x86_64 container, Python 3.11.16, `libzbar0 0.23.92-7+deb12u1`, pyzbar 0.1.9. Probe: `tools/probes/decode_edge_cases.py`.
+- **Caveats:** one zbar build, on the container's CPU; clean synthetic renders at one box size and border, with no camera noise or perspective; 34 hand-chosen cases are a probe, not a distribution. "Exact" compares with the bytes the same script rendered. The probe drives pyzbar's private scanner helpers (pyzbar pinned at 0.1.9). That config 4 is zbar's binary flag is established by E-009, not by this capture. The decoded-length growth on the pseudo-random case is shown only as a length and a prefix.
+- **Paper use:** Methods (decoder configuration and its effect), Threats to validity (decoder is part of the trust boundary; build dependence). To be repeated on the Pi before any quantitative claim.
+
+### E-009 Upstream zbar source for the text-conversion flag
+
+- **Date and step:** 2026-09-24, P1.3 (decision D5).
+- **Class:** design. **Confidence:** source-read.
+- **Claim:** zbar's QR text conversion is a documented, switchable behaviour: upstream defines `ZBAR_CFG_BINARY` ("don't convert binary data to text") and, unless it is set, guesses among SJIS, Latin-1, Big-5 and UTF-8.
+- **Result:** in `include/zbar.h`, `ZBAR_CFG_BINARY` is defined with the comment `don't convert binary data to text`. In `zbar/qrcode/qrdectxt.c`, line 79 reads the flag for QR into `raw_binary`; lines 85, 87, 89 and 91 open converters for ISO8859-1, SJIS, UTF-8 and BIG-5; lines 188 to 191 set the initial order (SJIS, Latin-1, Big-5, UTF-8); line 253 tests `if (raw_binary)`; line 261 reads `If there was data encoded in kanji mode, assume it's SJIS.`; line 284 reads `If the text is 8-bit clean, prefer UTF-8 over SJIS`. The tarball sha256 `dffc16695cb6e42fa318a4946fd42866c0f5ab735f7eaf450b108d1c3a19b4ba` equals the one recorded in E-004.
+- **Evidence:** [raw/E-009.txt](raw/E-009.txt), sha256 `5bf4e750c807ce44f3e261bde80326362111a4cb00e954131c6bb1d285e454d1`. Code commit `a6d9470e9b770e8151a73e28a5c1f025ea4920fa`, working tree clean (captured on the host; it reads upstream source, not the Debian build).
+- **Caveats:** three inferences are not in the capture. First, the flag's value is 4 by enumeration order (the capture prints only some members), which E-008 supports because library config 4 was accepted and changed results. Second, that Debian's build has an identical `qrdectxt.c`: E-004 shows the Debian patches touch `qrdec.c` and `databar.c`, and the other two patches (perl shebang, Python enum) are assumed not to. Third, that `José` returning one different character is a Big-5 reading of `c3 a9` is consistent with the converter list but was not confirmed.
+- **Paper use:** Methods (why raw mode exists), Threats to validity.
+
 ## Corrections and tooling notes
 
 - **2026-09-24, commit `3dc1270`:** the first version of `--verify` read files in text mode, which rewrites CRLF line endings, so it reported a false `HASH MISMATCH` for E-002 (curl's `-D` output contains `\r\n`). The file was intact: its byte-exact SHA-256 matched the recorded one before the fix, and all six captures verify after it. No capture was redone. Regression tests cover CR and non-UTF-8 output.
 
+- **2026-09-24, E-007 redacted before its first commit.** A pre-push scan found a host path on line 24 of `raw/E-007.txt` (`/Users/<name>/.../tests/test_decode_zbar.py:50: AssertionError`), which contradicted the header's claim that local paths are normalised. Cause: the container reused bytecode the host had compiled into the bind-mounted `__pycache__`, so the traceback carried the host path, and the normaliser only rewrote the container's own root and home. Change made to the capture: that one line now reads `<repo>/tests/test_decode_zbar.py:50: AssertionError`, one header line records the redaction, and the hash was recomputed. Nothing else in the file changed. Original sha256 `8b0d3e58690964e29420b626d9e36a3224e45cd347942d8d03f5c0d78a50f319`, new sha256 `3353024e45d66ed7fcc9639239f6097d11a07e864c63c05c020118b825018b66`. This is the only raw file edited after capture. The unredacted original was never published: the local commits that briefly held it were rewritten before the first push. Fixes, in the commits that follow: the normaliser scrubs any `/Users/<name>` or `/home/<name>` prefix (tested), and the Docker image sets `PYTHONPYCACHEPREFIX` so it cannot read host bytecode.
+
 ## Pending evidence
 
-Entries to add once real zbar has run (Docker image or the Pi): exact round-trip results for QR and Code 128 (plan P1.2); decoder behaviour on NUL bytes, invalid UTF-8, empty payloads, maximum-capacity codes and multi-symbol images (P1.3). Pi bring-up (Track H) will add the `libzbar0` package version and the VLM feasibility numbers.
+The green test suite in the container against the final code (E-010). The same probe and tests on the Pi (Track H1), to see whether the measured decoder behaviour holds on the Pi's `libzbar0` build. The Pi bring-up will also add the VLM feasibility numbers and the model digest.

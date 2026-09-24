@@ -1,0 +1,30 @@
+# evidence: E-007
+# captured: 2026-09-24T19:53:22Z
+# code commit: 57f49f0e2c10b1b2877867cb36c73a58e753bd05 (working tree dirty: yes)
+# host label: unlabelled
+# platform: Linux-6.12.76-linuxkit-x86_64-with-glibc2.36 x86_64
+# python: 3.11.16
+# libzbar0: 0.23.92-7+deb12u1
+# packages: pydantic 2.13.5, pyyaml 6.0.3, pillow 12.3.0, pyzbar 0.1.9, qrcode 8.2, python-barcode 0.16.1, pytest 9.1.1, opencv-python-headless not installed
+# paths normalised: repo root -> <repo>, home -> ~
+# command: python -m pytest tests/test_decode_zbar.py -p no:cacheprovider -q -k round_trip
+# exit: 1
+# redacted after capture: one host path on the failure trace (see docs/evidence/LOG.md, Corrections and tooling notes)
+--- stdout ---
+F.                                                                       [100%]
+=================================== FAILURES ===================================
+_________________________ test_qr_round_trip_is_exact __________________________
+
+decoder = <decode.decoder.PyzbarDecoder object at 0x7f6122618190>
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_qr_round_trip_is_exact0')
+
+>   ???
+E   AssertionError: 3/103 QR round trips differ, first: [('José', [RawSymbol(data=b'Jos\xe7\x9f\x87', symbology='QRCODE')]), ('李雷', [RawSymbol(data=b'\xe8\xad\x9a\xe6\x9c\xb1\xe5\xb3\xad', symbology='QRCODE')]), ("Zoë O'Neil-Smith", [RawSymbol(data=b"Zo\xe7\xa6\xb1 O'Neil-Smith", symbology='QRCODE')])]
+E   assert not [('José', [RawSymbol(data=b'Jos\xe7\x9f\x87', symbology='QRCODE')]), ('李雷', [RawSymbol(data=b'\xe8\xad\x9a\xe6\x9c\xb1...ad', symbology='QRCODE')]), ("Zoë O'Neil-Smith", [RawSymbol(data=b"Zo\xe7\xa6\xb1 O'Neil-Smith", symbology='QRCODE')])]
+
+<repo>/tests/test_decode_zbar.py:50: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_decode_zbar.py::test_qr_round_trip_is_exact - AssertionErro...
+1 failed, 1 passed, 6 deselected in 2.05s
+--- stderr ---
+# sha256-of-above: 3353024e45d66ed7fcc9639239f6097d11a07e864c63c05c020118b825018b66

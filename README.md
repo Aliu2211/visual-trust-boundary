@@ -6,7 +6,7 @@ A lab testbed on a Raspberry Pi 5 that traces one crafted machine-readable code 
 
 ## Status
 
-Early: phase P1 of [plan.md](plan.md) is in progress. What exists today:
+Early: phase P1 of [plan.md](plan.md) is nearly done (the Pi run of the decoder tests is still to do). What exists today:
 
 - [contracts.py](contracts.py): the data contracts every module shares.
 - [docs/oracles.md](docs/oracles.md): the definition of "crossed", per family and tier (draft, awaiting gate G1).
@@ -27,6 +27,13 @@ The Pi runs Python 3.11 on Debian Bookworm, so develop on 3.11.
     pytest
 
 Decoding needs the system library `libzbar` in addition to the Python packages (`apt install libzbar0` on Debian and the Pi). Without it the tests that need the real decoder are skipped, and the skip reason is shown. Set `VTB_REQUIRE_ZBAR=1` where zbar must be present (the Pi) so those tests fail instead of skipping.
+
+The full suite, including the decoder tests, runs in a Debian Bookworm image that has the same `libzbar0` package as the Pi (built and run on the laptop; no zbar is installed on the host):
+
+    docker build -t vtb-dev .
+    docker run --rm -v "$PWD":/work vtb-dev
+
+Rebuild the image when a requirements file changes. In the image the zbar tests fail rather than skip. Decoder behaviour, including how zbar rewrites non-ASCII QR payloads, is documented in [docs/decode.md](docs/decode.md).
 
 `requirements-live.txt` adds OpenCV for webcam capture only; replay experiments do not need it.
 
