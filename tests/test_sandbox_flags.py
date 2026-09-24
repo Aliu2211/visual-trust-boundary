@@ -41,6 +41,12 @@ def test_scratch_space_is_tmpfs_and_noexec():
     assert all("noexec" in t and "nosuid" in t and "size=" in t for t in tmpfs)
 
 
+def test_the_audit_tmpfs_is_owned_by_the_sandbox_user():
+    # tmpfs takes the mount point's permissions and /audit is root-only in the image (E-013).
+    audit = next(a for a in flags() if a.startswith("/audit:"))
+    assert f"uid={SANDBOX_UID}" in audit and f"gid={SANDBOX_UID}" in audit
+
+
 def test_the_canary_is_the_only_bind_mount_and_nothing_else_is_passed_in():
     a = flags()
     mounts = [a[i + 1] for i, x in enumerate(a) if x in ("-v", "--volume", "--mount")]

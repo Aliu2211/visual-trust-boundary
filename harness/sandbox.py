@@ -82,11 +82,27 @@ class DockerSandbox:
             "--memory", self.memory,
             "--memory-swap", self.memory,  # equal to --memory: no swap, so the limit is a hard one
             "--cpus", self.cpus,
-            "--tmpfs", "/tmp:rw,noexec,nosuid,size=32m",
-            "--tmpfs", "/audit:rw,noexec,nosuid,size=8m",
+            # tmpfs takes the mount point's permissions, and /audit is root-only in the image, so the sandbox
+            # user needs it stated (found by the containment battery, E-013).
+            "--tmpfs", "/tmp:rw,noexec,nosuid,size=32m,mode=1777",
+            "--tmpfs", f"/audit:rw,noexec,nosuid,size=8m,uid={SANDBOX_UID},gid={SANDBOX_UID},mode=0755",
             "-v", f"{canary}:/canary",
             self.image,
         ]
+
+    @staticmethod
+    def _stop(name: str, proc: subprocess.Popen) -> None:
+        """Stop the container itself: killing only the client would leave it running. The client is killed
+        first, because with its output pipe full `docker rm -f` was seen to hang (E-013), and killing the
+        client closes that stream."""
+        proc.kill()
+        for command in (["docker", "rm", "-f", name], ["docker", "kill", name]):
+            try:
+                subprocess.run(command, capture_output=True, timeout=30, check=False)
+                return
+            except subprocess.TimeoutExpired:
+                continue
+        raise RuntimeError(f"could not stop container {name}; remove it by hand with: docker rm -f {name}")
 
     def run(self, argv: Sequence[str], *, stdin: str | None = None, timeout: float | None = None) -> SandboxResult:
         limit = self.timeout if timeout is None else timeout
@@ -125,9 +141,8 @@ class DockerSandbox:
                 if truncated.is_set():
                     break
                 time.sleep(0.05)
-            if proc.poll() is None:  # timed out or over the output cap: killing the client alone would leave the container running
-                subprocess.run(["docker", "rm", "-f", name], capture_output=True, timeout=30, check=False)
-                proc.kill()
+            if proc.poll() is None:  # timed out or over the output cap
+                self._stop(name, proc)
             proc.wait(timeout=30)
             for reader in readers:
                 reader.join(timeout=5)

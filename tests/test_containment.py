@@ -13,7 +13,7 @@ import uuid
 
 import pytest
 
-from harness.sandbox import OUTPUT_CAP
+from harness.sandbox import IMAGE, OUTPUT_CAP
 
 
 def py(sandbox, code, **kw):
@@ -59,6 +59,7 @@ print(json.dumps(out))
     finally:
         listener.close()
 
+    print("observed:", json.dumps(out), "| a connection reached the host listener:", arrived)
     assert all(v.startswith("refused") for v in out.values()), out
     assert not arrived, "a connection from inside the sandbox reached a listener on the host"
 
@@ -79,6 +80,7 @@ for path in ("/etc/vtb_probe", "/usr/vtb_probe", "/app/vtb_probe", "/vtb_probe",
         out[path] = "refused:" + str(e.errno)
 print(json.dumps(out))
 """))
+    print("observed:", json.dumps(out))
     assert len(out) == 10 and all(v.startswith("refused") for v in out.values()), out
 
 
@@ -119,14 +121,18 @@ for root, dirs, files in os.walk("/"):
 print(json.dumps({{"path_exists": os.path.exists({str(marker)!r}), "found": found}}))
 """))
     assert marker.exists()  # control: it is really there on the host
+    print("observed:", json.dumps(out))
     assert out == {"path_exists": False, "found": []}
 
 
 def test_4b_the_host_environment_is_not_passed_in(sandbox, monkeypatch):
     monkeypatch.setenv("VTB_TEST_SECRET", "s3cret")
-    names = result_json(py(sandbox, "import json, os\nprint(json.dumps(sorted(os.environ)))"))
-    assert "VTB_TEST_SECRET" not in names
-    assert not [n for n in names if re.search(r"SECRET|TOKEN|PASSWORD|KEY", n)], names
+    inside = set(result_json(py(sandbox, "import json, os\nprint(json.dumps(sorted(os.environ)))")))
+    declared = json.loads(subprocess.run(["docker", "image", "inspect", IMAGE, "--format", "{{json .Config.Env}}"],
+                                         capture_output=True, text=True, check=True).stdout)
+    allowed = {entry.split("=", 1)[0] for entry in declared} | {"HOME", "HOSTNAME"}  # the image's own, plus what docker adds
+    assert "VTB_TEST_SECRET" not in inside
+    assert inside <= allowed, f"variables that are not the image's own: {sorted(inside - allowed)}"
 
 
 # 5. privileges ------------------------------------------------------------------------------------------------
@@ -138,6 +144,7 @@ import json
 st = dict(line.split(":\\t", 1) for line in open("/proc/self/status").read().splitlines() if ":\\t" in line)
 print(json.dumps({k: st[k].strip() for k in ("Uid", "CapPrm", "CapEff", "CapBnd", "NoNewPrivs")}))
 """))
+    print("observed:", json.dumps(out))
     assert out["Uid"].split()[0] == "10001"
     assert {out["CapPrm"], out["CapEff"], out["CapBnd"]} == {"0000000000000000"}, out
     assert out["NoNewPrivs"] == "1"
@@ -158,11 +165,13 @@ for i in range(300):
         break
 print(json.dumps({"started": len(kids), "failed_at": failed_at}))
 """, timeout=30))
+    print("observed:", json.dumps(out), "(pids limit 64)")
     assert out["failed_at"] is not None and out["started"] < 100, out
 
 
 def test_6b_the_memory_limit_is_enforced(sandbox):
     r = py(sandbox, "b = bytearray(400 * 1024 * 1024)\nfor i in range(0, len(b), 4096):\n    b[i] = 1\nprint('survived')", timeout=30)
+    print("observed: exit code", r.exit_code, "| survived printed:", "survived" in r.stdout, "(memory limit 256m, allocation 400 MiB)")
     assert "survived" not in r.stdout and r.exit_code != 0  # killed by the 256m limit (exit 137 expected)
 
 
@@ -171,8 +180,10 @@ def test_6b_the_memory_limit_is_enforced(sandbox):
 
 def test_7_nothing_persists_between_calls(sandbox):
     first = py(sandbox, 'for p in ("/canary/persist-me", "/tmp/persist-me", "/audit/persist-me"):\n    open(p, "w").write("x")\nprint("wrote")')
-    assert first.canary_files == ("persist-me",)  # control: the first call really did write
+    assert first.exit_code == 0, first.stderr  # control: the first call really did write everywhere
+    assert first.canary_files == ("persist-me",)
     out = result_json(py(sandbox, 'import json, os\nprint(json.dumps({d: sorted(os.listdir(d)) for d in ("/canary", "/tmp", "/audit")}))'))
+    print("observed:", json.dumps(out))
     assert out == {"/canary": [], "/tmp": [], "/audit": []}, out
 
 
@@ -182,6 +193,7 @@ def test_7_nothing_persists_between_calls(sandbox):
 def test_8_the_sqlite_behaviour_in_e012_holds_inside_the_sandbox(sandbox):
     r = sandbox.run(["python", "/app/tools/probes/sqlite_injection_limits.py"])
     assert r.exit_code == 0, r.stderr
+    print(r.stdout)
     assert re.search(r"stacked statement.*rejected: ProgrammingError", r.stdout)
     assert re.search(r"table still exists after the stacked attempt\s+True", r.stdout)
     assert re.search(r"load_extension through SQL\s+rejected: OperationalError: not authorized", r.stdout)
