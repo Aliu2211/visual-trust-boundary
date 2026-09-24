@@ -32,6 +32,7 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 | E-008 | zbar edge-case probe, default vs binary mode | dev-observation | D5, D14 |
 | E-009 | Upstream zbar source for the text-conversion flag | design | D5 |
 | E-010 | Full suite green in the Bookworm image | dev-observation | Methods |
+| E-011 | Decode success by symbology and decoder mode | dev-observation | P1.2 acceptance, D14 |
 
 ## Entries
 
@@ -135,11 +136,23 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 - **Caveats:** x86_64, not the Pi's aarch64, so it says nothing about the Pi's CPU or that the same zbar build behaves identically there; the Pi run is still to do. The pinned byte expectations were written from E-008, so agreement with E-008 is expected. This capture replaces one taken earlier the same day at a commit that was later rewritten (see Corrections). The test count changes as tests are added; the paper should cite the release-commit capture.
 - **Paper use:** Methods (software quality), only via the release-commit capture.
 
+### E-011 Decode success by symbology and decoder mode
+
+- **Date and step:** 2026-09-24, P1.2 (acceptance figure) and decision D14.
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** on the seeded benign set, both symbologies decode exactly for ASCII payloads in both decoder modes, while non-ASCII QR payloads decode exactly only in raw mode.
+- **Result:** benign set of 100 ASCII ids (seed 1337) rendered as QR and as Code 128, plus 3 non-ASCII texts as QR only. Default mode: QR ASCII `100/100`, QR non-ASCII `0/3`, Code 128 ASCII `100/100`. Raw mode: QR ASCII `100/100`, QR non-ASCII `3/3`, Code 128 ASCII `100/100`. "Exact" means one symbol whose bytes equal the rendered bytes.
+- **Evidence:** [raw/E-011.txt](raw/E-011.txt), sha256 `66b0ed36241c1009186834ac5c09bed5c93e9dbaef9ab3369274775be6ae198e`. Code commit `9204be4c4e9ab6ab6ce112c80a4a0e560a56f800`, working tree clean. Linux x86_64 container, Python 3.11.16, `libzbar0 0.23.92-7+deb12u1`. Probe: `tools/probes/roundtrip_rate.py`.
+- **Caveats:** 100 per symbology, so zero failures bounds the failure rate at roughly 3% (rule of three), not at zero. The non-ASCII set is 3 texts: an illustration, not a rate. Clean synthetic renders, no camera. This is not the benign set of at least 1000 items that decision D14 requires; that comes in P3. One zbar build; the Pi run is still to do. This capture replaces one taken earlier the same day at a commit that was later rewritten (see Corrections); the figures were identical.
+- **Paper use:** Methods (decoder validation). It becomes a Results figure only when repeated on the Pi as a `result-of-record`.
+
 ## Corrections and tooling notes
 
 - **2026-09-24, commit `3dc1270`:** the first version of `--verify` read files in text mode, which rewrites CRLF line endings, so it reported a false `HASH MISMATCH` for E-002 (curl's `-D` output contains `\r\n`). The file was intact: its byte-exact SHA-256 matched the recorded one before the fix, and all six captures verify after it. No capture was redone. Regression tests cover CR and non-UTF-8 output.
 
 - **2026-09-24, E-007 redacted before its first commit.** A pre-push scan found a host path on line 24 of `raw/E-007.txt` (`/Users/<name>/.../tests/test_decode_zbar.py:50: AssertionError`), which contradicted the header's claim that local paths are normalised. Cause: the container reused bytecode the host had compiled into the bind-mounted `__pycache__`, so the traceback carried the host path, and the normaliser only rewrote the container's own root and home. Change made to the capture: that one line now reads `<repo>/tests/test_decode_zbar.py:50: AssertionError`, one header line records the redaction, and the hash was recomputed. Nothing else in the file changed. Original sha256 `8b0d3e58690964e29420b626d9e36a3224e45cd347942d8d03f5c0d78a50f319`, new sha256 `3353024e45d66ed7fcc9639239f6097d11a07e864c63c05c020118b825018b66`. This is the only raw file edited after capture. The unredacted original was never published: the local commits that briefly held it were rewritten before the first push. Fixes, in the commits that follow: the normaliser scrubs any `/Users/<name>` or `/home/<name>` prefix (tested), and the Docker image sets `PYTHONPYCACHEPREFIX` so it cannot read host bytecode.
+
+- **2026-09-24, E-010 and E-011 were each captured twice.** The first captures cited commits in the local, unpublished history. That history was rewritten before the first push so a host path (the E-007 redaction above) never entered a published commit, which changed those commits' hashes. Both captures were therefore redone at the rewritten commits (E-010 at `92b2f4f`, E-011 at `9204be4`) under the same ids; the first captures were never published and are discarded. E-010's test count rose from 160 to 168 only because the rewritten tip includes tests added after the first capture; E-011's figures were identical. Commits `a6d9470` and earlier keep their hashes, so E-001 to E-009 are unaffected.
 
 ## Pending evidence
 

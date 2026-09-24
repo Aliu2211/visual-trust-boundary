@@ -1,0 +1,22 @@
+# evidence: E-011
+# captured: 2026-09-24T20:18:20Z
+# code commit: 9204be4c4e9ab6ab6ce112c80a4a0e560a56f800 (working tree dirty: no)
+# host label: unlabelled
+# platform: Linux-6.12.76-linuxkit-x86_64-with-glibc2.36 x86_64
+# python: 3.11.16
+# libzbar0: 0.23.92-7+deb12u1
+# packages: pydantic 2.13.5, pyyaml 6.0.3, pillow 12.3.0, pyzbar 0.1.9, qrcode 8.2, python-barcode 0.16.1, pytest 9.1.1, opencv-python-headless not installed
+# paths normalised: repo root -> <repo>, home and any ~ or ~ -> ~
+# command: python tools/probes/roundtrip_rate.py
+# exit: 0
+--- stdout ---
+benign set: 100 ASCII ids (seed 1337) rendered as QR and as Code 128; 3 non-ASCII texts as QR only
+decoder mode  symbology  payload set  exact/total
+default       QR         ascii        100/100
+default       QR         non-ascii    0/3
+default       Code 128   ascii        100/100
+raw           QR         ascii        100/100
+raw           QR         non-ascii    3/3
+raw           Code 128   ascii        100/100
+--- stderr ---
+# sha256-of-above: 66b0ed36241c1009186834ac5c09bed5c93e9dbaef9ab3369274775be6ae198e
