@@ -87,3 +87,15 @@ The three open items from the previous entry were not answered, so the plan's de
 | Scope contradiction (D15) | Resolved in `ethics/LAB_ONLY.md`; awaits G3 |
 
 **HUMAN_GATE G1 is open.** Nothing from P1 onward has been started. Needed from the user: approve or redline `docs/oracles.md`, in particular section 8 (eight overridable defaults), the mode matrix in section 3, and the Tier 3 hybrid input design (D10).
+
+---
+
+## 2026-09-24: Correction, remote exists; first push
+
+**Actor:** Claude, on the user's instruction ("lets commit and push, no co authoring").
+
+**Correction to the previous entry:** it said "not pushed, no remote". The "no remote" part was stated without checking and was wrong. `origin` is `git@github.com:Aliu2211/visual-trust-boundary.git`. The GitHub repo was empty (created 2026-09-24 10:35Z), so the first push is a plain fast-forward with no divergence. `gh` is authenticated as `Aliu2211`.
+
+**Commit conventions confirmed:** all six commits use Conventional Commits, carry no co-author or generated-by trailer (checked with a grep over the full history), and are authored by the configured git identity. Nothing needed rewriting.
+
+**Visibility:** the repo is PUBLIC. Everything in it is now readable by anyone: the plans, `docs/oracles.md`, `ethics/LAB_ONLY.md`, and the contracts. There are no payloads, credentials or secrets in the tree. Commit metadata includes the author email from the git identity. If public was not intended, switch the repo to private in GitHub settings.
