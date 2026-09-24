@@ -1,0 +1,4 @@
+# Runtime dependencies, added by the phase that needs them (see plan.md).
+# Ranges for now; the release pins exact versions from the Pi (plan.md P8.3).
+pydantic>=2.6,<3
+pyyaml>=6,<7

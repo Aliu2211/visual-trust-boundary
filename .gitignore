@@ -1,0 +1,19 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Secrets (none are needed today; keep it that way)
+.env
+
+# Model weights and caches never belong in the repo
+models/
+*.gguf
+
+# Raw per-run output. Curated CSVs and figures go directly under harness/results/
+harness/results/raw/
+
+# OS / editor
+.DS_Store
