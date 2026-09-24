@@ -12,8 +12,11 @@ COPY requirements-sandbox.txt ./
 RUN pip install --no-cache-dir -r requirements-sandbox.txt
 
 COPY contracts.py ./contracts.py
+COPY defense ./defense
+COPY tiers ./tiers
 COPY tools/probes/sqlite_injection_limits.py ./tools/probes/sqlite_injection_limits.py
 
 # The bytecode cache goes to tmpfs; the root filesystem is read-only at run time.
-ENV PYTHONDONTWRITEBYTECODE=1 PYTHONPYCACHEPREFIX=/tmp/pycache
+# VTB_IN_SANDBOX lets the deliberately vulnerable Tier 1 paths run; nothing else sets it (tiers/tier1_rulebased.py).
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONPYCACHEPREFIX=/tmp/pycache VTB_IN_SANDBOX=1
 USER 10001:10001
