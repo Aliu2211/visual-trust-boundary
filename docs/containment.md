@@ -30,11 +30,11 @@ A separate `vtb-sandbox` image (same Bookworm base as the dev image, Python and 
 | `--user 10001:10001` | not root; no login, no sudo |
 | `--cap-drop ALL` and `--security-opt no-new-privileges` | no capabilities, and none can be gained through setuid programs |
 | `--pids-limit 64`, `--memory 256m`, `--cpus 1` | bounded processes, memory and CPU |
-| `--tmpfs /tmp` and `--tmpfs /audit` (`noexec,nosuid`, size-capped) | scratch space that vanishes with the container |
+| `--tmpfs /tmp` (mode 1777) and `--tmpfs /audit` (owned by the sandbox user), both `noexec,nosuid` and size-capped | scratch space that vanishes with the container |
 | one bind mount, `/canary`, a per-run empty directory owned by the harness | the only place a payload's side effect can persist, and the only thing the harness reads back |
 | no other mounts, no Docker socket, no environment variables passed in | nothing of the host or its secrets is visible |
 
-The harness talks to the tier over stdin and stdout of `docker exec`, or a Unix socket in a shared directory, never a network port. Databases are restored from a golden copy before each call (oracle principle 2), by the harness, from outside.
+Every call is a fresh `docker run`, not an `exec` into a long-lived container, so nothing can carry over between calls (oracle principle 2) and the golden database is copied in at the start of each call. The harness talks to the tier over stdin and stdout, never a network port, and reads what a payload left in `/canary` from the host side of the mount. Output is capped at 1 MiB per stream, and a timeout removes the container itself. The runner is `harness/sandbox.py`; its flags are pinned by `tests/test_sandbox_flags.py`.
 
 ## 4. Pi: no Docker on the measurement Pi
 
@@ -68,6 +68,8 @@ A battery of inert escape attempts, run through the same entry point the vulnera
 8. The SQLite behaviour in E-012 holds in the sandbox: one statement per `execute()`, no extension loading.
 
 The results are captured as evidence on each platform. The vulnerable handler is not written until the battery passes on the laptop; it does not run on the Pi until the battery passes there.
+
+**Laptop status:** the battery is `tests/test_containment.py` (run on the host, where Docker is, with `VTB_REQUIRE_SANDBOX=1`). Its first run failed 3 of 14 tests and led to two clarifications of this design (the tmpfs ownership above, and the fresh-container-per-call runner) and a runner fix ([E-013](evidence/LOG.md)). It now passes 14 of 14 ([E-014](evidence/LOG.md)), so the condition for writing the vulnerable handler is met on the laptop. The Pi has not been run.
 
 ## 6. Residual risk
 

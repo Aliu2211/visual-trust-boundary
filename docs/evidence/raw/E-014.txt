@@ -1,0 +1,84 @@
+# evidence: E-014
+# captured: 2026-09-24T20:54:33Z
+# code commit: b2f48c6c10e2d368bbec65b055df171c2e0d829e (working tree dirty: no)
+# host label: unlabelled
+# platform: macOS-26.5.2-x86_64-i386-64bit x86_64
+# python: 3.11.15
+# libzbar0: n/a (no dpkg on this platform)
+# packages: pydantic 2.13.5, pyyaml 6.0.3, pillow 12.3.0, pyzbar 0.1.9, qrcode 8.2, python-barcode 0.16.1, pytest 9.1.1, opencv-python-headless not installed
+# paths normalised: repo root -> <repo>, home and any ~ or ~ -> ~
+# command: env VTB_REQUIRE_SANDBOX=1 .venv/bin/python -m pytest tests/test_containment.py -v -rA -p no:cacheprovider
+# exit: 0
+--- stdout ---
+============================= test session starts ==============================
+platform darwin -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0 -- <repo>/.venv/bin/python
+rootdir: <repo>
+configfile: pytest.ini
+collecting ... collected 14 items
+
+tests/test_containment.py::test_1_there_is_no_network PASSED             [  7%]
+tests/test_containment.py::test_2_writes_outside_the_allowed_directories_are_refused PASSED [ 14%]
+tests/test_containment.py::test_3_the_allowed_places_can_be_written_and_the_harness_sees_the_canary PASSED [ 21%]
+tests/test_containment.py::test_3b_scratch_space_is_noexec PASSED        [ 28%]
+tests/test_containment.py::test_4_a_host_file_outside_every_mount_is_not_visible PASSED [ 35%]
+tests/test_containment.py::test_4b_the_host_environment_is_not_passed_in PASSED [ 42%]
+tests/test_containment.py::test_5_not_root_no_capabilities_and_no_new_privileges PASSED [ 50%]
+tests/test_containment.py::test_6a_the_process_limit_is_enforced PASSED  [ 57%]
+tests/test_containment.py::test_6b_the_memory_limit_is_enforced PASSED   [ 64%]
+tests/test_containment.py::test_7_nothing_persists_between_calls PASSED  [ 71%]
+tests/test_containment.py::test_8_the_sqlite_behaviour_in_e012_holds_inside_the_sandbox PASSED [ 78%]
+tests/test_containment.py::test_9a_a_timeout_removes_the_container_and_not_just_the_client PASSED [ 85%]
+tests/test_containment.py::test_9b_runaway_output_is_capped_and_stops_the_container PASSED [ 92%]
+tests/test_containment.py::test_9c_stdin_and_exit_codes_pass_through PASSED [100%]
+
+==================================== PASSES ====================================
+__________________________ test_1_there_is_no_network __________________________
+----------------------------- Captured stdout call -----------------------------
+observed: {"external": "refused:OSError:101", "host_loopback": "refused:ConnectionRefusedError:111", "host_alias": "refused:gaierror:-3", "dns": "refused:gaierror"} | a connection reached the host listener: False
+__________ test_2_writes_outside_the_allowed_directories_are_refused ___________
+----------------------------- Captured stdout call -----------------------------
+observed: {"/etc/vtb_probe": "refused:30", "/usr/vtb_probe": "refused:30", "/app/vtb_probe": "refused:30", "/vtb_probe": "refused:30", "/var/vtb_probe": "refused:30", "/run/vtb_probe": "refused:30", "/proc/vtb_probe": "refused:2", "/sys/vtb_probe": "refused:30", "/dev/vtb_probe": "refused:13", "/nonexistent/vtb_probe": "refused:2"}
+____________ test_4_a_host_file_outside_every_mount_is_not_visible _____________
+----------------------------- Captured stdout call -----------------------------
+observed: {"path_exists": false, "found": []}
+____________ test_5_not_root_no_capabilities_and_no_new_privileges _____________
+----------------------------- Captured stdout call -----------------------------
+observed: {"Uid": "10001\t10001\t10001\t10001", "CapPrm": "0000000000000000", "CapEff": "0000000000000000", "CapBnd": "0000000000000000", "NoNewPrivs": "1"}
+____________________ test_6a_the_process_limit_is_enforced _____________________
+----------------------------- Captured stdout call -----------------------------
+observed: {"started": 63, "failed_at": 63} (pids limit 64)
+_____________________ test_6b_the_memory_limit_is_enforced _____________________
+----------------------------- Captured stdout call -----------------------------
+observed: exit code 137 | survived printed: False (memory limit 256m, allocation 400 MiB)
+____________________ test_7_nothing_persists_between_calls _____________________
+----------------------------- Captured stdout call -----------------------------
+observed: {"/canary": [], "/tmp": [], "/audit": []}
+_________ test_8_the_sqlite_behaviour_in_e012_holds_inside_the_sandbox _________
+----------------------------- Captured stdout call -----------------------------
+python 3.11.16 | sqlite 3.40.1
+stacked statement (second statement: DROP TABLE)     rejected: ProgrammingError: You can only execute one statement at a time.
+table still exists after the stacked attempt         True
+load_extension through SQL                           rejected: OperationalError: not authorized
+ATTACH smuggled after a SELECT                       rejected: ProgrammingError: You can only execute one statement at a time.
+file created by the ATTACH attempt                   False
+Connection.enable_load_extension exists              True
+PRAGMA via a single injected statement (allowed kind) ACCEPTED
+
+=========================== short test summary info ============================
+PASSED tests/test_containment.py::test_1_there_is_no_network
+PASSED tests/test_containment.py::test_2_writes_outside_the_allowed_directories_are_refused
+PASSED tests/test_containment.py::test_3_the_allowed_places_can_be_written_and_the_harness_sees_the_canary
+PASSED tests/test_containment.py::test_3b_scratch_space_is_noexec
+PASSED tests/test_containment.py::test_4_a_host_file_outside_every_mount_is_not_visible
+PASSED tests/test_containment.py::test_4b_the_host_environment_is_not_passed_in
+PASSED tests/test_containment.py::test_5_not_root_no_capabilities_and_no_new_privileges
+PASSED tests/test_containment.py::test_6a_the_process_limit_is_enforced
+PASSED tests/test_containment.py::test_6b_the_memory_limit_is_enforced
+PASSED tests/test_containment.py::test_7_nothing_persists_between_calls
+PASSED tests/test_containment.py::test_8_the_sqlite_behaviour_in_e012_holds_inside_the_sandbox
+PASSED tests/test_containment.py::test_9a_a_timeout_removes_the_container_and_not_just_the_client
+PASSED tests/test_containment.py::test_9b_runaway_output_is_capped_and_stops_the_container
+PASSED tests/test_containment.py::test_9c_stdin_and_exit_codes_pass_through
+============================= 14 passed in 18.67s ==============================
+--- stderr ---
+# sha256-of-above: 331eb1b94b82275cd98d17bb267c86a85a1a09fe91ba3f72ee489757e6a52f50

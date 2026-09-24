@@ -34,6 +34,8 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 | E-010 | Full suite green in the Bookworm image | dev-observation | Methods |
 | E-011 | Decode success by symbology and decoder mode | dev-observation | P1.2 acceptance, D14 |
 | E-012 | What an injected string can do through Python's sqlite3 | dev-observation | D12, gate G2 |
+| E-013 | Containment battery, first run: 3 of 14 failed | dev-observation | D12, gate G2 |
+| E-014 | Containment battery on the laptop: 14 of 14 pass | dev-observation | D12, gate G2 |
 
 ## Entries
 
@@ -156,6 +158,26 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 - **Evidence:** [raw/E-012.txt](raw/E-012.txt), sha256 `5f3f3eeff50976e92687e866a944c032ea5f5ee985371ceff8dfb2ded772fa2f`. Code commit `afd24e0dcf164caa9cb574387dacbb89f86626d5`, working tree clean. Linux x86_64 container, Python 3.11.16. Probe: `tools/probes/sqlite_injection_limits.py`.
 - **Caveats:** only `execute()` was probed; `executescript()` accepts multiple statements, so the vulnerable handler must not use it. The injected string controls part of one statement, not the whole, so single-statement forms such as a `UNION` that discloses another table are still possible and are what the Tier 1 oracle signals target; they were not probed here. One SQLite and Python build; the Pi's versions are unchecked and the probe should be repeated there.
 - **Paper use:** Methods (why the SQL sink is contained, and what the Tier 1 SQL oracle can and cannot see).
+
+### E-013 Containment battery, first run: 3 of 14 failed
+
+- **Date and step:** 2026-09-24, P2 (gate G2 condition: the sandbox is proven before any vulnerable code is written).
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** the first real run of the containment battery found two design gaps and one runner bug, all before any vulnerable code existed.
+- **Result:** `3 failed, 11 passed in 48.68s`. `test_3` failed with `PermissionError: [Errno 13] Permission denied: '/audit/a'`: the `/audit` tmpfs took the permissions of its root-only mount point, so the sandbox user could not write it. `test_4b` failed with `assert not ['GPG_KEY']`: the environment check flagged a variable that comes from the base image. `test_9b` failed with `subprocess.TimeoutExpired: Command '['docker', 'rm', '-f', ...]' timed out after 30 seconds`: the runner had stopped reading a flooding container's output, and `docker rm -f` hung on the full pipe.
+- **Evidence:** [raw/E-013.txt](raw/E-013.txt), sha256 `7e514666fd8d4e9aa2e3701786d28d9fa4f8189e2c35f6c79b371df58f116bb2`. Code commit `99bdd15a2648e57a8610f21db9638ada7e92b525`, working tree clean. macOS x86_64 host, Python 3.11.15, Docker Desktop.
+- **Caveats:** the Docker version is not in this header (the tool did not record it yet); the tool now does, and it reports client and server 29.6.2 on this machine the same day. That the `GPG_KEY` variable is the Python image's public signing-key id is my inference from the variable's name and origin (the base image); the capture shows only that the name was flagged. Fixed in commit `b2f48c6`: tmpfs ownership stated explicitly, the runner kills the client before removing the container, the environment test compares against the image's own declared variables, and the persistence test now checks that its first call succeeded.
+- **Paper use:** Methods (the sandbox was tested before use, and what that testing found).
+
+### E-014 Containment battery on the laptop: 14 of 14 pass
+
+- **Date and step:** 2026-09-24, P2.
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** in the laptop's Docker sandbox, the eight designed containment checks and the runner's own safety checks all hold. This meets the condition that the vulnerable Tier 1 code is not written until the battery passes on the laptop.
+- **Result:** `14 passed in 18.67s`. Observed values: outbound connection to `1.1.1.1:53` failed with `OSError` errno 101, a connection to the sandbox's own loopback port failed with `ConnectionRefusedError` (111), the host alias failed name resolution (`gaierror`, -3), DNS failed, and no connection reached a listener the harness opened on the host. Writes were refused with errno 30 for `/etc`, `/usr`, `/app`, `/`, `/var`, `/run` and `/sys`, errno 2 for `/proc` and the home path, and errno 13 for `/dev`. A host file outside every mount was not visible (`path_exists: false`, found nowhere). The process ran as uid 10001 with `CapPrm`, `CapEff` and `CapBnd` all `0000000000000000` and `NoNewPrivs` 1. With the process limit at 64, 63 children started and the next fork failed (`started: 63, failed_at: 63`). A 400 MiB allocation under a 256 MiB limit was killed (exit code 137, nothing printed afterwards). A second call saw `/canary`, `/tmp` and `/audit` all empty. The SQLite lines are those of E-012 (stacked statement rejected, table intact, `load_extension` `not authorized`, no file created). A timed-out call left no running container, a runaway writer was stopped at the 1 MiB output cap without waiting for the timeout, and stdin and exit codes passed through.
+- **Evidence:** [raw/E-014.txt](raw/E-014.txt), sha256 `331eb1b94b82275cd98d17bb267c86a85a1a09fe91ba3f72ee489757e6a52f50`. Code commit `b2f48c6c10e2d368bbec65b055df171c2e0d829e`, working tree clean. macOS x86_64 host, Python 3.11.15, Docker Desktop; the sandbox image is `python:3.11-slim-bookworm` (Python 3.11.16, SQLite 3.40.1 per the embedded probe).
+- **Caveats:** the tests are inert and show that these attempts failed, not that no escape exists; a kernel or runtime exploit is a stated non-goal. The isolation is Docker Desktop's Linux VM plus the container, so it is not the Pi's sandbox: the Pi uses `systemd-run`, which is unverified and needs its own capture. That errno 30 means a read-only file system and 101 means network unreachable is standard Linux knowledge, not shown by the capture. The Docker version is not in this header (see E-013). Resource limits were probed at one size each. Test 3's positive control (a write to `/canary` succeeds) is recorded by the test passing; its values are not printed.
+- **Paper use:** Methods (how deliberately vulnerable code was run safely, and what was verified).
 
 ## Corrections and tooling notes
 

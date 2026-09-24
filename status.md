@@ -243,3 +243,23 @@ The three open items from the previous entry were not answered, so the plan's de
 - **New evidence since the last entry:** E-012 (what an injected string can and cannot do through Python's sqlite3, in the Bookworm container).
 
 **Next:** P2. Order: the sandbox runner and its containment battery first (captured as evidence), then the badge database, the grammar and boundary, the vulnerable and defended Tier 1 handlers, and the four-mode demonstration for one injection payload.
+
+---
+
+## 2026-09-24: P2 started; the sandbox is built and proven on the laptop
+
+**Actor:** Claude, under the G1 and G2 approvals. **Evidence:** E-013 and E-014 (see `docs/evidence/LOG.md`).
+
+**Built:** `harness/sandbox.py` (one throwaway `docker run` per call with the approved flags, capped output, a timeout that removes the container, and the host-side `/canary` listing), `Dockerfile.sandbox` and `requirements-sandbox.txt` (Python, pydantic and pyyaml only), `tests/test_sandbox_flags.py` (12 pure tests pinning the flags), and `tests/test_containment.py` (the 14-test battery).
+
+**What the battery found on its first run (E-013):** 3 of 14 failed. The `/audit` tmpfs was unwritable because it took its root-only mount point's permissions; a full output pipe made `docker rm -f` hang in my runner; and the environment test flagged the base image's own `GPG_KEY`. One weaker test also came to light: the persistence test never checked that its first call succeeded, so it had passed while an `/audit` write was failing. All four are fixed, and the failing run is kept as evidence.
+
+**Result (E-014):** 14 of 14 pass. **The G2 condition for writing the vulnerable handler is met on the laptop.** Not met on the Pi: the systemd properties remain unverified until run there.
+
+**Amendment A11 (clarifications of the approved design, not changes to it):** the tmpfs mounts state their ownership (`/tmp` mode 1777, `/audit` uid and gid 10001); every call is a fresh `docker run`, not an `exec` into a long-lived container; output is capped at 1 MiB per stream. These are recorded in `docs/containment.md`.
+
+**Tooling:** capture headers now record the container runtime version (`# docker:`), because sandbox evidence depends on it and the package list does not cover it. E-013 and E-014 predate that; the ledger says so.
+
+**Not verified:** the Pi sandbox (`systemd-run`); anything about a kernel or runtime escape (a stated non-goal); the battery in the dev image, where Docker is not installed and it skips.
+
+**Next in P2:** the badge database with a restricted canary row, the defense grammar and boundary returning `Decision`, the vulnerable and defended Tier 1 handlers (the vulnerable one runs only inside this sandbox), the Tier 1 oracle signals, and the four-mode demonstration for one injection payload.

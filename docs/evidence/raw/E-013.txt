@@ -1,0 +1,110 @@
+# evidence: E-013
+# captured: 2026-09-24T20:52:31Z
+# code commit: 99bdd15a2648e57a8610f21db9638ada7e92b525 (working tree dirty: no)
+# host label: unlabelled
+# platform: macOS-26.5.2-x86_64-i386-64bit x86_64
+# python: 3.11.15
+# libzbar0: n/a (no dpkg on this platform)
+# packages: pydantic 2.13.5, pyyaml 6.0.3, pillow 12.3.0, pyzbar 0.1.9, qrcode 8.2, python-barcode 0.16.1, pytest 9.1.1, opencv-python-headless not installed
+# paths normalised: repo root -> <repo>, home and any ~ or ~ -> ~
+# command: env VTB_REQUIRE_SANDBOX=1 .venv/bin/python -m pytest tests/test_containment.py -v -p no:cacheprovider
+# exit: 1
+--- stdout ---
+============================= test session starts ==============================
+platform darwin -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0 -- <repo>/.venv/bin/python
+rootdir: <repo>
+configfile: pytest.ini
+collecting ... collected 14 items
+
+tests/test_containment.py::test_1_there_is_no_network PASSED             [  7%]
+tests/test_containment.py::test_2_writes_outside_the_allowed_directories_are_refused PASSED [ 14%]
+tests/test_containment.py::test_3_the_allowed_places_can_be_written_and_the_harness_sees_the_canary FAILED [ 21%]
+tests/test_containment.py::test_3b_scratch_space_is_noexec PASSED        [ 28%]
+tests/test_containment.py::test_4_a_host_file_outside_every_mount_is_not_visible PASSED [ 35%]
+tests/test_containment.py::test_4b_the_host_environment_is_not_passed_in FAILED [ 42%]
+tests/test_containment.py::test_5_not_root_no_capabilities_and_no_new_privileges PASSED [ 50%]
+tests/test_containment.py::test_6a_the_process_limit_is_enforced PASSED  [ 57%]
+tests/test_containment.py::test_6b_the_memory_limit_is_enforced PASSED   [ 64%]
+tests/test_containment.py::test_7_nothing_persists_between_calls PASSED  [ 71%]
+tests/test_containment.py::test_8_the_sqlite_behaviour_in_e012_holds_inside_the_sandbox PASSED [ 78%]
+tests/test_containment.py::test_9a_a_timeout_removes_the_container_and_not_just_the_client PASSED [ 85%]
+tests/test_containment.py::test_9b_runaway_output_is_capped_and_stops_the_container FAILED [ 92%]
+tests/test_containment.py::test_9c_stdin_and_exit_codes_pass_through PASSED [100%]
+
+=================================== FAILURES ===================================
+___ test_3_the_allowed_places_can_be_written_and_the_harness_sees_the_canary ___
+
+sandbox = <harness.sandbox.DockerSandbox object at 0x10328df90>
+
+    def test_3_the_allowed_places_can_be_written_and_the_harness_sees_the_canary(sandbox):
+        # The positive control for tests 2 and 7: an oracle that can never fire would make every defense look perfect.
+        r = py(sandbox, 'for p in ("/canary/probe-1", "/tmp/t", "/audit/a"):\n    open(p, "w").write("x")\nprint("ok")')
+>       assert r.exit_code == 0 and r.stdout.strip() == "ok", r.stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "<string>", line 2, in <module>
+E         PermissionError: [Errno 13] Permission denied: '/audit/a'
+E         
+E       assert (1 == 0)
+E        +  where 1 = SandboxResult(stdout='', stderr='Traceback (most recent call last):\n  File "<string>", line 2, in <module>\nPermissionError: [Errno 13] Permission denied: \'/audit/a\'\n', exit_code=1, timed_out=False, output_truncated=False, canary_files=('probe-1',)).exit_code
+
+tests/test_containment.py:88: AssertionError
+________________ test_4b_the_host_environment_is_not_passed_in _________________
+
+sandbox = <harness.sandbox.DockerSandbox object at 0x10328df90>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x103343a50>
+
+    def test_4b_the_host_environment_is_not_passed_in(sandbox, monkeypatch):
+        monkeypatch.setenv("VTB_TEST_SECRET", "s3cret")
+        names = result_json(py(sandbox, "import json, os\nprint(json.dumps(sorted(os.environ)))"))
+        assert "VTB_TEST_SECRET" not in names
+>       assert not [n for n in names if re.search(r"SECRET|TOKEN|PASSWORD|KEY", n)], names
+E       AssertionError: ['GPG_KEY', 'HOME', 'HOSTNAME', 'LANG', 'PATH', 'PYTHONDONTWRITEBYTECODE', ...]
+E       assert not ['GPG_KEY']
+
+tests/test_containment.py:129: AssertionError
+___________ test_9b_runaway_output_is_capped_and_stops_the_container ___________
+
+sandbox = <harness.sandbox.DockerSandbox object at 0x10328df90>
+
+    def test_9b_runaway_output_is_capped_and_stops_the_container(sandbox):
+>       r = sandbox.run(["python", "-c", "import sys\nwhile True:\n    sys.stdout.write('x' * 65536)"], timeout=30)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_containment.py:204: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+harness/sandbox.py:129: in run
+    subprocess.run(["docker", "rm", "-f", name], capture_output=True, timeout=30, check=False)
+../../../.local/share/uv/python/cpython-3.11.15-macos-x86_64-none/lib/python3.11/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.11.15-macos-x86_64-none/lib/python3.11/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../.local/share/uv/python/cpython-3.11.15-macos-x86_64-none/lib/python3.11/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Popen: returncode: -9 args: ['docker', 'rm', '-f', 'vtb-sbx-7ed9f4cb1602']>
+endtime = 458384.208323554, orig_timeout = 30, stdout_seq = [], stderr_seq = []
+skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() > endtime:
+>           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['docker', 'rm', '-f', 'vtb-sbx-7ed9f4cb1602']' timed out after 30 seconds
+
+../../../.local/share/uv/python/cpython-3.11.15-macos-x86_64-none/lib/python3.11/subprocess.py:1253: TimeoutExpired
+=========================== short test summary info ============================
+FAILED tests/test_containment.py::test_3_the_allowed_places_can_be_written_and_the_harness_sees_the_canary
+FAILED tests/test_containment.py::test_4b_the_host_environment_is_not_passed_in
+FAILED tests/test_containment.py::test_9b_runaway_output_is_capped_and_stops_the_container
+======================== 3 failed, 11 passed in 48.68s =========================
+--- stderr ---
+# sha256-of-above: 7e514666fd8d4e9aa2e3701786d28d9fa4f8189e2c35f6c79b371df58f116bb2
