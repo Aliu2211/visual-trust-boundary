@@ -1,0 +1,104 @@
+# evidence: E-005
+# captured: 2026-09-24T19:46:06Z
+# code commit: 28f0fbbbf8137ecf6afa47499c01bf11cd686428 (working tree dirty: yes)
+#   changed: ?? .dockerignore
+#   changed: ?? Dockerfile
+#   changed: ?? docs/evidence/
+#   changed: ?? tests/conftest.py
+#   changed: ?? tests/test_decode_zbar.py
+# host label: unlabelled
+# platform: macOS-26.5.2-x86_64-i386-64bit x86_64
+# python: 3.11.15
+# libzbar0: n/a (no dpkg on this platform)
+# packages: pydantic 2.13.5, pyyaml 6.0.3, pillow 12.3.0, pyzbar 0.1.9, qrcode 8.2, python-barcode 0.16.1, pytest 9.1.1, opencv-python-headless not installed
+# paths normalised: repo root -> <repo>, home -> ~
+# command: .venv/bin/python -c '
+import importlib.metadata as m
+d = m.distribution('"'"'pyzbar'"'"'); print('"'"'pyzbar'"'"', d.version)
+src = d.locate_file('"'"'pyzbar/pyzbar.py'"'"').read_text().splitlines()
+for name, n in (('"'"'def _pixel_data'"'"', 52), ('"'"'def _decode_symbols'"'"', 22)):
+    s = next(i for i, l in enumerate(src) if l.startswith(name))
+    print('"'"'--- pyzbar/pyzbar.py, from'"'"', name)
+    for i in range(s, s + n): print(i + 1, src[i])
+'
+# exit: 0
+--- stdout ---
+pyzbar 0.1.9
+--- pyzbar/pyzbar.py, from def _pixel_data
+141 def _pixel_data(image):
+142     """Returns (pixels, width, height)
+143 
+144     Returns:
+145         :obj: `tuple` (pixels, width, height)
+146     """
+147     # Test for PIL.Image, numpy.ndarray, and imageio.core.util without
+148     # requiring that cv2, PIL, or imageio are installed.
+149 
+150     image_type = str(type(image))
+151     if 'PIL.' in image_type:
+152         if 'L' != image.mode:
+153             image = image.convert('L')
+154         pixels = image.tobytes()
+155         width, height = image.size
+156     elif 'numpy.ndarray' in image_type or 'imageio.core.util' in image_type:
+157         # Different versions of imageio use a subclass of numpy.ndarray
+158         # called either imageio.core.util.Image or imageio.core.util.Array.
+159         if 3 == len(image.shape):
+160             # Take just the first channel
+161             image = image[:, :, 0]
+162         if 'uint8' != str(image.dtype):
+163             image = image.astype('uint8')
+164         try:
+165             pixels = image.tobytes()
+166         except AttributeError:
+167             # `numpy.ndarray.tobytes()` introduced in `numpy` 1.9.0 - use the
+168             # older `tostring` method.
+169             pixels = image.tostring()
+170         height, width = image.shape[:2]
+171     else:
+172         # image should be a tuple (pixels, width, height)
+173         pixels, width, height = image
+174 
+175         # Check dimensions
+176         if 0 != len(pixels) % (width * height):
+177             raise PyZbarError(
+178                 (
+179                     'Inconsistent dimensions: image data of {0} bytes is not '
+180                     'divisible by (width x height = {1})'
+181                 ).format(len(pixels), (width * height))
+182             )
+183 
+184     # Compute bits-per-pixel
+185     bpp = 8 * len(pixels) // (width * height)
+186     if 8 != bpp:
+187         raise PyZbarError(
+188             'Unsupported bits-per-pixel [{0}]. Only [8] is supported.'.format(
+189                 bpp
+190             )
+191         )
+192 
+--- pyzbar/pyzbar.py, from def _decode_symbols
+94 def _decode_symbols(symbols):
+95     """Generator of decoded symbol information.
+96 
+97     Args:
+98         symbols: iterable of instances of `POINTER(zbar_symbol)`
+99 
+100     Yields:
+101         Decoded: decoded symbol
+102     """
+103     for symbol in symbols:
+104         data = string_at(
+105             zbar_symbol_get_data(symbol),
+106             zbar_symbol_get_data_length(symbol)
+107         )
+108         # The 'type' int should be a value in the ZBarSymbol enumeration
+109         try:
+110             symbol_type = ZBarSymbol(symbol.contents.type)
+111         except ValueError:
+112             # This release of zbar supports a type that pyzbar does not know about
+113             symbol_type = "Unrecognised type [{0}]".format(symbol.contents.type)
+114         else:
+115             symbol_type = symbol_type.name
+--- stderr ---
+# sha256-of-above: 335e867484ff02ce930b812f9b5e2aa738e1e6664ff0ec2a83155a31460d80fa

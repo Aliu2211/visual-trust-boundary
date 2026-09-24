@@ -1,0 +1,31 @@
+# evidence: E-003
+# captured: 2026-09-24T19:47:28Z
+# code commit: 28f0fbbbf8137ecf6afa47499c01bf11cd686428 (working tree dirty: yes)
+#   changed: ?? .dockerignore
+#   changed: ?? CLAUDE.md
+#   changed: ?? Dockerfile
+#   changed: ?? docs/evidence/
+#   changed: ?? tests/conftest.py
+#   changed: ?? tests/test_decode_zbar.py
+# host label: unlabelled
+# platform: macOS-26.5.2-x86_64-i386-64bit x86_64
+# python: 3.11.15
+# libzbar0: n/a (no dpkg on this platform)
+# packages: pydantic 2.13.5, pyyaml 6.0.3, pillow 12.3.0, pyzbar 0.1.9, qrcode 8.2, python-barcode 0.16.1, pytest 9.1.1, opencv-python-headless not installed
+# paths normalised: repo root -> <repo>, home -> ~
+# command: .venv/bin/python -c '
+import json, urllib.request as u
+d = json.load(u.urlopen('"'"'https://pypi.org/pypi/pyzbar/json'"'"', timeout=90))
+i = d['"'"'info'"'"']
+print('"'"'latest version'"'"', i['"'"'version'"'"'], '"'"'| requires_python'"'"', i.get('"'"'requires_python'"'"'))
+print('"'"'python classifiers'"'"', [c.split('"'"' :: '"'"')[-1] for c in i['"'"'classifiers'"'"'] if '"'"'Programming Language :: Python ::'"'"' in c])
+rel = sorted((f['"'"'upload_time_iso_8601'"'"'], v) for v, fs in d['"'"'releases'"'"'].items() for f in fs[:1])
+print('"'"'most recent uploads (time, version):'"'"', rel[-3:])
+'
+# exit: 0
+--- stdout ---
+latest version 0.1.9 | requires_python 
+python classifiers ['2', '2.7', '3', '3.10', '3.5', '3.6', '3.7', '3.8', '3.9']
+most recent uploads (time, version): [('2018-05-13T12:30:15.469772Z', '0.1.7'), ('2019-02-21T07:09:34.035862Z', '0.1.8'), ('2022-03-15T14:53:40.637093Z', '0.1.9')]
+--- stderr ---
+# sha256-of-above: aedb8c788feb0d076a654d0e04fceef559ee9149a635597d9b1cad763d4fbb80

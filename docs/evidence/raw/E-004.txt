@@ -1,0 +1,56 @@
+# evidence: E-004
+# captured: 2026-09-24T19:47:34Z
+# code commit: 28f0fbbbf8137ecf6afa47499c01bf11cd686428 (working tree dirty: yes)
+#   changed: ?? .dockerignore
+#   changed: ?? CLAUDE.md
+#   changed: ?? Dockerfile
+#   changed: ?? docs/evidence/
+#   changed: ?? tests/conftest.py
+#   changed: ?? tests/test_decode_zbar.py
+# host label: unlabelled
+# platform: macOS-26.5.2-x86_64-i386-64bit x86_64
+# python: 3.11.15
+# libzbar0: n/a (no dpkg on this platform)
+# packages: pydantic 2.13.5, pyyaml 6.0.3, pillow 12.3.0, pyzbar 0.1.9, qrcode 8.2, python-barcode 0.16.1, pytest 9.1.1, opencv-python-headless not installed
+# paths normalised: repo root -> <repo>, home -> ~
+# command: sh -c '
+d=$(mktemp -d) && cd "$d" && base=https://deb.debian.org/debian/pool/main/z/zbar &&
+curl -sS --max-time 300 -O $base/zbar_0.23.92-7+deb12u1.dsc -O $base/zbar_0.23.92-7+deb12u1.debian.tar.xz -O $base/zbar_0.23.92.orig.tar.gz &&
+echo "-- sha256 of the downloaded files" && shasum -a 256 zbar_0.23.92.orig.tar.gz zbar_0.23.92-7+deb12u1.debian.tar.xz &&
+echo "-- sha256 listed in the .dsc" && awk "/^Checksums-Sha256:/{f=1;next} /^[A-Z]/{f=0} f{print \$1, \$3}" zbar_0.23.92-7+deb12u1.dsc &&
+echo "-- Debian patch series" && tar -xJOf zbar_0.23.92-7+deb12u1.debian.tar.xz debian/patches/series &&
+echo "-- headers of the two CVE patches" &&
+for p in 0003-CVE-2023-40889-qrdec.c-Fix-array-out-of-bounds-acces 0004-Add-bounds-check-for-CVE-2023-40890; do
+  echo "[$p]"; tar -xJOf zbar_0.23.92-7+deb12u1.debian.tar.xz debian/patches/$p.patch | grep -E "^(\+\+\+|Subject|Description|Origin|Bug)"
+done
+'
+# exit: 0
+--- stdout ---
+-- sha256 of the downloaded files
+dffc16695cb6e42fa318a4946fd42866c0f5ab735f7eaf450b108d1c3a19b4ba  zbar_0.23.92.orig.tar.gz
+bb794d1466b2ba5adabbb5ac7d271e801c757d096d4838fb0f721f6ed87eb588  zbar_0.23.92-7+deb12u1.debian.tar.xz
+-- sha256 listed in the .dsc
+dffc16695cb6e42fa318a4946fd42866c0f5ab735f7eaf450b108d1c3a19b4ba zbar_0.23.92.orig.tar.gz
+bb794d1466b2ba5adabbb5ac7d271e801c757d096d4838fb0f721f6ed87eb588 zbar_0.23.92-7+deb12u1.debian.tar.xz
+-- Debian patch series
+0001-Properly-set-perl-script-shebang.patch
+0002-python-enum-fix-build-for-Python-3.11.patch
+0003-CVE-2023-40889-qrdec.c-Fix-array-out-of-bounds-acces.patch
+0004-Add-bounds-check-for-CVE-2023-40890.patch
+-- headers of the two CVE patches
+[0003-CVE-2023-40889-qrdec.c-Fix-array-out-of-bounds-acces]
+Subject: CVE-2023-40889 qrdec.c: Fix array out-of-bounds access
+Origin: https://github.com/mchehab/zbar/commit/f8f8f5ccf1e8d68c3700e0f0b3d895cdf03ce679
+Bug-Debian: https://bugs.debian.org/1051724
+Bug: https://github.com/mchehab/zbar/issues/263
+Bug-Debian-Security: https://security-tracker.debian.org/tracker/CVE-2023-40889
++++ b/zbar/qrcode/qrdec.c
+[0004-Add-bounds-check-for-CVE-2023-40890]
+Subject: Add bounds check for CVE-2023-40890
+Origin: https://github.com/mchehab/zbar/commit/012a030250a203e5529d09caedea7ad7173dacfd
+Bug-Debian: https://bugs.debian.org/1051724
+Bug: https://github.com/mchehab/zbar/issues/263
+Bug-Debian-Security: https://security-tracker.debian.org/tracker/CVE-2023-40890
++++ b/zbar/decoder/databar.c
+--- stderr ---
+# sha256-of-above: c6523f5c66e3a049f5388e6802e8eca9ab0827b0e192175ce0e1fae318885523

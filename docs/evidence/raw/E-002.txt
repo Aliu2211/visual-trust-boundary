@@ -1,0 +1,68 @@
+# evidence: E-002
+# captured: 2026-09-24T19:47:27Z
+# code commit: 28f0fbbbf8137ecf6afa47499c01bf11cd686428 (working tree dirty: yes)
+#   changed: ?? .dockerignore
+#   changed: ?? CLAUDE.md
+#   changed: ?? Dockerfile
+#   changed: ?? docs/evidence/
+#   changed: ?? tests/conftest.py
+#   changed: ?? tests/test_decode_zbar.py
+# host label: unlabelled
+# platform: macOS-26.5.2-x86_64-i386-64bit x86_64
+# python: 3.11.15
+# libzbar0: n/a (no dpkg on this platform)
+# packages: pydantic 2.13.5, pyyaml 6.0.3, pillow 12.3.0, pyzbar 0.1.9, qrcode 8.2, python-barcode 0.16.1, pytest 9.1.1, opencv-python-headless not installed
+# paths normalised: repo root -> <repo>, home -> ~
+# command: sh -c '
+for m in qwen2-vl qwen3-vl "qwen3-vl:2b"; do
+  echo "== GET https://ollama.com/library/$m"
+  curl -sS -o /dev/null -D - --max-time 90 "https://ollama.com/library/$m" | sed -n "1p;/^[Dd]ate:/p"
+done
+echo "== sizes (GB) present on the qwen3-vl:2b page"
+curl -sS --max-time 90 "https://ollama.com/library/qwen3-vl:2b" | grep -oE "[0-9]+(\.[0-9]+)?GB" | sort | uniq -c
+echo "== tag strings containing 2b on the qwen3-vl tags page"
+curl -sS --max-time 90 https://ollama.com/library/qwen3-vl/tags | grep -oE "qwen3-vl:[0-9a-z.-]*2b[0-9a-z.-]*" | sort -u
+'
+# exit: 0
+--- stdout ---
+== GET https://ollama.com/library/qwen2-vl
+HTTP/1.1 404 Not Found
+date: Thu, 24 Sep 2026 19:47:06 GMT
+== GET https://ollama.com/library/qwen3-vl
+HTTP/1.1 200 OK
+date: Thu, 24 Sep 2026 19:47:07 GMT
+== GET https://ollama.com/library/qwen3-vl:2b
+HTTP/1.1 200 OK
+date: Thu, 24 Sep 2026 19:47:09 GMT
+== sizes (GB) present on the qwen3-vl:2b page
+   2 1.9GB
+== tag strings containing 2b on the qwen3-vl tags page
+qwen3-vl:235b-a22b
+qwen3-vl:235b-a22b-instruct
+qwen3-vl:235b-a22b-instruct-bf16
+qwen3-vl:235b-a22b-instruct-q4
+qwen3-vl:235b-a22b-instruct-q8
+qwen3-vl:235b-a22b-thinking
+qwen3-vl:235b-a22b-thinking-bf16
+qwen3-vl:235b-a22b-thinking-q4
+qwen3-vl:235b-a22b-thinking-q8
+qwen3-vl:2b
+qwen3-vl:2b-instruct
+qwen3-vl:2b-instruct-bf16
+qwen3-vl:2b-instruct-q4
+qwen3-vl:2b-instruct-q8
+qwen3-vl:2b-thinking
+qwen3-vl:2b-thinking-bf16
+qwen3-vl:2b-thinking-q4
+qwen3-vl:2b-thinking-q8
+qwen3-vl:32b
+qwen3-vl:32b-instruct
+qwen3-vl:32b-instruct-bf16
+qwen3-vl:32b-instruct-q4
+qwen3-vl:32b-instruct-q8
+qwen3-vl:32b-thinking
+qwen3-vl:32b-thinking-bf16
+qwen3-vl:32b-thinking-q4
+qwen3-vl:32b-thinking-q8
+--- stderr ---
+# sha256-of-above: b9757e1c5822a64fef9b17f277105b5c231c33f6a5809f97e1c27ccaf6651761
