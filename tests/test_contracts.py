@@ -80,6 +80,7 @@ def row(**over):
         run_id="run-1",
         family="injection",
         subset="naive",
+        decoder_mode="default",
         decode_status="ok",
         verdict="crossed",
         handle_ns=5000,
@@ -483,21 +484,54 @@ def test_subset_values_match_the_plan():
     assert {s.value for s in Subset} == {"naive", "adaptive", "heldout", "benign"}
 
 
-# --- decoder mode ---------------------------------------------------------------
+# --- decoder conditions ---------------------------------------------------------
 
 
-def test_decoder_mode_defaults_to_zbar_default_and_accepts_raw():
-    assert load_config(ROOT / "config.yaml").decode.decoder_mode == "default"
+def test_repo_config_records_the_decoder_condition_decision():
+    tiers = load_config(ROOT / "config.yaml").tiers
+    assert tiers[TierId.TIER1].decoder_modes == ("default", "raw")
+    assert tiers[TierId.TIER2].decoder_modes == ("default", "raw")
+    assert tiers[TierId.TIER3].decoder_modes == ("default",)
+
+
+def test_a_tier_without_decoder_modes_gets_the_default_condition():
     d = config_dict()
-    d["decode"]["decoder_mode"] = "raw"
-    assert Config.model_validate(d).decode.decoder_mode == "raw"
+    del d["tiers"]["tier1"]["decoder_modes"]
+    assert Config.model_validate(d).tiers[TierId.TIER1].decoder_modes == ("default",)
 
 
-def test_decoder_mode_rejects_unknown_values():
+@pytest.mark.parametrize("bad", [["binary"], [], ["default", "default"]], ids=["unknown", "empty", "duplicate"])
+def test_decoder_modes_reject_unknown_empty_and_duplicate_values(bad):
     d = config_dict()
-    d["decode"]["decoder_mode"] = "binary"
+    d["tiers"]["tier1"]["decoder_modes"] = bad
     with pytest.raises(ValidationError):
         Config.model_validate(d)
+
+
+def test_tier3_runs_in_the_default_decoder_condition_only():
+    d = config_dict()
+    d["tiers"]["tier3"]["decoder_modes"] = ["default", "raw"]
+    with pytest.raises(ValidationError, match="'default' decoder condition only"):
+        Config.model_validate(d)
+
+
+def test_every_enabled_tier_keeps_the_primary_decoder_condition():
+    d = config_dict()
+    d["tiers"]["tier1"]["decoder_modes"] = ["raw"]
+    with pytest.raises(ValidationError, match="primary condition"):
+        Config.model_validate(d)
+    d["tiers"]["tier1"]["enabled"] = False  # a tier that is not run is not held to it
+    assert Config.model_validate(d)
+
+
+def test_result_rows_record_the_decoder_condition():
+    assert ResultRow(**row(decoder_mode="raw")).decoder_mode == "raw"
+    missing = row()
+    del missing["decoder_mode"]
+    with pytest.raises(ValidationError):
+        ResultRow(**missing)
+    with pytest.raises(ValidationError):
+        ResultRow(**row(decoder_mode="binary"))
 
 
 def test_run_metadata_must_say_which_decoder_mode_produced_the_run():

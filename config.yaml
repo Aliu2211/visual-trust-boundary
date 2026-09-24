@@ -4,20 +4,22 @@ seed: 1337
 decode:
   source: replay              # replay for experiments; live only for demos
   image_dir: attacks/out
-  decoder_mode: default       # zbar's own text-encoding guessing; "raw" returns the symbol's bytes (docs/decode.md)
 
 tiers:
   tier1:
     enabled: true
     modes: [off, validate_only, parameterise_only, full]
+    decoder_modes: [default, raw]   # default is primary; raw exercises the encoding control (docs/decode.md)
   tier2:
     enabled: true
     modes: [off, validate_only, parameterise_only, full]
+    decoder_modes: [default, raw]
     host: 127.0.0.1
     port: 8102
   tier3:
     enabled: false            # off until gate G4 and the model digest is pinned
     modes: [off, full]        # add gate_only if time allows
+    decoder_modes: [default]  # tier 3 runs in the default condition only
     host: 127.0.0.1
     port: 11434               # Ollama's default port
 

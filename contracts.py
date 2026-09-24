@@ -119,6 +119,10 @@ _ATTACK_VERDICTS = frozenset(
 ID_PATTERN = r"^[a-z0-9][a-z0-9_-]{0,62}$"
 _LOOPBACK_HOSTS = frozenset({"127.0.0.1", "::1", "localhost"})
 
+# The decode stage runs in one of two conditions (docs/decode.md): zbar's own text-encoding guessing, or
+# ZBAR_CFG_BINARY, which returns the symbol's bytes untouched.
+DecoderMode = Literal["default", "raw"]
+
 
 class _Frozen(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -338,6 +342,7 @@ class ResultRow(TierOutcome):
     run_id: str = Field(min_length=1)
     family: Family
     subset: Subset
+    decoder_mode: DecoderMode
     decode_status: DecodeStatus
     verdict: Verdict
 
@@ -390,7 +395,7 @@ class RunMetadata(_Frozen):
     os: str
     kernel: str
     python: str
-    decoder_mode: Literal["default", "raw"]
+    decoder_mode: DecoderMode
     requirements_sha256: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
     zbar_version: str | None = None
     ollama_version: str | None = None
@@ -407,6 +412,8 @@ class RunMetadata(_Frozen):
 class TierConfig(_Frozen):
     enabled: bool = True
     modes: tuple[Mode, ...] = Field(min_length=1)
+    # Decoder conditions this tier is run under. Each is a separate run, and result rows record it.
+    decoder_modes: tuple[DecoderMode, ...] = Field(default=("default",), min_length=1)
     host: str = "127.0.0.1"
     port: int | None = Field(default=None, ge=1024, le=65535)
 
@@ -422,6 +429,13 @@ class TierConfig(_Frozen):
     def _unique_modes(cls, modes: tuple[Mode, ...]) -> tuple[Mode, ...]:
         if len(set(modes)) != len(modes):
             raise ValueError("modes has duplicates")
+        return modes
+
+    @field_validator("decoder_modes")
+    @classmethod
+    def _unique_decoder_modes(cls, modes: tuple[str, ...]) -> tuple[str, ...]:
+        if len(set(modes)) != len(modes):
+            raise ValueError("decoder_modes has duplicates")
         return modes
 
 
@@ -442,9 +456,6 @@ class RepsConfig(_Frozen):
 class DecodeConfig(_Frozen):
     source: Literal["replay", "live"]
     image_dir: str = Field(min_length=1)
-    # "raw" disables zbar's text-encoding guessing for QR data (docs/decode.md). Which mode results
-    # of record use is a Methods decision; every run records the mode it used in RunMetadata.
-    decoder_mode: Literal["default", "raw"] = "default"
 
 
 class PathsConfig(_Frozen):
@@ -471,6 +482,10 @@ class Config(_Frozen):
                 raise ValueError(f"{tier_id.value}: modes {bad} are not valid for this tier")
             if tier.enabled and tier_id is not TierId.TIER1 and tier.port is None:
                 raise ValueError(f"{tier_id.value}: an enabled service tier needs a port")
+            if tier.enabled and "default" not in tier.decoder_modes:
+                raise ValueError(f"{tier_id.value}: decoder_modes must include the primary condition 'default'")
+            if tier_id is TierId.TIER3 and tier.decoder_modes != ("default",):
+                raise ValueError("tier3 runs in the 'default' decoder condition only (decision recorded 2026-09-24)")
         if self.tiers[TierId.TIER3].enabled and self.model.digest is None:
             raise ValueError("tier3 is enabled: pin the model by digest (D3, D13)")
         return self
