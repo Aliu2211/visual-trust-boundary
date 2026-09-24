@@ -6,33 +6,18 @@ dependence: record it as evidence, do not just update the number.
 """
 
 import io
-import random
 
 import barcode
 import pytest
 from barcode.writer import ImageWriter
 from PIL import Image
 
+from attacks.benign import benign_ascii
 from attacks.render import render_code128, render_qr
 from contracts import DecodeStatus, PayloadRecord
 from decode.capture import gray_from_bytes, main, record_from_symbols, replay_records
 
 ECC_L_MAX = 2953  # bytes, byte mode
-
-
-def benign_ascii(n: int, seed: int = 1337) -> list[str]:
-    """Badge, plate and ticket shaped ids plus the awkward-but-ASCII cases from plan.md D14."""
-    rng = random.Random(seed)
-    out = {"O'BRIEN", "a-b_c.d", "A" * 40, "0012345", "AB-1234-CD"}
-    while len(out) < n:
-        kind = rng.choice("bpt")
-        if kind == "b":
-            out.add(f"B-{rng.randrange(10**6):06d}")
-        elif kind == "p":
-            out.add(f"{rng.choice('ABCDEFGH')}{rng.choice('ABCDEFGH')}-{rng.randrange(10**4):04d}")
-        else:
-            out.add(f"T20260924-{rng.randrange(10**4):04d}")
-    return sorted(out)
 
 
 def qr_symbols(decoder, data: bytes, tmp_path, ecc="M"):
