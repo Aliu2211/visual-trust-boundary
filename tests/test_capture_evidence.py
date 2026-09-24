@@ -69,6 +69,13 @@ def test_verify_detects_edits_to_body_and_header(tmp_path):
     assert ce.verify(path)
 
 
+def test_other_evidence_captures_do_not_make_the_tree_dirty():
+    porcelain = "?? docs/evidence/raw/E-008.txt\n M contracts.py\n?? docs/evidence/LOG.md\n?? docs/evidence/raw/E-009.txt\n"
+    assert ce.code_changes(porcelain) == [" M contracts.py", "?? docs/evidence/LOG.md"]
+    assert ce.code_changes("?? docs/evidence/raw/E-008.txt\n") == []
+    assert ce.code_changes("") == []
+
+
 def test_carriage_returns_in_output_survive_and_still_verify(tmp_path):
     # HTTP headers from curl end in \r\n; a text-mode read once turned these into a false HASH MISMATCH.
     path, _ = run(tmp_path, "E-011", sys.executable, "-c",

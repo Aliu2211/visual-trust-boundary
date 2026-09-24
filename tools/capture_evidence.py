@@ -40,6 +40,15 @@ def _run(args: list[str], cwd: Path = ROOT) -> str | None:
     return done.stdout if done.returncode == 0 else None
 
 
+EVIDENCE_DIR = "docs/evidence/raw/"
+
+
+def code_changes(porcelain: str) -> list[str]:
+    """Changed files that can affect a result. Other evidence captures do not, so they are left out;
+    otherwise every capture would report a dirty tree merely because earlier captures exist."""
+    return [line for line in porcelain.splitlines() if line.strip() and not line[3:].startswith(EVIDENCE_DIR)]
+
+
 def git_state() -> tuple[str, str, list[str]]:
     """(commit, 'yes'|'no'|'unknown', changed files). Falls back to VTB_GIT_* where git is absent."""
     sha = _run(["git", "rev-parse", "HEAD"])
@@ -47,7 +56,7 @@ def git_state() -> tuple[str, str, list[str]]:
     if sha is None or status is None:
         dirty = {"0": "no", "1": "yes"}.get(os.environ.get("VTB_GIT_DIRTY", ""), "unknown")
         return os.environ.get("VTB_GIT_SHA", "unknown"), dirty, []
-    files = [line for line in status.splitlines() if line.strip()]
+    files = code_changes(status)
     return sha.strip(), "yes" if files else "no", files
 
 
