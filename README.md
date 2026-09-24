@@ -13,6 +13,7 @@ Early: phase P1 of [plan.md](plan.md) is in progress. What exists today:
 - [decode/](decode/): the decode stage. zbar sits behind an interface; replay and live capture turn images into records.
 - [attacks/render.py](attacks/render.py): deterministic QR and Code 128 rendering.
 - [config.yaml](config.yaml): run settings, validated against the contracts.
+- [docs/evidence/LOG.md](docs/evidence/LOG.md): the paper evidence ledger. Every implementation result is backed by a provenance-stamped raw capture made with [tools/capture_evidence.py](tools/capture_evidence.py).
 
 Progress, decisions and open blockers are logged in [status.md](status.md). The original proposal is kept at [docs/source-plan.md](docs/source-plan.md).
 

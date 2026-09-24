@@ -150,3 +150,23 @@ The three open items from the previous entry were not answered, so the plan's de
 **What was done:** confirmed there was no VM process (no vfkit) and so nothing running to lose, then stopped the orphaned user-owned backend (PID 45391 with SIGTERM; PID 45387 ignored SIGTERM and was stopped with SIGKILL). The root-owned helper `com.docker.vmnetd` was left alone. After relaunching, the engine answered within 5 seconds: Docker 29.6.2, x86_64.
 
 **Next:** build the `vtb-dev` image (Bookworm base, `libzbar0` from Debian's repo, the Python deps), run the full suite in it, then the edge-case probe. Progress is recorded in the next entry.
+
+---
+
+## 2026-09-24: Evidence discipline for the paper
+
+**Actor:** Claude, on the user's instruction ("so have to be noting the implentation results down with evidence for use in the paper writing").
+
+**Added:** `docs/evidence/LOG.md` (the ledger), `docs/evidence/raw/` (captures E-001 to E-006), `tools/capture_evidence.py` with tests, `tests/test_evidence_log.py`, and a repo `CLAUDE.md` stating the rule for future sessions. A memory note was saved for the same reason.
+
+**Amendment A7 (plan.md unchanged):** every step that yields a result ends with an evidence capture and a ledger entry, and a phase's acceptance includes those entries. Only entries of class `result-of-record` (Pi, after G3 and the defense freeze at G5) may back a quantitative claim in the paper; laptop and container runs are `dev-observation` and support Methods and Threats to validity.
+
+**How it works:** the tool stamps each capture with the code commit and dirty state, platform, Python, package versions, the `libzbar0` package version where there is one, the exact command, the exit code and a SHA-256. It never overwrites a file, and `--verify` checks a file. A test fails if a raw capture has no ledger entry, a capture does not verify, or the hash quoted in the ledger differs from the file's.
+
+**Backfill:** E-001 to E-006 were re-captured from commands run today, not copied from earlier chat output. They already corrected one chat figure: the suite is 93 passed and 7 skipped at capture, not the 77 quoted earlier, because tests were added in between.
+
+**Defect found on first use:** `--verify` read files in text mode, which rewrites CRLF, so it reported a false `HASH MISMATCH` on E-002 (curl's header dump contains `\r\n`). The file was intact. Fixed in `3dc1270`; all six captures verify; no capture was redone.
+
+**Kept out of the ledger on purpose** (project chronology only): the Docker orphan process, the YAML `off` boolean defect, and the qrcode exception type. The user may want the last two added as implementation notes; say so and they get captures.
+
+**Still pending:** the `vtb-dev` image build (at the apt step when last checked). Once it finishes, the zbar tests run in the container and their results become E-007 onward.
