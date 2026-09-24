@@ -123,17 +123,21 @@ def capture(evidence_id: str, command: list[str], out_dir: Path, timeout: int) -
     digest = hashlib.sha256(body.encode("utf-8")).hexdigest()
 
     out_dir.mkdir(parents=True, exist_ok=True)
-    with open(path, "x", encoding="utf-8") as fh:  # "x": never overwrite, even if it appeared meanwhile
-        fh.write(body + HASH_PREFIX + digest + "\n")
+    # Bytes, not text: output can hold \r (HTTP headers do) and text mode would rewrite it, so the
+    # hash would no longer match the file. "x" never overwrites, even if the file appeared meanwhile.
+    with open(path, "xb") as fh:
+        fh.write((body + HASH_PREFIX + digest + "\n").encode("utf-8"))
     return path, code
 
 
 def verify(path: Path) -> bool:
-    text = path.read_text(encoding="utf-8")
-    head, sep, last = text.rstrip("\n").rpartition("\n")
-    if not sep or not last.startswith(HASH_PREFIX):
+    data = path.read_bytes()
+    marker = b"\n" + HASH_PREFIX.encode("ascii")
+    cut = data.rstrip(b"\n").rfind(marker)
+    if cut == -1:
         return False
-    return hashlib.sha256((head + "\n").encode("utf-8")).hexdigest() == last[len(HASH_PREFIX):]
+    recorded = data[cut + len(marker):].strip().decode("ascii", errors="replace")
+    return hashlib.sha256(data[: cut + 1]).hexdigest() == recorded
 
 
 def main(argv: list[str] | None = None) -> int:

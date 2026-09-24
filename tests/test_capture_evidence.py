@@ -69,6 +69,21 @@ def test_verify_detects_edits_to_body_and_header(tmp_path):
     assert ce.verify(path)
 
 
+def test_carriage_returns_in_output_survive_and_still_verify(tmp_path):
+    # HTTP headers from curl end in \r\n; a text-mode read once turned these into a false HASH MISMATCH.
+    path, _ = run(tmp_path, "E-011", sys.executable, "-c",
+                  "import sys; sys.stdout.write('HTTP/1.1 404 Not Found\\r\\ndate: x\\r\\nlone\\rcr\\n')")
+    assert b"404 Not Found\r\ndate: x\r\nlone\rcr\n" in path.read_bytes()
+    assert ce.verify(path)
+    path.write_bytes(path.read_bytes().replace(b"\r\n", b"\n"))  # a real edit must still be caught
+    assert not ce.verify(path)
+
+
+def test_output_that_is_not_utf8_is_captured_and_verifies(tmp_path):
+    path, _ = run(tmp_path, "E-012", sys.executable, "-c", "import sys; sys.stdout.buffer.write(b'ok \\xff\\xfe end\\n')")
+    assert "ok" in path.read_text(encoding="utf-8", errors="replace") and ce.verify(path)
+
+
 def test_verify_rejects_a_file_without_a_hash_line(tmp_path):
     f = tmp_path / "E-008.txt"
     f.write_text("# evidence: E-008\n--- stdout ---\nhi\n")
