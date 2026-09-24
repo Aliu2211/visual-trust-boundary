@@ -14,7 +14,7 @@ def test_capture_records_provenance_output_and_a_valid_hash(tmp_path):
     text = path.read_text()
 
     assert code == 0 and path.name == "E-001.txt"
-    for field in ("# evidence: E-001", "# captured: ", "# code commit: ", "# python: ", "# libzbar0: ",
+    for field in ("# evidence: E-001", "# captured: ", "# code commit: ", "# python: ", "# libzbar0: ", "# docker: ",
                   "# packages: ", "# command: ", "# exit: 0", "--- stdout ---\nhello\n", "--- stderr ---\nwarn\n"):
         assert field in text, field
     assert ce.verify(path)

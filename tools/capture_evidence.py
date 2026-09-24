@@ -80,6 +80,14 @@ def libzbar_version() -> str:
 HOME_PATH = re.compile(r"/(?:Users|home)/[^/\s:'\"]+")
 
 
+def docker_version() -> str:
+    """The container runtime, which sandbox evidence depends on and package versions do not cover."""
+    if not shutil.which("docker"):
+        return "n/a (docker not installed)"
+    out = _run(["docker", "version", "--format", "client {{.Client.Version}}, server {{.Server.Version}}"])
+    return out.strip() if out else "installed, daemon not answering"
+
+
 def normalise(text: str) -> str:
     """Keep local paths out of a public repo: the repo root becomes <repo>, the home directory ~.
 
@@ -111,6 +119,7 @@ def build_header(evidence_id: str, command: list[str], exit_label: str) -> str:
         f"# platform: {platform.platform()} {platform.machine()}",
         f"# python: {platform.python_version()}",
         f"# libzbar0: {libzbar_version()}",
+        f"# docker: {docker_version()}",
         f"# packages: {package_versions()}",
         "# paths normalised: repo root -> <repo>, home and any /Users/<name> or /home/<name> -> ~",
         f"# command: {shlex.join(command)}",
