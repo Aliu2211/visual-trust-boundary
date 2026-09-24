@@ -15,6 +15,7 @@ from contracts import (
     Decision,
     Family,
     Mode,
+    Observation,
     PayloadRecord,
     PayloadSpec,
     Reason,
@@ -372,7 +373,7 @@ def test_tier_protocol_is_structural():
         tier_id = TierId.TIER1
 
         def handle(self, record, mode, rep):
-            return TierOutcome(tier=self.tier_id, mode=mode, payload_id="inj-001", rep=rep)
+            return TierOutcome(tier=self.tier_id, mode=mode, payload_id="inj-001", rep=rep), Observation()
 
     assert isinstance(Dummy(), Tier)
     assert not isinstance(object(), Tier)
@@ -540,3 +541,12 @@ def test_run_metadata_must_say_which_decoder_mode_produced_the_run():
             run_id="r", started_at="2026-09-24T10:00:00Z", git_sha="abc1234", git_dirty=False,
             config_sha256=SHA, host_label="pi", os="linux", kernel="6.6", python="3.11",
         )
+
+
+def test_an_observation_is_a_plain_report_with_no_verdict_in_it():
+    assert set(Observation.model_fields) == {"granted", "matched_id", "visible_text"}
+    assert Observation().granted is None
+    with pytest.raises(ValidationError):
+        Observation(visible_text="x" * 4097)
+    with pytest.raises(ValidationError):
+        Observation(crossed=True)  # a tier never grades itself

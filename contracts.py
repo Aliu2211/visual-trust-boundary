@@ -374,13 +374,25 @@ class ResultRow(TierOutcome):
         return self.verdict is Verdict.CROSSED
 
 
+class Observation(_Frozen):
+    """What a tier showed its caller, before any judgement: its decision and the text it returned.
+
+    The harness oracle reads this together with state it observes itself (docs/oracles.md principle 1). A tier
+    reports what it did, never whether that crossed the boundary.
+    """
+
+    granted: bool | None = None  # null when the tier reached no decision
+    matched_id: str | None = None
+    visible_text: str = Field(default="", max_length=4096)  # everything the tier returned, errors included
+
+
 @runtime_checkable
 class Tier(Protocol):
     """A tier handler. It sees only the record, never the labels (docs/oracles.md principle 1)."""
 
     tier_id: TierId
 
-    def handle(self, record: PayloadRecord, mode: Mode, rep: int) -> TierOutcome: ...
+    def handle(self, record: PayloadRecord, mode: Mode, rep: int) -> tuple[TierOutcome, Observation]: ...
 
 
 class RunMetadata(_Frozen):
