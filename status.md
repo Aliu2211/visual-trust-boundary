@@ -138,3 +138,15 @@ The three open items from the previous entry were not answered, so the plan's de
 3. `brew install zbar` (heavy).
 
 **Next after P1:** P2 needs G1 (oracles) and G2 (containment) approved.
+
+---
+
+## 2026-09-24: Correction; Docker unblocked
+
+**Actor:** Claude, after the user reported that `open -a Docker` failed in their own terminal with error -1712 (Launch Services timed out waiting for the app).
+
+**Correction to the previous entry:** it said my `open -a Docker` "left Docker Desktop's backend process running". That was wrong. The two `com.docker.backend` processes had been running for 8 days 21 hours, so they predate my launch. They were orphans from a Docker Desktop crash on 2026-09-17 (its log records "recovering from engine crash"), and they were what made every fresh launch time out. My launch earlier today never started the UI or the engine.
+
+**What was done:** confirmed there was no VM process (no vfkit) and so nothing running to lose, then stopped the orphaned user-owned backend (PID 45391 with SIGTERM; PID 45387 ignored SIGTERM and was stopped with SIGKILL). The root-owned helper `com.docker.vmnetd` was left alone. After relaunching, the engine answered within 5 seconds: Docker 29.6.2, x86_64.
+
+**Next:** build the `vtb-dev` image (Bookworm base, `libzbar0` from Debian's repo, the Python deps), run the full suite in it, then the edge-case probe. Progress is recorded in the next entry.
