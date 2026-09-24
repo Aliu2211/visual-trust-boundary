@@ -31,3 +31,16 @@ def raw_decoder():
 def any_decoder(request, decoder, raw_decoder):
     """For behaviour that must hold in both decoder modes."""
     return decoder if request.param == "default" else raw_decoder
+
+
+@pytest.fixture(scope="session")
+def sandbox():
+    """The lab sandbox. Skips where Docker or the vtb-sandbox image is missing, unless VTB_REQUIRE_SANDBOX is set, where it fails."""
+    from harness.sandbox import DockerSandbox
+
+    ok, reason = DockerSandbox.available()
+    if not ok:
+        if os.environ.get("VTB_REQUIRE_SANDBOX"):
+            pytest.fail(f"VTB_REQUIRE_SANDBOX is set but the sandbox is unavailable: {reason}")
+        pytest.skip(f"sandbox unavailable: {reason}")
+    return DockerSandbox(timeout=60)

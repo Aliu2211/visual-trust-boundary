@@ -1,0 +1,19 @@
+# The lab sandbox image (docs/containment.md section 3): Python and the tier code only, no build tools.
+# It is run with the flags in harness/sandbox.py (no network, read-only root, no capabilities, resource
+# limits, tmpfs scratch, one bind-mounted /canary), so nothing here is writable at run time.
+#   docker build -f Dockerfile.sandbox -t vtb-sandbox .
+FROM python:3.11-slim-bookworm
+
+RUN useradd --uid 10001 --user-group --no-create-home --home-dir /nonexistent --shell /usr/sbin/nologin vtb \
+    && mkdir /canary /audit /app
+
+WORKDIR /app
+COPY requirements-sandbox.txt ./
+RUN pip install --no-cache-dir -r requirements-sandbox.txt
+
+COPY contracts.py ./contracts.py
+COPY tools/probes/sqlite_injection_limits.py ./tools/probes/sqlite_injection_limits.py
+
+# The bytecode cache goes to tmpfs; the root filesystem is read-only at run time.
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONPYCACHEPREFIX=/tmp/pycache
+USER 10001:10001

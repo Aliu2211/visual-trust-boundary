@@ -1,0 +1,5 @@
+# The only Python packages inside the lab sandbox image (docs/containment.md). Deliberately fewer than
+# requirements.txt: the sandbox holds the deliberately vulnerable code, so it carries no image, decoder
+# or rendering libraries.
+pydantic>=2.6,<3
+pyyaml>=6,<7
