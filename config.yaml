@@ -4,6 +4,7 @@ seed: 1337
 decode:
   source: replay              # replay for experiments; live only for demos
   image_dir: attacks/out
+  decoder_mode: default       # zbar's own text-encoding guessing; "raw" returns the symbol's bytes (docs/decode.md)
 
 tiers:
   tier1:

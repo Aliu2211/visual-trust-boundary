@@ -390,6 +390,7 @@ class RunMetadata(_Frozen):
     os: str
     kernel: str
     python: str
+    decoder_mode: Literal["default", "raw"]
     requirements_sha256: str | None = Field(default=None, pattern=r"^[0-9a-f]{64}$")
     zbar_version: str | None = None
     ollama_version: str | None = None
@@ -441,6 +442,9 @@ class RepsConfig(_Frozen):
 class DecodeConfig(_Frozen):
     source: Literal["replay", "live"]
     image_dir: str = Field(min_length=1)
+    # "raw" disables zbar's text-encoding guessing for QR data (docs/decode.md). Which mode results
+    # of record use is a Methods decision; every run records the mode it used in RunMetadata.
+    decoder_mode: Literal["default", "raw"] = "default"
 
 
 class PathsConfig(_Frozen):

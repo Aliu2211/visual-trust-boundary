@@ -388,6 +388,7 @@ def test_run_metadata_accepts_laptop_run_without_pi_fields():
         os="darwin",
         kernel="25.5.0",
         python="3.11.9",
+        decoder_mode="default",
     )
     assert meta.throttled_start is None
 
@@ -404,6 +405,7 @@ def test_run_metadata_rejects_malformed_throttle_flag():
             os="linux",
             kernel="6.6",
             python="3.11",
+            decoder_mode="default",
             throttled_start="not-hex",
         )
 
@@ -479,3 +481,28 @@ def test_verdict_and_status_enums_cover_the_oracle_doc():
 
 def test_subset_values_match_the_plan():
     assert {s.value for s in Subset} == {"naive", "adaptive", "heldout", "benign"}
+
+
+# --- decoder mode ---------------------------------------------------------------
+
+
+def test_decoder_mode_defaults_to_zbar_default_and_accepts_raw():
+    assert load_config(ROOT / "config.yaml").decode.decoder_mode == "default"
+    d = config_dict()
+    d["decode"]["decoder_mode"] = "raw"
+    assert Config.model_validate(d).decode.decoder_mode == "raw"
+
+
+def test_decoder_mode_rejects_unknown_values():
+    d = config_dict()
+    d["decode"]["decoder_mode"] = "binary"
+    with pytest.raises(ValidationError):
+        Config.model_validate(d)
+
+
+def test_run_metadata_must_say_which_decoder_mode_produced_the_run():
+    with pytest.raises(ValidationError):
+        RunMetadata(
+            run_id="r", started_at="2026-09-24T10:00:00Z", git_sha="abc1234", git_dirty=False,
+            config_sha256=SHA, host_label="pi", os="linux", kernel="6.6", python="3.11",
+        )

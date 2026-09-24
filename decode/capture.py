@@ -155,6 +155,12 @@ def opencv_frames(device: int = 0, count: int | None = None) -> Iterator[GrayIma
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="python -m decode.capture", description=__doc__.split("\n")[0])
     parser.add_argument("--run-id", default=datetime.now(UTC).strftime("run-%Y%m%dT%H%M%SZ"))
+    parser.add_argument(
+        "--decoder-mode",
+        choices=["default", "raw"],
+        default="default",
+        help="raw disables zbar's text-encoding guessing (see docs/decode.md)",
+    )
     sub = parser.add_subparsers(dest="mode", required=True)
     replay = sub.add_parser("replay", help="decode every .png in a folder")
     replay.add_argument("image_dir")
@@ -163,7 +169,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     live.add_argument("--frames", type=int, default=5)
     args = parser.parse_args(argv)
 
-    decoder = PyzbarDecoder()
+    decoder = PyzbarDecoder(raw=args.decoder_mode == "raw")
     if args.mode == "replay":
         records = replay_records(args.image_dir, args.run_id, decoder)
     else:
