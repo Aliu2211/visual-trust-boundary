@@ -1,0 +1,211 @@
+# evidence: E-015
+# captured: 2026-09-24T23:08:17Z
+# code commit: 5d2942d27b8c6a850391ac55678420371c945564 (working tree dirty: no)
+# host label: unlabelled
+# platform: macOS-26.5.2-x86_64-i386-64bit x86_64
+# python: 3.11.15
+# libzbar0: n/a (no dpkg on this platform)
+# docker: client 29.6.2, server 29.6.2
+# packages: pydantic 2.13.5, pyyaml 6.0.3, pillow 12.3.0, pyzbar 0.1.9, qrcode 8.2, python-barcode 0.16.1, pytest 9.1.1, opencv-python-headless not installed
+# paths normalised: repo root -> <repo>, home and any ~ or ~ -> ~
+# command: env VTB_REQUIRE_SANDBOX=1 .venv/bin/python -m pytest tests/test_tier1_sandbox.py -v -rA -p no:cacheprovider
+# exit: 0
+--- stdout ---
+============================= test session starts ==============================
+platform darwin -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0 -- <repo>/.venv/bin/python
+rootdir: <repo>
+configfile: pytest.ini
+collecting ... collected 39 items
+
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-sql-001-off] PASSED [  2%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-sql-001-validate_only] PASSED [  5%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-sql-001-parameterise_only] PASSED [  7%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-sql-001-full] PASSED [ 10%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-union-001-off] PASSED [ 12%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-union-001-validate_only] PASSED [ 15%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-union-001-parameterise_only] PASSED [ 17%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-union-001-full] PASSED [ 20%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-shell-001-off] PASSED [ 23%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-shell-001-validate_only] PASSED [ 25%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-shell-001-parameterise_only] PASSED [ 28%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-shell-001-full] PASSED [ 30%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-kill-001-off] PASSED [ 33%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-kill-001-validate_only] PASSED [ 35%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-kill-001-parameterise_only] PASSED [ 38%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-kill-001-full] PASSED [ 41%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-sleep-001-off] PASSED [ 43%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-sleep-001-validate_only] PASSED [ 46%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-sleep-001-parameterise_only] PASSED [ 48%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-sleep-001-full] PASSED [ 51%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[mal-quote-001-off] PASSED [ 53%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[mal-quote-001-validate_only] PASSED [ 56%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[mal-quote-001-parameterise_only] PASSED [ 58%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[mal-quote-001-full] PASSED [ 61%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[ben-active-001-off] PASSED [ 64%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[ben-active-001-validate_only] PASSED [ 66%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[ben-active-001-parameterise_only] PASSED [ 69%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[ben-active-001-full] PASSED [ 71%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[ben-revoked-001-off] PASSED [ 74%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[ben-revoked-001-validate_only] PASSED [ 76%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[ben-revoked-001-parameterise_only] PASSED [ 79%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[ben-revoked-001-full] PASSED [ 82%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[ben-unknown-001-off] PASSED [ 84%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[ben-unknown-001-validate_only] PASSED [ 87%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[ben-unknown-001-parameterise_only] PASSED [ 89%]
+tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[ben-unknown-001-full] PASSED [ 92%]
+tests/test_tier1_sandbox.py::test_the_first_real_crossing_and_the_first_real_block PASSED [ 94%]
+tests/test_tier1_sandbox.py::test_a_disclosure_payload_fires_both_the_grant_and_the_disclosure_signals PASSED [ 97%]
+tests/test_tier1_sandbox.py::test_a_payload_cannot_kill_the_tier_because_it_is_pid_1_in_its_container PASSED [100%]
+
+==================================== PASSES ====================================
+_________ test_the_verdict_for_each_payload_and_mode[inj-sql-001-off] __________
+----------------------------- Captured stdout call -----------------------------
+row: inj-sql-001      off                -> crossed   signals=['A'] blocked=False error=None crashed=False canary=-
+____ test_the_verdict_for_each_payload_and_mode[inj-sql-001-validate_only] _____
+----------------------------- Captured stdout call -----------------------------
+row: inj-sql-001      validate_only      -> blocked   signals=- blocked=True error=None crashed=False canary=-
+__ test_the_verdict_for_each_payload_and_mode[inj-sql-001-parameterise_only] ___
+----------------------------- Captured stdout call -----------------------------
+row: inj-sql-001      parameterise_only  -> no_effect signals=- blocked=False error=None crashed=False canary=-
+_________ test_the_verdict_for_each_payload_and_mode[inj-sql-001-full] _________
+----------------------------- Captured stdout call -----------------------------
+row: inj-sql-001      full               -> blocked   signals=- blocked=True error=None crashed=False canary=-
+________ test_the_verdict_for_each_payload_and_mode[inj-union-001-off] _________
+----------------------------- Captured stdout call -----------------------------
+row: inj-union-001    off                -> crossed   signals=['A', 'C'] blocked=False error=None crashed=False canary=-
+___ test_the_verdict_for_each_payload_and_mode[inj-union-001-validate_only] ____
+----------------------------- Captured stdout call -----------------------------
+row: inj-union-001    validate_only      -> blocked   signals=- blocked=True error=None crashed=False canary=-
+_ test_the_verdict_for_each_payload_and_mode[inj-union-001-parameterise_only] __
+----------------------------- Captured stdout call -----------------------------
+row: inj-union-001    parameterise_only  -> no_effect signals=- blocked=False error=None crashed=False canary=-
+________ test_the_verdict_for_each_payload_and_mode[inj-union-001-full] ________
+----------------------------- Captured stdout call -----------------------------
+row: inj-union-001    full               -> blocked   signals=- blocked=True error=None crashed=False canary=-
+________ test_the_verdict_for_each_payload_and_mode[inj-shell-001-off] _________
+----------------------------- Captured stdout call -----------------------------
+row: inj-shell-001    off                -> crossed   signals=['D'] blocked=False error=None crashed=False canary=['inj-shell-001']
+___ test_the_verdict_for_each_payload_and_mode[inj-shell-001-validate_only] ____
+----------------------------- Captured stdout call -----------------------------
+row: inj-shell-001    validate_only      -> blocked   signals=- blocked=True error=None crashed=False canary=-
+_ test_the_verdict_for_each_payload_and_mode[inj-shell-001-parameterise_only] __
+----------------------------- Captured stdout call -----------------------------
+row: inj-shell-001    parameterise_only  -> no_effect signals=- blocked=False error=None crashed=False canary=-
+________ test_the_verdict_for_each_payload_and_mode[inj-shell-001-full] ________
+----------------------------- Captured stdout call -----------------------------
+row: inj-shell-001    full               -> blocked   signals=- blocked=True error=None crashed=False canary=-
+_________ test_the_verdict_for_each_payload_and_mode[inj-kill-001-off] _________
+----------------------------- Captured stdout call -----------------------------
+row: inj-kill-001     off                -> no_effect signals=- blocked=False error=None crashed=False canary=-
+____ test_the_verdict_for_each_payload_and_mode[inj-kill-001-validate_only] ____
+----------------------------- Captured stdout call -----------------------------
+row: inj-kill-001     validate_only      -> blocked   signals=- blocked=True error=None crashed=False canary=-
+__ test_the_verdict_for_each_payload_and_mode[inj-kill-001-parameterise_only] __
+----------------------------- Captured stdout call -----------------------------
+row: inj-kill-001     parameterise_only  -> no_effect signals=- blocked=False error=None crashed=False canary=-
+________ test_the_verdict_for_each_payload_and_mode[inj-kill-001-full] _________
+----------------------------- Captured stdout call -----------------------------
+row: inj-kill-001     full               -> blocked   signals=- blocked=True error=None crashed=False canary=-
+________ test_the_verdict_for_each_payload_and_mode[inj-sleep-001-off] _________
+----------------------------- Captured stdout call -----------------------------
+row: inj-sleep-001    off                -> fault     signals=- blocked=False error=TimeoutExpired crashed=False canary=-
+___ test_the_verdict_for_each_payload_and_mode[inj-sleep-001-validate_only] ____
+----------------------------- Captured stdout call -----------------------------
+row: inj-sleep-001    validate_only      -> blocked   signals=- blocked=True error=None crashed=False canary=-
+_ test_the_verdict_for_each_payload_and_mode[inj-sleep-001-parameterise_only] __
+----------------------------- Captured stdout call -----------------------------
+row: inj-sleep-001    parameterise_only  -> no_effect signals=- blocked=False error=None crashed=False canary=-
+________ test_the_verdict_for_each_payload_and_mode[inj-sleep-001-full] ________
+----------------------------- Captured stdout call -----------------------------
+row: inj-sleep-001    full               -> blocked   signals=- blocked=True error=None crashed=False canary=-
+________ test_the_verdict_for_each_payload_and_mode[mal-quote-001-off] _________
+----------------------------- Captured stdout call -----------------------------
+row: mal-quote-001    off                -> fault     signals=- blocked=False error=OperationalError crashed=False canary=-
+___ test_the_verdict_for_each_payload_and_mode[mal-quote-001-validate_only] ____
+----------------------------- Captured stdout call -----------------------------
+row: mal-quote-001    validate_only      -> blocked   signals=- blocked=True error=None crashed=False canary=-
+_ test_the_verdict_for_each_payload_and_mode[mal-quote-001-parameterise_only] __
+----------------------------- Captured stdout call -----------------------------
+row: mal-quote-001    parameterise_only  -> no_effect signals=- blocked=False error=None crashed=False canary=-
+________ test_the_verdict_for_each_payload_and_mode[mal-quote-001-full] ________
+----------------------------- Captured stdout call -----------------------------
+row: mal-quote-001    full               -> blocked   signals=- blocked=True error=None crashed=False canary=-
+________ test_the_verdict_for_each_payload_and_mode[ben-active-001-off] ________
+----------------------------- Captured stdout call -----------------------------
+row: ben-active-001   off                -> benign_ok signals=- blocked=False error=None crashed=False canary=-
+___ test_the_verdict_for_each_payload_and_mode[ben-active-001-validate_only] ___
+----------------------------- Captured stdout call -----------------------------
+row: ben-active-001   validate_only      -> benign_ok signals=- blocked=False error=None crashed=False canary=-
+_ test_the_verdict_for_each_payload_and_mode[ben-active-001-parameterise_only] _
+----------------------------- Captured stdout call -----------------------------
+row: ben-active-001   parameterise_only  -> benign_ok signals=- blocked=False error=None crashed=False canary=-
+_______ test_the_verdict_for_each_payload_and_mode[ben-active-001-full] ________
+----------------------------- Captured stdout call -----------------------------
+row: ben-active-001   full               -> benign_ok signals=- blocked=False error=None crashed=False canary=-
+_______ test_the_verdict_for_each_payload_and_mode[ben-revoked-001-off] ________
+----------------------------- Captured stdout call -----------------------------
+row: ben-revoked-001  off                -> benign_ok signals=- blocked=False error=None crashed=False canary=-
+__ test_the_verdict_for_each_payload_and_mode[ben-revoked-001-validate_only] ___
+----------------------------- Captured stdout call -----------------------------
+row: ben-revoked-001  validate_only      -> benign_ok signals=- blocked=False error=None crashed=False canary=-
+_ test_the_verdict_for_each_payload_and_mode[ben-revoked-001-parameterise_only] _
+----------------------------- Captured stdout call -----------------------------
+row: ben-revoked-001  parameterise_only  -> benign_ok signals=- blocked=False error=None crashed=False canary=-
+_______ test_the_verdict_for_each_payload_and_mode[ben-revoked-001-full] _______
+----------------------------- Captured stdout call -----------------------------
+row: ben-revoked-001  full               -> benign_ok signals=- blocked=False error=None crashed=False canary=-
+_______ test_the_verdict_for_each_payload_and_mode[ben-unknown-001-off] ________
+----------------------------- Captured stdout call -----------------------------
+row: ben-unknown-001  off                -> benign_ok signals=- blocked=False error=None crashed=False canary=-
+__ test_the_verdict_for_each_payload_and_mode[ben-unknown-001-validate_only] ___
+----------------------------- Captured stdout call -----------------------------
+row: ben-unknown-001  validate_only      -> benign_ok signals=- blocked=False error=None crashed=False canary=-
+_ test_the_verdict_for_each_payload_and_mode[ben-unknown-001-parameterise_only] _
+----------------------------- Captured stdout call -----------------------------
+row: ben-unknown-001  parameterise_only  -> benign_ok signals=- blocked=False error=None crashed=False canary=-
+_______ test_the_verdict_for_each_payload_and_mode[ben-unknown-001-full] _______
+----------------------------- Captured stdout call -----------------------------
+row: ben-unknown-001  full               -> benign_ok signals=- blocked=False error=None crashed=False canary=-
+=========================== short test summary info ============================
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-sql-001-off]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-sql-001-validate_only]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-sql-001-parameterise_only]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-sql-001-full]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-union-001-off]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-union-001-validate_only]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-union-001-parameterise_only]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-union-001-full]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-shell-001-off]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-shell-001-validate_only]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-shell-001-parameterise_only]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-shell-001-full]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-kill-001-off]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-kill-001-validate_only]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-kill-001-parameterise_only]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-kill-001-full]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-sleep-001-off]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-sleep-001-validate_only]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-sleep-001-parameterise_only]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-sleep-001-full]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[mal-quote-001-off]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[mal-quote-001-validate_only]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[mal-quote-001-parameterise_only]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[mal-quote-001-full]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[ben-active-001-off]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[ben-active-001-validate_only]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[ben-active-001-parameterise_only]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[ben-active-001-full]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[ben-revoked-001-off]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[ben-revoked-001-validate_only]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[ben-revoked-001-parameterise_only]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[ben-revoked-001-full]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[ben-unknown-001-off]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[ben-unknown-001-validate_only]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[ben-unknown-001-parameterise_only]
+PASSED tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[ben-unknown-001-full]
+PASSED tests/test_tier1_sandbox.py::test_the_first_real_crossing_and_the_first_real_block
+PASSED tests/test_tier1_sandbox.py::test_a_disclosure_payload_fires_both_the_grant_and_the_disclosure_signals
+PASSED tests/test_tier1_sandbox.py::test_a_payload_cannot_kill_the_tier_because_it_is_pid_1_in_its_container
+======================== 39 passed in 70.95s (0:01:10) =========================
+--- stderr ---
+# sha256-of-above: 6b4f6ce501bcb336f989f6ad978ac12cb566db0259ccbcbfc62c5fded7723bcb

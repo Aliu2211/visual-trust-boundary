@@ -36,6 +36,8 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 | E-012 | What an injected string can do through Python's sqlite3 | dev-observation | D12, gate G2 |
 | E-013 | Containment battery, first run: 3 of 14 failed | dev-observation | D12, gate G2 |
 | E-014 | Containment battery on the laptop: 14 of 14 pass | dev-observation | D12, gate G2 |
+| E-015 | Tier 1 through all four modes, in the sandbox | dev-observation | D6, D8, P2 acceptance |
+| E-016 | The sandbox image E-015 ran in | dev-observation | D12, reproducibility |
 
 ## Entries
 
@@ -179,6 +181,26 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 - **Caveats:** the tests are inert and show that these attempts failed, not that no escape exists; a kernel or runtime exploit is a stated non-goal. The isolation is Docker Desktop's Linux VM plus the container, so it is not the Pi's sandbox: the Pi uses `systemd-run`, which is unverified and needs its own capture. That errno 30 means a read-only file system and 101 means network unreachable is standard Linux knowledge, not shown by the capture. The Docker version is not in this header (see E-013). Resource limits were probed at one size each. Test 3's positive control (a write to `/canary` succeeds) is recorded by the test passing; its values are not printed.
 - **Paper use:** Methods (how deliberately vulnerable code was run safely, and what was verified).
 
+### E-015 Tier 1 through all four modes, in the sandbox
+
+- **Date and step:** 2026-09-24, P2.4 (the first real crossing and the first real block).
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** with the approved oracles and the proven sandbox, the same payloads give the expected verdicts across the four Tier 1 modes: with no control, three of them cross; with validation, all are blocked; with parameterisation alone, all are accepted with no effect; benign identifiers pass in every mode.
+- **Result:** 9 payloads by 4 modes, 36 rows (verdicts as off / validate_only / parameterise_only / full). `inj-sql-001` crossed / blocked / no_effect / blocked; `inj-union-001` crossed / blocked / no_effect / blocked; `inj-shell-001` crossed / blocked / no_effect / blocked; `inj-kill-001` no_effect / blocked / no_effect / blocked; `inj-sleep-001` fault / blocked / no_effect / blocked; `mal-quote-001` fault / blocked / no_effect / blocked; and `ben-active-001`, `ben-revoked-001`, `ben-unknown-001` benign_ok in all four modes. In `off` mode the signals were: `inj-sql-001` signal A (unauthorised grant); `inj-union-001` signals A and C (a grant plus the restricted canary secret in the output); `inj-shell-001` signal D (the harness saw the file `inj-shell-001` in the canary directory from the host side); `inj-sleep-001` `error TimeoutExpired`; `mal-quote-001` `error OperationalError`; `inj-kill-001` nothing. `39 passed in 70.95s` (the 36 rows plus three further checks).
+- **Evidence:** [raw/E-015.txt](raw/E-015.txt), sha256 `6b4f6ce501bcb336f989f6ad978ac12cb566db0259ccbcbfc62c5fded7723bcb`. Code commit `5d2942d27b8c6a850391ac55678420371c945564`, working tree clean. macOS x86_64 host, Docker client and server 29.6.2 (in the header). The sandbox image is identified in E-016.
+- **Caveats:** these are nine hand-written, naive payloads. Validation blocking every one is what the design predicts by construction (decision D7) and says nothing about adaptive or grammar-conformant attacks, which are P6 and the held-out set. Signal T1-B (table tamper) never fired, because stacked statements are impossible through `execute()` (E-012), so it has not been exercised by an attack. The `kill -9 $PPID` payload had no effect because the tier is PID 1 in its container and the kernel ignores SIGKILL sent to a namespace's init from inside it: this is a limit on what a payload can do here, and my first expectation for this row was wrong. The sleep payload's fault comes from the tier's own 5-second shell timeout. The decode stage is bypassed (records are built from text); image-to-record decoding is validated separately (E-008, E-011) and joined in the P3 harness. Three benign cases are a demonstration, not the 1000 or more that decision D14 needs for a false-positive rate. One run per cell, on a deterministic tier. Docker Desktop on macOS, not the Pi.
+- **Paper use:** Methods (a worked example of the oracle and the four-mode design). Not Results.
+
+### E-016 The sandbox image E-015 ran in
+
+- **Date and step:** 2026-09-24, P2.
+- **Class:** dev-observation. **Confidence:** verified for what the image says about itself; the link to E-015 is assumed (see caveats).
+- **Claim:** the deliberately vulnerable code ran in image `sha256:8f31726dbfd1f2cea6729055e73f512932c210a92dbacd5684d7ed3bbca1f831`, built `2026-09-24T23:02:19Z`, linux/amd64, user `10001:10001`, working directory `/app`, command `python3`, with `VTB_IN_SANDBOX=1` and `PYTHONPYCACHEPREFIX=/tmp/pycache` in its environment.
+- **Result:** as above; the environment also carries the Python base image's variables (`PYTHON_VERSION=3.11.16` and others).
+- **Evidence:** [raw/E-016.txt](raw/E-016.txt), sha256 `1cca5761ebfc787e5b89ac566ea6602c26efd1c08e5260116817287cf6123d64`. Code commit `1dfc1a86d87ecab72e29bd5af5ea58632e33dab5`, working tree clean; the header records the same image id.
+- **Caveats:** an image id identifies the built image, not the Dockerfile that produced it. That this is the image E-015 ran in is assumed: E-015's header predates the tool recording the image id, but the image was built once before E-015 and not rebuilt before this capture (the build printed the same id). Every capture from here on records the image id in its header. That `GPG_KEY` in the environment is the base image's public signing-key fingerprint is my inference.
+- **Paper use:** Methods (reproducibility of the sandbox).
+
 ## Corrections and tooling notes
 
 - **2026-09-24, commit `3dc1270`:** the first version of `--verify` read files in text mode, which rewrites CRLF line endings, so it reported a false `HASH MISMATCH` for E-002 (curl's `-D` output contains `\r\n`). The file was intact: its byte-exact SHA-256 matched the recorded one before the fix, and all six captures verify after it. No capture was redone. Regression tests cover CR and non-UTF-8 output.
@@ -186,6 +208,8 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 - **2026-09-24, E-007 redacted before its first commit.** A pre-push scan found a host path on line 24 of `raw/E-007.txt` (`/Users/<name>/.../tests/test_decode_zbar.py:50: AssertionError`), which contradicted the header's claim that local paths are normalised. Cause: the container reused bytecode the host had compiled into the bind-mounted `__pycache__`, so the traceback carried the host path, and the normaliser only rewrote the container's own root and home. Change made to the capture: that one line now reads `<repo>/tests/test_decode_zbar.py:50: AssertionError`, one header line records the redaction, and the hash was recomputed. Nothing else in the file changed. Original sha256 `8b0d3e58690964e29420b626d9e36a3224e45cd347942d8d03f5c0d78a50f319`, new sha256 `3353024e45d66ed7fcc9639239f6097d11a07e864c63c05c020118b825018b66`. This is the only raw file edited after capture. The unredacted original was never published: the local commits that briefly held it were rewritten before the first push. Fixes, in the commits that follow: the normaliser scrubs any `/Users/<name>` or `/home/<name>` prefix (tested), and the Docker image sets `PYTHONPYCACHEPREFIX` so it cannot read host bytecode.
 
 - **2026-09-24, E-010 and E-011 were each captured twice.** The first captures cited commits in the local, unpublished history. That history was rewritten before the first push so a host path (the E-007 redaction above) never entered a published commit, which changed those commits' hashes. Both captures were therefore redone at the rewritten commits (E-010 at `92b2f4f`, E-011 at `9204be4`) under the same ids; the first captures were never published and are discarded. E-010's test count rose from 160 to 168 only because the rewritten tip includes tests added after the first capture; E-011's figures were identical. Commits `a6d9470` and earlier keep their hashes, so E-001 to E-009 are unaffected.
+
+- **2026-09-24, E-016 captured twice.** The first attempt used a malformed `docker image inspect` format string (`.Config.Entrypoint` does not exist on this image), so it exited 1 with no output. That capture was never committed; it was discarded and redone under the same id, as with E-010 and E-011.
 
 ## Pending evidence
 
