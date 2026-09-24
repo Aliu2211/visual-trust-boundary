@@ -213,3 +213,20 @@ The three open items from the previous entry were not answered, so the plan's de
 **Verified:** across every commit in the range to be pushed, `git log -S` finds no commit that adds or removes the macOS username, a `/Users/...` home path, an email address or a session directory, and `git grep` over every reachable commit finds no occurrence of the username. Host suite: 113 passed, 55 skipped (zbar tests skip without libzbar). Container suite: 168 passed, none skipped.
 
 **Local backup:** the branch `backup/pre-rewrite` holds the old history, including the leaking blob. It is local only. It should be deleted after the push so it cannot be published by accident (`git push --all`); it stays recoverable through the reflog for a while.
+
+---
+
+## 2026-09-24: Decoder-condition decision recorded
+
+**Actor:** Claude, on the user's instruction ("alright lets go with that"), taken as the answer to the one open question, the decoder-mode recommendation in `docs/decode.md`. It was **not** taken as approval of the rest of G1: the oracle contents and the other defaults in `docs/oracles.md` section 8 are still unconfirmed.
+
+**Decision:** `default` is the primary decoder condition. `raw` is a second condition for Tiers 1 and 2. Tier 3 runs in `default` only. The Tier 1 and 2 correctness matrix doubles; runs there are deterministic and cheap.
+
+**Amendment A10 (plan.md unchanged):**
+- `decoder_modes` moves from a single `decode.decoder_mode` (amendment A8, which nothing consumed yet) to a per-tier setting in `config.yaml`. The config rejects Tier 3 with `raw`, and rejects an enabled tier that lacks `default`, so the decision cannot drift silently.
+- `ResultRow` gains a required `decoder_mode`. Without it the same (tier, mode, payload, rep) appears once per condition with nothing to tell the rows apart. A row is now identified by (run, tier, mode, decoder_mode, payload, rep).
+- `docs/oracles.md` records the condition in sections 2 and 3, the metrics are per condition, and the benign set is ASCII-only in `default`; non-ASCII benign texts and invalid-UTF-8 malformed payloads run in `raw` only. `docs/decode.md` turns the open question into the recorded decision and lists what follows.
+
+**Verified:** host suite 119 passed, 55 skipped (the zbar tests skip without libzbar); container suite 174 passed, none skipped. No evidence capture was taken: this step is a design decision and its plumbing, not a measured result. The release-commit suite capture is the one the paper will cite.
+
+**Next, needs the user:** the rest of G1 (oracles, the mode matrix, attack subsets, the Tier 3 input design, and the seven remaining defaults in `docs/oracles.md` section 8) and G2 (containment) before P2. Payload specs need a per-payload decoder-condition field, which is added in P3.
