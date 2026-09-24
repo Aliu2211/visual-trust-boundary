@@ -38,6 +38,7 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 | E-014 | Containment battery on the laptop: 14 of 14 pass | dev-observation | D12, gate G2 |
 | E-015 | Tier 1 through all four modes, in the sandbox | dev-observation | D6, D8, P2 acceptance |
 | E-016 | The sandbox image E-015 ran in | dev-observation | D12, reproducibility |
+| E-017 | Full suite in the Bookworm dev image after Tier 1 | dev-observation | Methods |
 
 ## Entries
 
@@ -200,6 +201,16 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 - **Evidence:** [raw/E-016.txt](raw/E-016.txt), sha256 `1cca5761ebfc787e5b89ac566ea6602c26efd1c08e5260116817287cf6123d64`. Code commit `1dfc1a86d87ecab72e29bd5af5ea58632e33dab5`, working tree clean; the header records the same image id.
 - **Caveats:** an image id identifies the built image, not the Dockerfile that produced it. That this is the image E-015 ran in is assumed: E-015's header predates the tool recording the image id, but the image was built once before E-015 and not rebuilt before this capture (the build printed the same id). Every capture from here on records the image id in its header. That `GPG_KEY` in the environment is the base image's public signing-key fingerprint is my inference.
 - **Paper use:** Methods (reproducibility of the sandbox).
+
+### E-017 Full suite in the Bookworm dev image after Tier 1
+
+- **Date and step:** 2026-09-24, P2.
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** everything that does not need Docker passes in the dev image with the real `libzbar0`: the contracts, decode stage, defense, badge database, verdict function, Tier 1 in its defended modes and its host-side guard, and the Tier 1 oracle.
+- **Result:** `308 passed, 53 skipped in 10.13s`, exit 0. The 53 skips are the sandbox tests (the 14-test containment battery and the 39-test Tier 1 demonstration), all skipped for the same reason, `sandbox unavailable: docker is not installed here`.
+- **Evidence:** [raw/E-017.txt](raw/E-017.txt), sha256 `5468910aa5e56c231e37b3b90d13dbb2943cd846be90611e0a294b3772581780`. Code commit `190735f3437cebd5cc685d54a170b2059573ddf7`, working tree clean. Linux x86_64 container, Python 3.11.16, `libzbar0 0.23.92-7+deb12u1`, Docker not installed (recorded in the header).
+- **Caveats:** the sandbox tests do not run here by design; they are covered by the host run. The pinned seed-1337 database hash passes on Python 3.11.16 here and on 3.11.15 on the host, so the ground truth agrees across those two builds; the Pi's Python is unchecked. The test count changes as tests are added, so the paper should cite the release-commit capture.
+- **Paper use:** Methods (software quality), only via the release-commit capture.
 
 ## Corrections and tooling notes
 
