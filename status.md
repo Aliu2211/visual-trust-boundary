@@ -230,3 +230,16 @@ The three open items from the previous entry were not answered, so the plan's de
 **Verified:** host suite 119 passed, 55 skipped (the zbar tests skip without libzbar); container suite 174 passed, none skipped. No evidence capture was taken: this step is a design decision and its plumbing, not a measured result. The release-commit suite capture is the one the paper will cite.
 
 **Next, needs the user:** the rest of G1 (oracles, the mode matrix, attack subsets, the Tier 3 input design, and the seven remaining defaults in `docs/oracles.md` section 8) and G2 (containment) before P2. Payload specs need a per-payload decoder-condition field, which is added in P3.
+
+---
+
+## 2026-09-24: Gates G1 and G2 approved
+
+**Actor:** Claude, on the user's answers to three questions after "lets proceed".
+
+- **G1 approved as drafted:** `docs/oracles.md` (the nine oracles, verdict precedence, metrics and the eight defaults in its section 8; the decoder condition had been decided separately). Correction to my earlier entry: I wrote that section 8 has "seven remaining defaults"; it has **eight**, and all eight are approved.
+- **G2 approved, `systemd-run` on the Pi:** `docs/containment.md` (Docker settings on the laptop, `systemd-run` on the Pi, the containment test battery in its section 5). The systemd properties remain unverified until run on a Pi. Per the approval, the vulnerable shell path is not written until the battery passes on the laptop.
+- **Push approved:** the local commits were pushed after a fresh scan for local paths and identity strings.
+- **New evidence since the last entry:** E-012 (what an injected string can and cannot do through Python's sqlite3, in the Bookworm container).
+
+**Next:** P2. Order: the sandbox runner and its containment battery first (captured as evidence), then the badge database, the grammar and boundary, the vulnerable and defended Tier 1 handlers, and the four-mode demonstration for one injection payload.

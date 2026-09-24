@@ -1,6 +1,6 @@
 # Oracles: what "crossed" means
 
-**Status:** DRAFT for gate G1. Nothing here is implemented yet; the tiers and the harness are built to satisfy it. Every reported rate is defined in this file, so a change after G1 needs re-approval.
+**Status:** APPROVED at gate G1 on 2026-09-24, as drafted (including the eight defaults in section 8; the decoder condition was decided separately). The tiers and the harness are built to satisfy it, phase by phase. Every reported rate is defined in this file, so a change needs re-approval.
 
 The verdict names below are the `Verdict` enum in [contracts.py](../contracts.py), and the pair list is `APPLICABLE_PAIRS`. A test checks that this file has exactly one section per applicable pair.
 

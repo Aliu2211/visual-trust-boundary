@@ -1,6 +1,6 @@
 # Containment design for the deliberately vulnerable code
 
-**Status:** DRAFT for gate G2. Nothing here is implemented, and the vulnerable shell path (plan P2.1) is not written until this is approved. It implements decision D12 and the conditions in [ethics/LAB_ONLY.md](../ethics/LAB_ONLY.md).
+**Status:** APPROVED at gate G2 on 2026-09-24, with `systemd-run` on the Pi. The vulnerable shell path (plan P2.1) is not written until the containment battery in section 5 passes on the laptop. It implements decision D12 and the conditions in [ethics/LAB_ONLY.md](../ethics/LAB_ONLY.md).
 
 ## 1. What has to be contained
 
@@ -75,8 +75,8 @@ The results are captured as evidence on each platform. The vulnerable handler is
 - The Pi sandbox has no process-ID namespace unless `bubblewrap` is chosen.
 - A mistaken payload. Mitigated by the canary-only rule, review at G5, and the fact that the sandbox cannot touch the host.
 
-## 7. Decisions for you (gate G2)
+## 7. Decisions (recorded 2026-09-24)
 
-1. Approve the laptop design in section 3.
-2. Pi sandbox: `systemd-run` (recommended, no new package) or `bubblewrap` (namespaces, one more package).
-3. Accept the non-goals in section 2 and the residual risks in section 6.
+1. The laptop design in section 3 is approved.
+2. The Pi sandbox is `systemd-run`, not `bubblewrap` (no new package on the measurement Pi).
+3. The non-goals in section 2 and the residual risks in section 6 are accepted.
