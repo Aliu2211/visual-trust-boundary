@@ -1,0 +1,35 @@
+# Run settings, validated by contracts.Config. Edit here, not in code.
+seed: 1337
+
+decode:
+  source: replay              # replay for experiments; live only for demos
+  image_dir: attacks/out
+
+tiers:
+  tier1:
+    enabled: true
+    modes: [off, validate_only, parameterise_only, full]
+  tier2:
+    enabled: true
+    modes: [off, validate_only, parameterise_only, full]
+    host: 127.0.0.1
+    port: 8102
+  tier3:
+    enabled: false            # off until gate G4 and the model digest is pinned
+    modes: [off, full]        # add gate_only if time allows
+    host: 127.0.0.1
+    port: 11434               # Ollama's default port
+
+model:
+  name: qwen3-vl:2b           # candidate; the source plan's qwen2-vl:2b does not exist (D3)
+  digest: null                # pin after the H3 spike
+  temperature: 0.0
+
+reps:                         # proposed; tune after the H3 spike (plan.md P7.1)
+  correctness: 1
+  timing: 30
+  tier3: 10
+
+paths:
+  canary_dir: /canary         # inside the sandbox (D12)
+  results_dir: harness/results
