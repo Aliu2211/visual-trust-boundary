@@ -1,4 +1,9 @@
 # Runtime dependencies, added by the phase that needs them (see plan.md).
 # Ranges for now; the release pins exact versions from the Pi (plan.md P8.3).
+# System library needed as well: libzbar0 (apt on the Pi, in the Docker dev image on the laptop).
 pydantic>=2.6,<3
 pyyaml>=6,<7
+pillow>=10                  # image I/O; only ever opens images this repo generated (P1)
+pyzbar>=0.1.9,<0.2          # zbar wrapper; unmaintained since 2022, kept behind decode.decoder.Decoder (D4)
+qrcode[pil]>=7.4,<9         # renders QR codes (attacks/render.py)
+python-barcode>=0.15,<1     # renders Code 128 (attacks/render.py)
