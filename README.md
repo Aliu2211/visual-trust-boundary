@@ -6,12 +6,15 @@ A lab testbed on a Raspberry Pi 5 that traces one crafted machine-readable code 
 
 ## Status
 
-Early: phase P1 of [plan.md](plan.md) is nearly done (the Pi run of the decoder tests is still to do). What exists today:
+Early: phases P0 to P2 of [plan.md](plan.md) are done on the laptop; the Pi runs are still to do. What exists today:
 
 - [contracts.py](contracts.py): the data contracts every module shares.
 - [docs/oracles.md](docs/oracles.md): the definition of "crossed", per family and tier (draft, awaiting gate G1).
 - [decode/](decode/): the decode stage. zbar sits behind an interface; replay and live capture turn images into records.
-- [attacks/render.py](attacks/render.py): deterministic QR and Code 128 rendering.
+- [attacks/](attacks/): deterministic QR and Code 128 rendering, and the seeded benign identifier generator.
+- [defense/](defense/): the decode-time boundary check (defense v0) and its grammars.
+- [tiers/](tiers/): the Tier 1 access node in its four modes and its seeded badge database. The vulnerable modes run only inside the sandbox.
+- [harness/](harness/): the sandbox runner ([docs/containment.md](docs/containment.md)), the verdict function and the Tier 1 oracle.
 - [config.yaml](config.yaml): run settings, validated against the contracts.
 - [docs/evidence/LOG.md](docs/evidence/LOG.md): the paper evidence ledger. Every implementation result is backed by a provenance-stamped raw capture made with [tools/capture_evidence.py](tools/capture_evidence.py).
 

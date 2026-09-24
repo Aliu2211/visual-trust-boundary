@@ -263,3 +263,30 @@ The three open items from the previous entry were not answered, so the plan's de
 **Not verified:** the Pi sandbox (`systemd-run`); anything about a kernel or runtime escape (a stated non-goal); the battery in the dev image, where Docker is not installed and it skips.
 
 **Next in P2:** the badge database with a restricted canary row, the defense grammar and boundary returning `Decision`, the vulnerable and defended Tier 1 handlers (the vulnerable one runs only inside this sandbox), the Tier 1 oracle signals, and the four-mode demonstration for one injection payload.
+
+---
+
+## 2026-09-24: P2 complete on the laptop
+
+**Actor:** Claude, under the G1 and G2 approvals. **Evidence:** E-015 to E-018 (see `docs/evidence/LOG.md`).
+
+**Acceptance (plan P2.4) met:** for one payload through all four modes, `off` crosses per the oracle, `validate_only` blocks, `parameterise_only` accepts without effect, and `full` blocks. It was run for nine payloads (36 rows) through the real sandbox (E-015), and the whole suite passes in both environments (E-017 in the dev image, E-018 on the host).
+
+**Built:** `defense/` (grammars and `check`, returning shared immutable `Decision`s), `tiers/badges.py` (seeded ground truth with a restricted canary row; the seed-1337 hash is pinned as a reproducibility guard and matches on Python 3.11.15 and 3.11.16), `tiers/tier1_rulebased.py` and `tiers/sandbox_entry.py`, `harness/verdict.py` (the G1 precedence table as a pure function, one test per rule), `harness/tier1_run.py` and `harness/oracles.py` (the four approved signals, computed from what the harness observes itself).
+
+**Amendments (plan.md unchanged):**
+- **A12, `Observation`.** Plan section 2 gave a tier one output, `TierOutcome`. A tier now also returns an `Observation` (its decision and everything it showed its caller), which the oracle needs for signals A and C. It carries no verdict, and a test checks that a tier cannot smuggle one in. The `Tier` protocol returns both.
+- **A13, host guard.** The vulnerable Tier 1 modes raise unless `VTB_IN_SANDBOX=1`, which only the sandbox image sets, in addition to the sandbox itself. A host test shows nothing executes if they are called by mistake.
+- **A14, audit sink.** The audit step writes a file in the `/audit` tmpfs, not a database table. `docs/oracles.md` already says "audit sink"; the plan's "audit table" is dropped because nothing reads it.
+- **Not built, deliberately:** `gate()` (it arrives with Tier 3 in P5), and any timing analysis. `handle_ns` and `defense_ns` are recorded but the laptop's numbers are not results.
+
+**Observations worth knowing (each is in the ledger):**
+- A payload cannot kill the tier: it is PID 1 in its container and the kernel ignores SIGKILL sent to a namespace's init from inside. My first expectation was wrong; the row is kept with the observed outcome.
+- Signal T1-B (table tamper) has never fired: stacked statements are impossible through `execute()` (E-012). The signal is implemented and tested against constructed runs, but no attack has exercised it.
+- Validation blocking all nine naive payloads is what the design predicts (decision D7). It says nothing about adaptive or grammar-conformant attacks, which are P6 and the held-out set.
+
+**Test mistakes caught along the way, all mine:** five wrong expectations in the defense tests (a valid `B-00012` expected to be refused; two grammar failures expected as length failures) and a property test that accepted nothing until it mutated valid strings; the tests were corrected, not the defense. E-016 was first captured with a malformed format string and redone.
+
+**Not verified:** the Pi (aarch64, its own zbar package, `systemd-run` sandbox); the join between image decoding and the tiers (P3 builds the harness that does it); false-positive rate beyond three benign cases (decision D14 needs 1000 or more); anything about Tier 2 and Tier 3.
+
+**Next, P3:** `payloads.yaml` with a per-payload decoder-condition field, the seeded generator, the harness loop that decodes each image and drives the tiers, and the first CSV. Track H (the Pi) still needs the hardware.

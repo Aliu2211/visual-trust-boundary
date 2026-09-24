@@ -39,6 +39,7 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 | E-015 | Tier 1 through all four modes, in the sandbox | dev-observation | D6, D8, P2 acceptance |
 | E-016 | The sandbox image E-015 ran in | dev-observation | D12, reproducibility |
 | E-017 | Full suite in the Bookworm dev image after Tier 1 | dev-observation | Methods |
+| E-018 | Full host suite with the sandbox required | dev-observation | Methods, D12 |
 
 ## Entries
 
@@ -211,6 +212,16 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 - **Evidence:** [raw/E-017.txt](raw/E-017.txt), sha256 `5468910aa5e56c231e37b3b90d13dbb2943cd846be90611e0a294b3772581780`. Code commit `190735f3437cebd5cc685d54a170b2059573ddf7`, working tree clean. Linux x86_64 container, Python 3.11.16, `libzbar0 0.23.92-7+deb12u1`, Docker not installed (recorded in the header).
 - **Caveats:** the sandbox tests do not run here by design; they are covered by the host run. The pinned seed-1337 database hash passes on Python 3.11.16 here and on 3.11.15 on the host, so the ground truth agrees across those two builds; the Pi's Python is unchecked. The test count changes as tests are added, so the paper should cite the release-commit capture.
 - **Paper use:** Methods (software quality), only via the release-commit capture.
+
+### E-018 Full host suite with the sandbox required
+
+- **Date and step:** 2026-09-24, P2.
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** on the host, with Docker and the sandbox image present and `VTB_REQUIRE_SANDBOX=1` (so a missing sandbox fails instead of skipping), the whole suite passes, including the containment battery against the rebuilt image and the Tier 1 four-mode demonstration.
+- **Result:** `306 passed, 55 skipped in 95.27s`, exit 0. All 55 skips are the decoder tests, skipped because the host has no `libzbar`. Together with E-017 (308 passed, 53 skipped) the two runs each account for 361 tests, and the tests skipped in one environment are the ones that ran in the other.
+- **Evidence:** [raw/E-018.txt](raw/E-018.txt), sha256 `2bb73043564625a96a95ab58698a3944545109313f07d2bc47da3df8de35dee6`. Code commit `48aac9d28d6b634db41a8601a064c5474c4db63f`, working tree clean. macOS x86_64 host, Python 3.11.15, Docker client and server 29.6.2. The header records the sandbox image: `sha256:8f31726dbfd1f2cea6729055e73f512932c210a92dbacd5684d7ed3bbca1f831`, the same as in E-016, so the image was unchanged across this stage.
+- **Caveats:** Docker Desktop on macOS, not the Pi. The battery, the demonstration and the decoder tests never run in one environment together, because Docker is on the host and `libzbar` is in the dev image; the two captures together cover them. The test count changes as tests are added, so the paper should cite the release-commit capture.
+- **Paper use:** Methods (software quality and sandbox reproducibility), only via the release-commit capture.
 
 ## Corrections and tooling notes
 

@@ -1,0 +1,38 @@
+# evidence: E-018
+# captured: 2026-09-24T23:12:45Z
+# code commit: 48aac9d28d6b634db41a8601a064c5474c4db63f (working tree dirty: no)
+# host label: unlabelled
+# platform: macOS-26.5.2-x86_64-i386-64bit x86_64
+# python: 3.11.15
+# libzbar0: n/a (no dpkg on this platform)
+# docker: client 29.6.2, server 29.6.2
+# sandbox image: sha256:8f31726dbfd1f2cea6729055e73f512932c210a92dbacd5684d7ed3bbca1f831 created 2026-09-24T23:02:19.51371375Z
+# packages: pydantic 2.13.5, pyyaml 6.0.3, pillow 12.3.0, pyzbar 0.1.9, qrcode 8.2, python-barcode 0.16.1, pytest 9.1.1, opencv-python-headless not installed
+# paths normalised: repo root -> <repo>, home and any ~ or ~ -> ~
+# command: env VTB_REQUIRE_SANDBOX=1 .venv/bin/python -m pytest -p no:cacheprovider -q -rs
+# exit: 0
+--- stdout ---
+........................................................................ [ 19%]
+................................................................ssssssss [ 39%]
+sssssssssssssssssssssssssssssssssssssssssssssss......................... [ 59%]
+........................................................................ [ 79%]
+........................................................................ [ 99%]
+.                                                                        [100%]
+=========================== short test summary info ============================
+SKIPPED [2] tests/test_decode_zbar.py:43: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [2] tests/test_decode_zbar.py:49: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [10] tests/test_decode_zbar.py:61: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [16] tests/test_decode_zbar.py:68: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [2] tests/test_decode_zbar.py:77: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [6] tests/test_decode_zbar.py:82: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [3] tests/test_decode_zbar.py:97: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [3] tests/test_decode_zbar.py:105: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [1] tests/test_decode_zbar.py:121: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [2] tests/test_decode_zbar.py:140: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [2] tests/test_decode_zbar.py:150: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [2] tests/test_decode_zbar.py:167: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [2] tests/test_decode_zbar.py:174: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [2] tests/test_decode_zbar.py:180: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+306 passed, 55 skipped in 95.27s (0:01:35)
+--- stderr ---
+# sha256-of-above: 2bb73043564625a96a95ab58698a3944545109313f07d2bc47da3df8de35dee6
