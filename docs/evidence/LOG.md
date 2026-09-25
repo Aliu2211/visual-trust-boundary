@@ -53,6 +53,7 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 | E-029 | The reproducibility check passes | dev-observation | P3 acceptance |
 | E-030 | Summary of the final default run | dev-observation | D7, D14 |
 | E-031 | Summary of the final raw run | dev-observation | D5, D7 |
+| E-032 | Full host suite after P3, with the sandbox required | dev-observation | Methods |
 
 ## Entries
 
@@ -365,6 +366,16 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 - **Evidence:** [raw/E-031.txt](raw/E-031.txt), sha256 `5086e4190e9897be788080566b3b8819f034f174ea454727ab20205d1b1f1f53`. Code commit `4de0f96322a627d46dba47c2289262e1a635908e`, working tree dirty: no. Summarises the results of E-028.
 - **Caveats:** as E-030. Two encoding cases are an illustration that the control is reachable, not a measurement of it.
 - **Paper use:** Methods.
+
+### E-032 Full host suite after P3, with the sandbox required
+
+- **Date and step:** 2026-09-25, P3.
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** the whole suite passes on the host with Docker and the sandbox image present, and the earlier stall did not recur.
+- **Result:** `375 passed, 58 skipped in 147.56s (0:02:27)`, exit 0. All 58 skips are the decoder tests (`libzbar not available here`). The slowest test took 9.70 seconds (`test_the_first_real_crossing_and_the_first_real_block`); nothing else exceeded 7.3 seconds.
+- **Evidence:** [raw/E-032.txt](raw/E-032.txt), sha256 `f1443cb29f1af5a0ee1df002c7285c0b63456d41638dbe45e2f7ade534793c92`. Code commit `5d1e50057292201f2110298fdff19546cebb46db`, working tree clean. macOS x86_64 host, Python 3.11.15, Docker client and server 29.6.2. The header records the sandbox image, `sha256:311e6c5aa56e15b2eb19bc7404b7485bfa04db4fff2b7f63e5cfd3a714077c71`, the image the final runs used.
+- **Caveats:** an earlier full-suite run stalled for over 20 minutes while the host's load average was 75 and was killed; the same tests run separately took 21 seconds, 104 seconds and 15 seconds, and this run took 147 seconds with the load in the twenties to thirties. So the stall is not reproduced and not explained: most likely Docker Desktop under host memory pressure, which is a guess. Docker on this laptop is slow under load, so laptop durations say nothing about the Pi.
+- **Paper use:** Methods (software quality), only via the release-commit capture.
 
 ## Corrections and tooling notes
 
