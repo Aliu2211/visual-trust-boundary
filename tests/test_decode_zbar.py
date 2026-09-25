@@ -197,3 +197,18 @@ def test_seeded_benign_set_is_reproducible_and_well_formed():
     assert benign_ascii(50, seed=1) != benign_ascii(50, seed=2)
     ids = benign_ascii(100)
     assert len(set(ids)) == 100 and all(0 < len(t) <= 64 for t in ids)
+
+
+@pytest.mark.parametrize("mode", ["default", "raw"])
+def test_cli_writes_a_records_file_and_its_metadata_and_never_overwrites(tmp_path, capsys, decoder, mode):
+    import json
+
+    render_qr(b"BADGE-0001", tmp_path / "b-1.png")
+    out = tmp_path / "records.jsonl"
+    assert main(["--run-id", "run-cli", "--decoder-mode", mode, "replay", str(tmp_path), "--out", str(out)]) == 0
+    records = [PayloadRecord.model_validate_json(line) for line in out.read_text().splitlines()]
+    assert [(r.payload_id, r.text, r.decoder_mode, r.run_id) for r in records] == [("b-1", "BADGE-0001", mode, "run-cli")]
+    meta = json.loads((tmp_path / "records.jsonl.meta.json").read_text())
+    assert meta["decoder_mode"] == mode and meta["records"] == 1 and meta["libzbar0"]
+    with pytest.raises(FileExistsError):
+        main(["--decoder-mode", mode, "replay", str(tmp_path), "--out", str(out)])

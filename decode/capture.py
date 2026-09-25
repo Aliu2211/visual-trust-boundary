@@ -11,7 +11,11 @@ import argparse
 import base64
 import hashlib
 import io
+import json
+import platform
 import re
+import shutil
+import subprocess
 import sys
 import time
 from collections.abc import Iterable, Iterator, Sequence
@@ -72,6 +76,31 @@ def record_from_symbols(
     return PayloadRecord(
         decode_status=DecodeStatus.OK, raw_bytes_b64=raw_b64, text=text, symbology=symbol.symbology, **common
     )
+
+
+def libzbar_package_version() -> str | None:
+    """The libzbar0 package version (Debian and the Pi); results depend on the exact build (docs/evidence E-004)."""
+    if not shutil.which("dpkg-query"):
+        return None
+    done = subprocess.run(["dpkg-query", "-W", "-f=${Version}", "libzbar0"], capture_output=True, text=True, check=False)
+    return done.stdout.strip() or None if done.returncode == 0 else None
+
+
+def decode_meta(decoder: Decoder, run_id: str, image_dir: str, records: Sequence[PayloadRecord]) -> dict:
+    """What produced a records file, written beside it so the harness can carry it into the run's metadata."""
+    from importlib import metadata
+
+    return {
+        "run_id": run_id,
+        "decoder": decoder.name,
+        "decoder_mode": decoder.mode,
+        "pyzbar": metadata.version("pyzbar"),
+        "libzbar0": libzbar_package_version(),
+        "python": platform.python_version(),
+        "image_dir": image_dir,
+        "records": len(records),
+        "created": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+    }
 
 
 def _timed_decode(decoder: Decoder, image: GrayImage) -> tuple[list[RawSymbol], int]:
@@ -168,6 +197,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     sub = parser.add_subparsers(dest="mode", required=True)
     replay = sub.add_parser("replay", help="decode every .png in a folder")
     replay.add_argument("image_dir")
+    replay.add_argument("--out", help="write the records as JSON lines to this file, and its metadata to <file>.meta.json")
     live = sub.add_parser("live", help="decode frames from a webcam")
     live.add_argument("--device", type=int, default=0)
     live.add_argument("--frames", type=int, default=5)
@@ -178,6 +208,16 @@ def main(argv: Sequence[str] | None = None) -> int:
         records = replay_records(args.image_dir, args.run_id, decoder)
     else:
         records = live_records(opencv_frames(args.device, args.frames), args.run_id, decoder)
+    if args.mode == "replay" and args.out:
+        collected = list(records)
+        out = Path(args.out)
+        with open(out, "x", encoding="utf-8") as fh:  # never overwrites a records file
+            fh.writelines(record.model_dump_json() + "\n" for record in collected)
+        out.with_name(out.name + ".meta.json").write_text(
+            json.dumps(decode_meta(decoder, args.run_id, args.image_dir, collected), indent=1, sort_keys=True) + "\n"
+        )
+        print(f"wrote {len(collected)} records ({decoder.mode} mode) to {out}")
+        return 0
     for record in records:
         print(record.model_dump_json())
     return 0

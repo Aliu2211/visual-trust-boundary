@@ -146,3 +146,16 @@ def test_live_records_number_frames_and_have_no_payload_id():
     assert [r.source_image for r in records] == ["cam0#0", "cam0#1"]
     assert all(r.payload_id is None and r.decode_status is DecodeStatus.NO_SYMBOL for r in records)
     assert records[0].image_sha256 == hashlib.sha256(bytes([1, 2, 3, 4])).hexdigest()
+
+
+# --- decode metadata -----------------------------------------------------------------------------------------------
+
+
+def test_decode_meta_says_what_produced_the_records(tmp_path):
+    from decode.capture import decode_meta
+
+    write_png(tmp_path / "a.png")
+    records = list(replay_records(tmp_path, "run-9", FakeDecoder([])))
+    meta = decode_meta(FakeDecoder([]), "run-9", str(tmp_path), records)
+    assert (meta["run_id"], meta["decoder"], meta["decoder_mode"], meta["records"]) == ("run-9", "fake", "default", 1)
+    assert {"pyzbar", "libzbar0", "python", "created", "image_dir"} <= set(meta)
