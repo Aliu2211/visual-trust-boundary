@@ -228,7 +228,9 @@ def test_compare_checks_file_hashes_within_one_environment_and_reports_missing_a
 def test_check_mode_reports_a_match_and_a_mismatch(tmp_path, capsys):
     assert gen.main(["--check"]) in (0, 1)  # 0 when versions match; 1 with a clear message when they do not
     tampered = json.loads(gen.DEFAULT_MANIFEST.read_text())
-    tampered["payloads"][0]["sha256"] = "0" * 64
+    # The pixel hash is compared in every environment; the file hash only where the environment matches (E-019),
+    # so tampering with that one would go unnoticed in the dev image (E-033).
+    tampered["payloads"][0]["pixel_sha256"] = "0" * 64
     bad = tmp_path / "manifest.json"
     bad.write_text(json.dumps(tampered))
     assert gen.main(["--check", "--manifest", str(bad)]) == 1

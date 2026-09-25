@@ -1,0 +1,66 @@
+# evidence: E-033
+# captured: 2026-09-25T10:35:19Z
+# code commit: 9ee63975e1cf99f4869468a643aa7490a1aef640 (working tree dirty: no)
+# host label: unlabelled
+# platform: Linux-6.12.76-linuxkit-x86_64-with-glibc2.36 x86_64
+# python: 3.11.16
+# libzbar0: 0.23.92-7+deb12u1
+# docker: n/a (docker not installed)
+# sandbox image: n/a
+# packages: pydantic 2.13.5, pyyaml 6.0.3, pillow 12.3.0, pyzbar 0.1.9, qrcode 8.2, python-barcode 0.16.1, pytest 9.1.1, opencv-python-headless not installed
+# paths normalised: repo root -> <repo>, home and any ~ or ~ -> ~
+# command: python -m pytest -p no:cacheprovider -q -rs
+# exit: 1
+--- stdout ---
+.....................................................ssssssssssssss..... [ 16%]
+........................................................................ [ 33%]
+........................................................................ [ 49%]
+........................................................................ [ 66%]
+.......................F................................................ [ 83%]
+......................sssssssssssssssssssssssssssssssssssssss........... [ 99%]
+.                                                                        [100%]
+=================================== FAILURES ===================================
+________________ test_check_mode_reports_a_match_and_a_mismatch ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_check_mode_reports_a_matc0')
+capsys = <_pytest.capture.CaptureFixture object at 0x7f16b41d4c50>
+
+    def test_check_mode_reports_a_match_and_a_mismatch(tmp_path, capsys):
+        assert gen.main(["--check"]) in (0, 1)  # 0 when versions match; 1 with a clear message when they do not
+        tampered = json.loads(gen.DEFAULT_MANIFEST.read_text())
+        tampered["payloads"][0]["sha256"] = "0" * 64
+        bad = tmp_path / "manifest.json"
+        bad.write_text(json.dumps(tampered))
+>       assert gen.main(["--check", "--manifest", str(bad)]) == 1
+E       AssertionError: assert 0 == 1
+E        +  where 0 = <function main at 0x7f16b4ead300>(['--check', '--manifest', '/tmp/pytest-of-root/pytest-0/test_check_mode_reports_a_matc0/manifest.json'])
+E        +    where <function main at 0x7f16b4ead300> = gen.main
+
+tests/test_payloads.py:234: AssertionError
+----------------------------- Captured stdout call -----------------------------
+environment differs (committed {'pillow': '12.3.0', 'platform': 'Darwin x86_64', 'python': '3.11.15', 'python-barcode': '0.16.1', 'qrcode': '8.2'}, here {'platform': 'Linux x86_64', 'python': '3.11.16', 'pillow': '12.3.0', 'qrcode': '8.2', 'python-barcode': '0.16.1'}): PNG file hashes were not compared; pixel content was
+143 payloads: MATCH
+environment differs (committed {'pillow': '12.3.0', 'platform': 'Darwin x86_64', 'python': '3.11.15', 'python-barcode': '0.16.1', 'qrcode': '8.2'}, here {'platform': 'Linux x86_64', 'python': '3.11.16', 'pillow': '12.3.0', 'qrcode': '8.2', 'python-barcode': '0.16.1'}): PNG file hashes were not compared; pixel content was
+143 payloads: MATCH
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_containment.py:31: sandbox unavailable: docker is not installed here
+SKIPPED [1] tests/test_containment.py:70: sandbox unavailable: docker is not installed here
+SKIPPED [1] tests/test_containment.py:87: sandbox unavailable: docker is not installed here
+SKIPPED [1] tests/test_containment.py:94: sandbox unavailable: docker is not installed here
+SKIPPED [1] tests/test_containment.py:111: sandbox unavailable: docker is not installed here
+SKIPPED [1] tests/test_containment.py:128: sandbox unavailable: docker is not installed here
+SKIPPED [1] tests/test_containment.py:141: sandbox unavailable: docker is not installed here
+SKIPPED [1] tests/test_containment.py:156: sandbox unavailable: docker is not installed here
+SKIPPED [1] tests/test_containment.py:172: sandbox unavailable: docker is not installed here
+SKIPPED [1] tests/test_containment.py:181: sandbox unavailable: docker is not installed here
+SKIPPED [1] tests/test_containment.py:193: sandbox unavailable: docker is not installed here
+SKIPPED [1] tests/test_containment.py:206: sandbox unavailable: docker is not installed here
+SKIPPED [1] tests/test_containment.py:215: sandbox unavailable: docker is not installed here
+SKIPPED [1] tests/test_containment.py:221: sandbox unavailable: docker is not installed here
+SKIPPED [36] tests/test_tier1_sandbox.py:53: sandbox unavailable: docker is not installed here
+SKIPPED [1] tests/test_tier1_sandbox.py:72: sandbox unavailable: docker is not installed here
+SKIPPED [1] tests/test_tier1_sandbox.py:83: sandbox unavailable: docker is not installed here
+SKIPPED [1] tests/test_tier1_sandbox.py:91: sandbox unavailable: docker is not installed here
+1 failed, 379 passed, 53 skipped in 35.73s
+--- stderr ---
+# sha256-of-above: a17ff045e0b6d8c73e7c6b5e02f093c00dec86db86972c7ea30bbd47c92d7d16

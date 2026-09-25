@@ -54,6 +54,7 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 | E-030 | Summary of the final default run | dev-observation | D7, D14 |
 | E-031 | Summary of the final raw run | dev-observation | D5, D7 |
 | E-032 | Full host suite after P3, with the sandbox required | dev-observation | Methods |
+| E-033 | Dev-image suite after P3: one failure | dev-observation | Methods |
 
 ## Entries
 
@@ -376,6 +377,16 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 - **Evidence:** [raw/E-032.txt](raw/E-032.txt), sha256 `f1443cb29f1af5a0ee1df002c7285c0b63456d41638dbe45e2f7ade534793c92`. Code commit `5d1e50057292201f2110298fdff19546cebb46db`, working tree clean. macOS x86_64 host, Python 3.11.15, Docker client and server 29.6.2. The header records the sandbox image, `sha256:311e6c5aa56e15b2eb19bc7404b7485bfa04db4fff2b7f63e5cfd3a714077c71`, the image the final runs used.
 - **Caveats:** an earlier full-suite run stalled for over 20 minutes while the host's load average was 75 and was killed; the same tests run separately took 21 seconds, 104 seconds and 15 seconds, and this run took 147 seconds with the load in the twenties to thirties. So the stall is not reproduced and not explained: most likely Docker Desktop under host memory pressure, which is a guess. Docker on this laptop is slow under load, so laptop durations say nothing about the Pi.
 - **Paper use:** Methods (software quality), only via the release-commit capture.
+
+### E-033 Dev-image suite after P3: one failure
+
+- **Date and step:** 2026-09-25, P3.
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** the suite passed on the host but had one failure in the dev image, because a test assumed the same environment as the manifest's.
+- **Result:** `1 failed, 379 passed, 53 skipped in 35.73s`, exit 1. The failure is `test_check_mode_reports_a_match_and_a_mismatch`: `assert gen.main(["--check", "--manifest", ...]) == 1` got `0`. The 53 skips are the sandbox tests (`sandbox unavailable: docker is not installed here`).
+- **Evidence:** [raw/E-033.txt](raw/E-033.txt), sha256 `a17ff045e0b6d8c73e7c6b5e02f093c00dec86db86972c7ea30bbd47c92d7d16`. Code commit `9ee63975e1cf99f4869468a643aa7490a1aef640`, working tree clean. Linux x86_64 container, Python 3.11.16.
+- **Caveats:** the test tampered with a manifest entry's PNG file hash and expected `--check` to report a mismatch. `--check` deliberately compares file hashes only when the environment matches the manifest's (E-019), and the container is Linux while the manifest was built on macOS, so it correctly ignored the tampering. The defect is in the test, not in `--check`; it was invisible on the host, where the environments match. Fixed in the next commit by tampering with the pixel hash, which is compared everywhere. Superseded by E-034.
+- **Paper use:** none; recorded because a check that only runs in one environment can hide a defect in another.
 
 ## Corrections and tooling notes
 
