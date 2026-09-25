@@ -1,7 +1,7 @@
 # The lab sandbox image (docs/containment.md section 3): Python and the tier code only, no build tools.
 # It is run with the flags in harness/sandbox.py (no network, read-only root, no capabilities, resource
 # limits, tmpfs scratch, one bind-mounted /canary), so nothing here is writable at run time.
-#   docker build -f Dockerfile.sandbox -t vtb-sandbox .
+#   python -m harness.sandbox build   (labels the image with a hash of its source; a stale image is refused)
 FROM python:3.11-slim-bookworm
 
 RUN useradd --uid 10001 --user-group --no-create-home --home-dir /nonexistent --shell /usr/sbin/nologin vtb \
@@ -19,4 +19,7 @@ COPY tools/probes/sqlite_injection_limits.py ./tools/probes/sqlite_injection_lim
 # The bytecode cache goes to tmpfs; the root filesystem is read-only at run time.
 # VTB_IN_SANDBOX lets the deliberately vulnerable Tier 1 paths run; nothing else sets it (tiers/tier1_rulebased.py).
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONPYCACHEPREFIX=/tmp/pycache VTB_IN_SANDBOX=1
+# Set by `python -m harness.sandbox build`: what this image was built from. The tests refuse a mismatch.
+ARG SOURCE_HASH=unknown
+LABEL vtb.source-sha256=$SOURCE_HASH
 USER 10001:10001

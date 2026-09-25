@@ -92,7 +92,8 @@ def sandbox_image() -> str:
     """Which sandbox image ran, when there is one: the deliberately vulnerable code executes inside it."""
     if not shutil.which("docker"):
         return "n/a"
-    out = _run(["docker", "image", "inspect", "vtb-sandbox", "--format", "{{.Id}} created {{.Created}}"])
+    out = _run(["docker", "image", "inspect", "vtb-sandbox", "--format",
+                "{{.Id}} created {{.Created}} source {{index .Config.Labels \"vtb.source-sha256\"}}"])
     return out.strip() if out else "n/a (image vtb-sandbox not built)"
 
 

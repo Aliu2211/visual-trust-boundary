@@ -7,8 +7,10 @@ what a payload left behind from the host side of the /canary mount, never from i
 The Pi uses systemd-run instead (containment.md section 4); it is not written yet.
 """
 
+import hashlib
 import shutil
 import subprocess
+import sys
 import tempfile
 import threading
 import time
@@ -17,7 +19,9 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
+REPO = Path(__file__).resolve().parent.parent
 IMAGE = "vtb-sandbox"
+SOURCE_LABEL = "vtb.source-sha256"
 SANDBOX_UID = 10001
 OUTPUT_CAP = 1024 * 1024  # bytes kept per stream; a runaway writer stalls on a full pipe and is killed
 
@@ -30,6 +34,29 @@ class SandboxResult:
     timed_out: bool
     output_truncated: bool
     canary_files: tuple[str, ...]  # what the run left in /canary, listed from the host side
+
+
+def source_files(root: Path = REPO) -> list[Path]:
+    """Everything the sandbox image bakes in (Dockerfile.sandbox): it must be rebuilt when any of it changes."""
+    fixed = ["Dockerfile.sandbox", "requirements-sandbox.txt", "contracts.py", "tools/probes/sqlite_injection_limits.py"]
+    tree = [p.relative_to(root).as_posix() for d in ("defense", "tiers") for p in (root / d).rglob("*.py")]
+    return [root / name for name in sorted(fixed + tree)]
+
+
+def source_hash(root: Path = REPO) -> str:
+    """SHA-256 over the names and bytes of the baked-in source, so the image can say what it was built from."""
+    digest = hashlib.sha256()
+    for path in source_files(root):
+        digest.update(path.relative_to(root).as_posix().encode() + b"\0" + path.read_bytes() + b"\0")
+    return digest.hexdigest()
+
+
+def build_image(image: str = IMAGE, root: Path = REPO) -> None:
+    """docker build, labelling the image with the hash of its source so a stale image can be recognised."""
+    subprocess.run(
+        ["docker", "build", "-f", "Dockerfile.sandbox", "-t", image, "--build-arg", f"SOURCE_HASH={source_hash(root)}", "."],
+        cwd=root, check=True,
+    )
 
 
 def _read_capped(stream, sink: list[bytes], truncated: threading.Event, cap: int) -> None:
@@ -65,7 +92,13 @@ class DockerSandbox:
         except (OSError, subprocess.TimeoutExpired) as exc:
             return False, f"docker did not answer: {exc}"
         if inspect.returncode != 0:
-            return False, f"image {image} is not built (docker build -f Dockerfile.sandbox -t {image} .)"
+            return False, f"image {image} is not built (python -m harness.sandbox build)"
+        label = subprocess.run(
+            ["docker", "image", "inspect", image, "--format", f'{{{{index .Config.Labels "{SOURCE_LABEL}"}}}}'],
+            capture_output=True, text=True, timeout=15, check=False,
+        ).stdout.strip()
+        if label != source_hash():
+            return False, f"image {image} is stale: it was built from different source (python -m harness.sandbox build)"
         return True, ""
 
     def docker_args(self, name: str, canary: Path, *, interactive: bool = False) -> list[str]:
@@ -158,3 +191,11 @@ class DockerSandbox:
             output_truncated=truncated.is_set(),
             canary_files=files,
         )
+
+
+if __name__ == "__main__":
+    if sys.argv[1:] == ["build"]:
+        build_image()
+    else:
+        print("usage: python -m harness.sandbox build", file=sys.stderr)
+        sys.exit(2)
