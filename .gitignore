@@ -17,3 +17,6 @@ harness/results/raw/
 
 # OS / editor
 .DS_Store
+
+# Generated code images; the committed manifest (attacks/manifest.json) is what identifies them
+attacks/out/
