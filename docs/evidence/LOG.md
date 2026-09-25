@@ -55,6 +55,7 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 | E-031 | Summary of the final raw run | dev-observation | D5, D7 |
 | E-032 | Full host suite after P3, with the sandbox required | dev-observation | Methods |
 | E-033 | Dev-image suite after P3: one failure | dev-observation | Methods |
+| E-034 | Dev-image suite after P3, after the test fix | dev-observation | Methods |
 
 ## Entries
 
@@ -387,6 +388,16 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 - **Evidence:** [raw/E-033.txt](raw/E-033.txt), sha256 `a17ff045e0b6d8c73e7c6b5e02f093c00dec86db86972c7ea30bbd47c92d7d16`. Code commit `9ee63975e1cf99f4869468a643aa7490a1aef640`, working tree clean. Linux x86_64 container, Python 3.11.16.
 - **Caveats:** the test tampered with a manifest entry's PNG file hash and expected `--check` to report a mismatch. `--check` deliberately compares file hashes only when the environment matches the manifest's (E-019), and the container is Linux while the manifest was built on macOS, so it correctly ignored the tampering. The defect is in the test, not in `--check`; it was invisible on the host, where the environments match. Fixed in the next commit by tampering with the pixel hash, which is compared everywhere. Superseded by E-034.
 - **Paper use:** none; recorded because a check that only runs in one environment can hide a defect in another.
+
+### E-034 Dev-image suite after P3, after the test fix
+
+- **Date and step:** 2026-09-25, P3.
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** everything that does not need Docker passes in the dev image with the real `libzbar0`, including all decoder tests, the payload set, the harness and the ledger checks.
+- **Result:** `380 passed, 53 skipped in 40.29s`, exit 0. The 53 skips are the sandbox tests (`sandbox unavailable: docker is not installed here`); no decoder test is skipped.
+- **Evidence:** [raw/E-034.txt](raw/E-034.txt), sha256 `bfbf9ca8e1438ff76a61c288b8e73ad0cc3c2609c6353541f2bd75979eebe078`. Code commit `1beb31c23ef22231d32e8b88be7d8942d4ffae37`, working tree clean. Linux x86_64 container, Python 3.11.16, `libzbar0 0.23.92-7+deb12u1`. Supersedes E-033.
+- **Caveats:** the sandbox tests do not run here by design and are covered by the host run (E-035). The test count changes as tests are added; the paper should cite the release-commit capture.
+- **Paper use:** Methods (software quality), only via the release-commit capture.
 
 ## Corrections and tooling notes
 
