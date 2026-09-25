@@ -56,6 +56,7 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 | E-032 | Full host suite after P3, with the sandbox required | dev-observation | Methods |
 | E-033 | Dev-image suite after P3: one failure | dev-observation | Methods |
 | E-034 | Dev-image suite after P3, after the test fix | dev-observation | Methods |
+| E-035 | Full host suite after P3, after the test fix | dev-observation | Methods |
 
 ## Entries
 
@@ -397,6 +398,16 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 - **Result:** `380 passed, 53 skipped in 40.29s`, exit 0. The 53 skips are the sandbox tests (`sandbox unavailable: docker is not installed here`); no decoder test is skipped.
 - **Evidence:** [raw/E-034.txt](raw/E-034.txt), sha256 `bfbf9ca8e1438ff76a61c288b8e73ad0cc3c2609c6353541f2bd75979eebe078`. Code commit `1beb31c23ef22231d32e8b88be7d8942d4ffae37`, working tree clean. Linux x86_64 container, Python 3.11.16, `libzbar0 0.23.92-7+deb12u1`. Supersedes E-033.
 - **Caveats:** the sandbox tests do not run here by design and are covered by the host run (E-035). The test count changes as tests are added; the paper should cite the release-commit capture.
+- **Paper use:** Methods (software quality), only via the release-commit capture.
+
+### E-035 Full host suite after P3, after the test fix
+
+- **Date and step:** 2026-09-25, P3.
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** at the same commit as E-034, the whole suite passes on the host with the sandbox required, so the two environments together cover every test.
+- **Result:** `375 passed, 58 skipped in 141.44s (0:02:21)`, exit 0. All skips are the decoder tests (`libzbar not available here`). Together with E-034 (380 passed, 53 skipped) the two runs each account for 433 tests, and the tests skipped in one environment are the ones that ran in the other.
+- **Evidence:** [raw/E-035.txt](raw/E-035.txt), sha256 `a87b28273edfdfc10c20294585c6aa65a2ff3e68b37f2c59ecc69590674349e7`. Code commit `548422004ce4d13e89531726042319d31d0516e7`, working tree dirty: no. macOS x86_64 host, Python 3.11.15, Docker client and server 29.6.2. Sandbox image `sha256:311e6c5aa56e15b2eb19bc7404b7485bfa04db4fff2b7f63e5cfd3a714077c71`, the image the final runs used.
+- **Caveats:** Docker Desktop on macOS, not the Pi. The test count changes as tests are added; the paper should cite the release-commit capture.
 - **Paper use:** Methods (software quality), only via the release-commit capture.
 
 ## Corrections and tooling notes

@@ -1,0 +1,47 @@
+# evidence: E-035
+# captured: 2026-09-25T10:39:56Z
+# code commit: 548422004ce4d13e89531726042319d31d0516e7 (working tree dirty: no)
+# host label: unlabelled
+# platform: macOS-26.5.2-x86_64-i386-64bit x86_64
+# python: 3.11.15
+# libzbar0: n/a (no dpkg on this platform)
+# docker: client 29.6.2, server 29.6.2
+# sandbox image: sha256:311e6c5aa56e15b2eb19bc7404b7485bfa04db4fff2b7f63e5cfd3a714077c71 created 2026-09-25T10:00:44.035582902Z source a38f0f0f23378b3d6c90f45c42c162d781fd8d2b361052dc357b46dfefbfb334
+# packages: pydantic 2.13.5, pyyaml 6.0.3, pillow 12.3.0, pyzbar 0.1.9, qrcode 8.2, python-barcode 0.16.1, pytest 9.1.1, opencv-python-headless not installed
+# paths normalised: repo root -> <repo>, home and any ~ or ~ -> ~
+# command: env VTB_REQUIRE_SANDBOX=1 .venv/bin/python -m pytest -p no:cacheprovider -q -rs --durations=5
+# exit: 0
+--- stdout ---
+........................................................................ [ 16%]
+........................................................................ [ 33%]
+...ssssssssssssssssssssssssssssssssssssssssssssssssssssssss.ss.......... [ 49%]
+........................................................................ [ 66%]
+........................................................................ [ 83%]
+........................................................................ [ 99%]
+.                                                                        [100%]
+============================= slowest 5 durations ==============================
+8.47s call     tests/test_tier1_sandbox.py::test_the_first_real_crossing_and_the_first_real_block
+7.10s call     tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[inj-sleep-001-off]
+4.35s call     tests/test_containment.py::test_9a_a_timeout_removes_the_container_and_not_just_the_client
+3.96s call     tests/test_payloads.py::test_check_mode_reports_a_match_and_a_mismatch
+3.65s call     tests/test_tier1_sandbox.py::test_the_verdict_for_each_payload_and_mode[ben-revoked-001-off]
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_decode_zbar.py:41: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [2] tests/test_decode_zbar.py:48: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [2] tests/test_decode_zbar.py:54: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [10] tests/test_decode_zbar.py:66: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [16] tests/test_decode_zbar.py:73: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [2] tests/test_decode_zbar.py:82: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [6] tests/test_decode_zbar.py:87: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [3] tests/test_decode_zbar.py:102: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [3] tests/test_decode_zbar.py:110: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [1] tests/test_decode_zbar.py:126: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [2] tests/test_decode_zbar.py:145: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [2] tests/test_decode_zbar.py:155: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [2] tests/test_decode_zbar.py:172: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [2] tests/test_decode_zbar.py:179: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [2] tests/test_decode_zbar.py:185: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+SKIPPED [2] tests/test_decode_zbar.py:202: libzbar not available here (apt install libzbar0 on Debian and the Pi)
+375 passed, 58 skipped in 141.44s (0:02:21)
+--- stderr ---
+# sha256-of-above: a87b28273edfdfc10c20294585c6aa65a2ff3e68b37f2c59ecc69590674349e7

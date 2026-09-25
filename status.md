@@ -324,3 +324,13 @@ The three open items from the previous entry were not answered, so the plan's de
 **Not verified:** the Pi (aarch64, its own zbar and Python, the `systemd-run` sandbox); Tier 2 and Tier 3; the join with a live camera; results beyond three-run samples.
 
 **Next:** P4 (Tier 2, a FastAPI service with a log-integrity sink and a second-order query), Track H on the Pi, and the adaptive and held-out subsets (P6). None needs a gate except G4 for Tier 3.
+
+---
+
+## 2026-09-25: The suite in both environments, and a test that hid a defect
+
+**Actor:** Claude. **Evidence:** E-032 to E-035.
+
+- **The stall did not recur.** A full-suite run on the host took 147 seconds with the sandbox required (E-032); the earlier stall stays unexplained and is disclosed in the previous entry.
+- **A defect hidden by running one environment.** The dev-image run failed one test (E-033) that had passed on the host: it tampered with a PNG file hash, which the manifest check deliberately ignores when the environment differs (macOS manifest, Linux container). The test, not the check, was wrong; it now tampers with the pixel hash, and passes in both environments. The lesson recorded here: after changing environment-aware behaviour, run the suite in every environment before committing, not only the one being developed in.
+- **Final pair at one commit:** dev image 380 passed, 53 skipped (E-034); host 375 passed, 58 skipped (E-035). Each accounts for 433 tests, and what one skips the other runs.
