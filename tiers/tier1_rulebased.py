@@ -89,6 +89,10 @@ def handle(
     observation = Observation(granted=granted, matched_id=None if row is None else str(row[0]), visible_text=visible[:4096])
     try:
         _audit(text, parameterised=parameterised, audit_path=audit_path)
+    except subprocess.TimeoutExpired:
+        # A fixed description: the exception's own text embeds the measured elapsed time, which made two runs of the
+        # same payload differ in a non-timing column (E-025).
+        return outcome(error="TimeoutExpired", detail=f"audit shell command exceeded {_SHELL_TIMEOUT_S} s"), observation
     except (OSError, ValueError, subprocess.SubprocessError) as exc:  # the decision was made; the audit step failed
         return outcome(error=type(exc).__name__, detail=str(exc)[:200]), observation
     return outcome(), observation

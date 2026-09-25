@@ -129,3 +129,21 @@ def test_a_record_without_a_payload_id_cannot_be_handled(conn, tmp_path):
                          symbology="QRCODE", source_image="live#0", image_sha256="a" * 64, t_capture=0.0, t_decode_ns=1)
     with pytest.raises(ValueError, match="payload_id"):
         tier1_rulebased.handle(conn, live, Mode.FULL, 0, audit_path=str(tmp_path / "a.log"))
+
+
+# --- reproducibility: nothing measured may leak into a text column (E-025) ------------------------------------------
+
+
+@pytest.mark.parametrize("elapsed", [4.999930853999103, 4.99997205100226, 5.0021])
+def test_a_shell_timeout_is_described_without_the_measured_time(conn, tmp_path, monkeypatch, elapsed):
+    import subprocess
+
+    def slow(cmd, **kwargs):  # stands in for the shell step; nothing is executed
+        raise subprocess.TimeoutExpired(cmd, elapsed)
+
+    monkeypatch.setenv("VTB_IN_SANDBOX", "1")
+    monkeypatch.setattr(tier1_rulebased.subprocess, "run", slow)
+    outcome, obs = tier1_rulebased.handle(conn, rec("x; sleep 30"), Mode.OFF, 0, audit_path=str(tmp_path / "a.log"))
+    assert outcome.error == "TimeoutExpired"
+    assert outcome.detail == "audit shell command exceeded 5 s"  # the same text whatever the elapsed time
+    assert obs.granted is False  # the lookup had already decided; only the audit step failed
