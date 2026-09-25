@@ -13,14 +13,14 @@ SHA = "a" * 64
 def rec(text: str | None = None, *, raw: bytes | None = None, status: str = "ok") -> PayloadRecord:
     if status == "ok":
         raw = text.encode("utf-8")
-        return PayloadRecord(run_id="r", payload_id="p", raw_bytes_b64=base64.b64encode(raw).decode(), text=text,
+        return PayloadRecord(run_id="r", decoder_mode="default", payload_id="p", raw_bytes_b64=base64.b64encode(raw).decode(), text=text,
                              decode_status="ok", symbology="QRCODE", source_image="p.png", image_sha256=SHA,
                              t_capture=0.0, t_decode_ns=1)
     if status == "invalid_utf8":
-        return PayloadRecord(run_id="r", payload_id="p", raw_bytes_b64=base64.b64encode(raw).decode(), text=None,
+        return PayloadRecord(run_id="r", decoder_mode="default", payload_id="p", raw_bytes_b64=base64.b64encode(raw).decode(), text=None,
                              decode_status="invalid_utf8", symbology="QRCODE", source_image="p.png", image_sha256=SHA,
                              t_capture=0.0, t_decode_ns=1)
-    return PayloadRecord(run_id="r", payload_id="p", decode_status=status, source_image="p.png", image_sha256=SHA,
+    return PayloadRecord(run_id="r", decoder_mode="default", payload_id="p", decode_status=status, source_image="p.png", image_sha256=SHA,
                          t_capture=0.0, t_decode_ns=1)
 
 

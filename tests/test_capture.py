@@ -14,6 +14,7 @@ from decode.decoder import GrayImage, RawSymbol
 COMMON = dict(
     run_id="run-1",
     payload_id="p-1",
+    decoder_mode="default",
     source_image="p-1.png",
     image_sha256="a" * 64,
     t_capture=1.0,
@@ -23,6 +24,7 @@ COMMON = dict(
 
 class FakeDecoder:
     name = "fake"
+    mode = "default"
 
     def __init__(self, symbols):
         self.symbols = symbols
@@ -74,6 +76,17 @@ def test_empty_symbol_is_a_symbol_not_a_miss():
 def test_nul_bytes_survive_into_the_record():
     r = record_from_symbols([RawSymbol(b"a\x00b", "QRCODE")], **COMMON)
     assert r.text == "a\x00b" and base64.b64decode(r.raw_bytes_b64) == b"a\x00b"
+
+
+def test_replayed_and_live_records_carry_the_decoders_mode(tmp_path):
+    class RawFake(FakeDecoder):
+        mode = "raw"
+
+    write_png(tmp_path / "a.png")
+    assert [r.decoder_mode for r in replay_records(tmp_path, "r", RawFake([]))] == ["raw"]
+    assert [r.decoder_mode for r in replay_records(tmp_path, "r", FakeDecoder([]))] == ["default"]
+    frames = [GrayImage(2, 2, bytes(4))]
+    assert [r.decoder_mode for r in live_records(frames, "r", RawFake([]))] == ["raw"]
 
 
 # --- GrayImage and image loading ---------------------------------------------------

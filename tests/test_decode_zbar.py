@@ -33,8 +33,13 @@ def qr_bytes(decoder, data: bytes, tmp_path, ecc="M") -> bytes:
 
 def record_for(symbols) -> PayloadRecord:
     return record_from_symbols(
-        symbols, run_id="r", payload_id="p", source_image="p.png", image_sha256="a" * 64, t_capture=0.0, t_decode_ns=1
+        symbols, run_id="r", payload_id="p", decoder_mode="default", source_image="p.png", image_sha256="a" * 64,
+        t_capture=0.0, t_decode_ns=1
     )
+
+
+def test_the_decoders_report_their_own_mode(decoder, raw_decoder):
+    assert (decoder.mode, raw_decoder.mode) == ("default", "raw")
 
 
 # --- ASCII: exact in both modes ------------------------------------------------------------

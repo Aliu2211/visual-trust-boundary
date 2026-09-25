@@ -45,7 +45,7 @@ CASES = [
 
 
 def record(pid: str, text: str) -> PayloadRecord:
-    return PayloadRecord(run_id="demo", payload_id=pid, raw_bytes_b64=base64.b64encode(text.encode()).decode(), text=text,
+    return PayloadRecord(run_id="demo", decoder_mode="default", payload_id=pid, raw_bytes_b64=base64.b64encode(text.encode()).decode(), text=text,
                          decode_status="ok", symbology="QRCODE", source_image=f"{pid}.png", image_sha256="a" * 64,
                          t_capture=0.0, t_decode_ns=1)
 

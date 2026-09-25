@@ -21,7 +21,7 @@ def db(seed=SEED) -> sqlite3.Connection:
 
 
 def rec(text: str) -> PayloadRecord:
-    return PayloadRecord(run_id="r", payload_id="p", raw_bytes_b64=base64.b64encode(text.encode()).decode(), text=text,
+    return PayloadRecord(run_id="r", decoder_mode="default", payload_id="p", raw_bytes_b64=base64.b64encode(text.encode()).decode(), text=text,
                          decode_status="ok", symbology="QRCODE", source_image="p.png", image_sha256="a" * 64,
                          t_capture=0.0, t_decode_ns=1)
 

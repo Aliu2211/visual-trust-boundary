@@ -9,6 +9,8 @@ from ctypes import c_void_p, cast
 from dataclasses import dataclass
 from typing import Protocol
 
+from contracts import DecoderMode
+
 
 @dataclass(frozen=True)
 class GrayImage:
@@ -34,6 +36,7 @@ class RawSymbol:
 
 class Decoder(Protocol):
     name: str
+    mode: DecoderMode  # recorded on every record this decoder produces
 
     def decode(self, image: GrayImage) -> list[RawSymbol]: ...
 
@@ -70,6 +73,10 @@ class PyzbarDecoder:
         self._pyzbar = pyzbar
         self._symbols = [pyzbar.ZBarSymbol.QRCODE, pyzbar.ZBarSymbol.CODE128]
         self.raw = raw
+
+    @property
+    def mode(self) -> DecoderMode:
+        return "raw" if self.raw else "default"
 
     def decode(self, image: GrayImage) -> list[RawSymbol]:
         if self.raw:

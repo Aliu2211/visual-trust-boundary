@@ -16,7 +16,7 @@ REVOKED = sorted(TRUTH.revoked_ids)[0]
 
 
 def record(text, pid="inj-001", status="ok"):
-    return PayloadRecord(run_id="r", payload_id=pid, raw_bytes_b64=base64.b64encode(text.encode()).decode(), text=text,
+    return PayloadRecord(run_id="r", decoder_mode="default", payload_id=pid, raw_bytes_b64=base64.b64encode(text.encode()).decode(), text=text,
                          decode_status=status, symbology="QRCODE", source_image="p.png", image_sha256="a" * 64,
                          t_capture=0.0, t_decode_ns=1)
 
@@ -102,7 +102,7 @@ def test_a_benign_row_is_not_ok_if_any_signal_fired():
 
 
 def test_an_undelivered_record_needs_no_run_and_is_not_delivered():
-    undelivered = PayloadRecord(run_id="r", payload_id="inj-001", decode_status="no_symbol", source_image="p.png",
+    undelivered = PayloadRecord(run_id="r", decoder_mode="default", payload_id="inj-001", decode_status="no_symbol", source_image="p.png",
                                 image_sha256="a" * 64, t_capture=0.0, t_decode_ns=1)
     assert judge_tier1(Family.INJECTION, undelivered, None, TRUTH, GOLDEN) == (Verdict.NOT_DELIVERED, None)
 

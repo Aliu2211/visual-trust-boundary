@@ -59,6 +59,7 @@ def record(**over):
     base = dict(
         run_id="run-1",
         payload_id="inj-001",
+        decoder_mode="default",
         raw_bytes_b64=b64(b"BADGE-1"),
         text="BADGE-1",
         decode_status="ok",
@@ -87,6 +88,8 @@ def row(**over):
         handle_ns=5000,
     )
     base.update(over)
+    # A crossed row names the signal that fired; the other verdicts named none (docs/oracles.md section 2).
+    base.setdefault("signals", "A" if base["verdict"] == "crossed" else "")
     return base
 
 
@@ -133,7 +136,7 @@ def test_spec_accepts_text_content():
 
 def test_spec_carries_bytes_that_yaml_text_cannot():
     raw = b"a\x00\xff\xfe"
-    s = PayloadSpec(**spec(family="malformed", content_text=None, content_b64=b64(raw)))
+    s = PayloadSpec(**spec(family="malformed", content_text=None, content_b64=b64(raw), decoder_modes=["raw"]))
     assert s.content_bytes == raw
 
 
@@ -550,3 +553,71 @@ def test_an_observation_is_a_plain_report_with_no_verdict_in_it():
         Observation(visible_text="x" * 4097)
     with pytest.raises(ValidationError):
         Observation(crossed=True)  # a tier never grades itself
+
+
+# --- decoder conditions on payload specs, damage, signals -----------------------------------------------------
+
+
+def test_invalid_utf8_content_runs_in_the_raw_decoder_mode_only():
+    bad = spec(family="malformed", content_text=None, content_b64=b64(b"ab\xff\xfe"))
+    with pytest.raises(ValidationError, match="raw decoder mode only"):
+        PayloadSpec(**bad)
+    assert PayloadSpec(**bad, decoder_modes=["raw"]).decoder_modes == ("raw",)
+
+
+def test_non_ascii_benign_text_runs_in_the_raw_decoder_mode_only():
+    benign = spec(family="benign", subset="benign", target_tiers=["tier1"], content_text="José")
+    with pytest.raises(ValidationError, match="raw decoder mode only"):
+        PayloadSpec(**benign)
+    assert PayloadSpec(**benign, decoder_modes=["raw"])
+
+
+def test_valid_non_ascii_text_in_the_malformed_family_may_run_in_both_modes():
+    # Only benign text is held to raw: a malformed payload that zbar rewrites is still a payload the tier sees.
+    assert PayloadSpec(**spec(family="malformed", content_text="José")).decoder_modes == ("default", "raw")
+
+
+def test_decoder_modes_default_to_both_and_reject_empty_duplicate_and_unknown():
+    assert PayloadSpec(**spec()).decoder_modes == ("default", "raw")
+    for bad in ([], ["raw", "raw"], ["binary"]):
+        with pytest.raises(ValidationError):
+            PayloadSpec(**spec(decoder_modes=bad))
+
+
+def test_a_damaged_image_is_expected_not_to_decode():
+    assert PayloadSpec(**spec(family="malformed", damage="truncate", expected_decode="fail")).damage == "truncate"
+    with pytest.raises(ValidationError, match="expected not to decode"):
+        PayloadSpec(**spec(family="malformed", damage="truncate", expected_decode="ok"))
+    with pytest.raises(ValidationError):
+        PayloadSpec(**spec(damage="shred"))
+
+
+def test_a_record_must_say_how_it_was_decoded():
+    missing = record()
+    del missing["decoder_mode"]
+    with pytest.raises(ValidationError):
+        PayloadRecord(**missing)
+    assert PayloadRecord(**record(decoder_mode="raw")).decoder_mode == "raw"
+
+
+def test_a_crossed_row_must_name_the_signal_that_fired():
+    assert ResultRow(**row(signals="A,C")).signals == "A,C"
+    with pytest.raises(ValidationError, match="name the signal"):
+        ResultRow(**row(verdict="crossed", signals=""))
+    assert ResultRow(**row(verdict="no_effect")).signals == ""  # other verdicts need none
+    # A benign row can carry a fired signal only if it is a fault (docs/oracles.md: a benign row is not ok if any signal fired).
+    assert ResultRow(**row(family="benign", subset="benign", verdict="fault", signals="D")).signals == "D"
+
+
+def test_no_effect_and_benign_ok_cannot_name_a_signal():
+    with pytest.raises(ValidationError, match="no signal fired"):
+        ResultRow(**row(verdict="no_effect", signals="A"))
+    with pytest.raises(ValidationError, match="no signal fired"):
+        ResultRow(**row(family="benign", subset="benign", verdict="benign_ok", signals="A"))
+
+
+def test_run_metadata_can_record_the_container_runtime_and_sandbox_image():
+    meta = RunMetadata(run_id="r", started_at="2026-09-25T10:00:00Z", git_sha="abc1234", git_dirty=False, config_sha256=SHA,
+                       host_label="laptop", os="darwin", kernel="25", python="3.11", decoder_mode="default",
+                       docker_version="client 29.6.2, server 29.6.2", sandbox_image="sha256:" + "a" * 64)
+    assert meta.docker_version and meta.sandbox_image

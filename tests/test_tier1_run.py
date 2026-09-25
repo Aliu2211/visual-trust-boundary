@@ -25,7 +25,7 @@ class FakeSandbox:
 
 
 def rec():
-    return PayloadRecord(run_id="r", payload_id="inj-001", raw_bytes_b64=base64.b64encode(b"x").decode(), text="x",
+    return PayloadRecord(run_id="r", decoder_mode="default", payload_id="inj-001", raw_bytes_b64=base64.b64encode(b"x").decode(), text="x",
                          decode_status="ok", symbology="QRCODE", source_image="p.png", image_sha256="a" * 64,
                          t_capture=0.0, t_decode_ns=1)
 

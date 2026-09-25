@@ -24,10 +24,10 @@ def conn():
 
 def rec(text=None, *, raw=None, pid="p-001"):
     if raw is not None:
-        return PayloadRecord(run_id="r", payload_id=pid, raw_bytes_b64=base64.b64encode(raw).decode(), text=None,
+        return PayloadRecord(run_id="r", decoder_mode="default", payload_id=pid, raw_bytes_b64=base64.b64encode(raw).decode(), text=None,
                              decode_status="invalid_utf8", symbology="QRCODE", source_image="p.png", image_sha256="a" * 64,
                              t_capture=0.0, t_decode_ns=1)
-    return PayloadRecord(run_id="r", payload_id=pid, raw_bytes_b64=base64.b64encode(text.encode()).decode(), text=text,
+    return PayloadRecord(run_id="r", decoder_mode="default", payload_id=pid, raw_bytes_b64=base64.b64encode(text.encode()).decode(), text=text,
                          decode_status="ok", symbology="QRCODE", source_image="p.png", image_sha256="a" * 64,
                          t_capture=0.0, t_decode_ns=1)
 
@@ -125,7 +125,7 @@ def test_full_mode_still_serves_every_legitimate_badge(conn, tmp_path):
 
 
 def test_a_record_without_a_payload_id_cannot_be_handled(conn, tmp_path):
-    live = PayloadRecord(run_id="r", raw_bytes_b64=base64.b64encode(b"x").decode(), text="x", decode_status="ok",
+    live = PayloadRecord(run_id="r", decoder_mode="default", raw_bytes_b64=base64.b64encode(b"x").decode(), text="x", decode_status="ok",
                          symbology="QRCODE", source_image="live#0", image_sha256="a" * 64, t_capture=0.0, t_decode_ns=1)
     with pytest.raises(ValueError, match="payload_id"):
         tier1_rulebased.handle(conn, live, Mode.FULL, 0, audit_path=str(tmp_path / "a.log"))
