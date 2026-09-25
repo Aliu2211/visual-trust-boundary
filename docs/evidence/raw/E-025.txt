@@ -1,0 +1,18 @@
+# evidence: E-025
+# captured: 2026-09-25T09:59:30Z
+# code commit: c90529e30bc6c5629a9391b38c9ba3e284c6106b (working tree dirty: no)
+# host label: unlabelled
+# platform: macOS-26.5.2-x86_64-i386-64bit x86_64
+# python: 3.11.15
+# libzbar0: n/a (no dpkg on this platform)
+# docker: client 29.6.2, server 29.6.2
+# sandbox image: sha256:e87ea087dc7e1859eb716a0be9c24f2bed4231f6b3fd2e726345c9ab1cbb6dca created 2026-09-25T09:00:34.459561868Z source 7f93f9ef82e3838b5a0d80ad6913335921e1ff63e3b5f84246d66ae879fb22d1
+# packages: pydantic 2.13.5, pyyaml 6.0.3, pillow 12.3.0, pyzbar 0.1.9, qrcode 8.2, python-barcode 0.16.1, pytest 9.1.1, opencv-python-headless not installed
+# paths normalised: repo root -> <repo>, home and any ~ or ~ -> ~
+# command: .venv/bin/python -m harness.compare harness/results/raw/p3-default/results.csv harness/results/raw/p3-default-2/results.csv
+# exit: 1
+--- stdout ---
+('tier1', 'off', 'default', 'inj-sleep-001', 0): detail differs ("Command 'echo x; sleep 30 >> /audit/audit.log' timed out after 4.999930853999103 seconds" then "Command 'echo x; sleep 30 >> /audit/audit.log' timed out after 4.99997205100226 seconds")
+1 differences (ignoring handle_ns, defense_ns, run_id)
+--- stderr ---
+# sha256-of-above: 80d8aa80c73ffbe0e822a232b6bca9476b087e59db4a1fb8d80f5e3f717daebd

@@ -1,0 +1,56 @@
+# evidence: E-022
+# captured: 2026-09-25T09:42:15Z
+# code commit: c90529e30bc6c5629a9391b38c9ba3e284c6106b (working tree dirty: no)
+# host label: unlabelled
+# platform: macOS-26.5.2-x86_64-i386-64bit x86_64
+# python: 3.11.15
+# libzbar0: n/a (no dpkg on this platform)
+# docker: client 29.6.2, server 29.6.2
+# sandbox image: sha256:e87ea087dc7e1859eb716a0be9c24f2bed4231f6b3fd2e726345c9ab1cbb6dca created 2026-09-25T09:00:34.459561868Z source 7f93f9ef82e3838b5a0d80ad6913335921e1ff63e3b5f84246d66ae879fb22d1
+# packages: pydantic 2.13.5, pyyaml 6.0.3, pillow 12.3.0, pyzbar 0.1.9, qrcode 8.2, python-barcode 0.16.1, pytest 9.1.1, opencv-python-headless not installed
+# paths normalised: repo root -> <repo>, home and any ~ or ~ -> ~
+# command: sh -c '.venv/bin/python -m harness.run_experiments --records harness/results/raw/decode/records-default.jsonl --out harness/results/raw/p3-default --jobs 3; echo exit=$?; shasum -a 256 harness/results/raw/p3-default/results.csv; wc -l harness/results/raw/p3-default/results.csv; cat harness/results/raw/p3-default/run_meta.json'
+# exit: 0
+--- stdout ---
+564 rows (default decoder condition) written to harness/results/raw/p3-default
+  full               benign_ok      110
+  full               blocked        29
+  full               not_delivered  2
+  off                benign_ok      110
+  off                crossed        15
+  off                fault          4
+  off                no_effect      10
+  off                not_delivered  2
+  parameterise_only  benign_ok      110
+  parameterise_only  no_effect      29
+  parameterise_only  not_delivered  2
+  validate_only      benign_ok      110
+  validate_only      blocked        29
+  validate_only      not_delivered  2
+exit=0
+cfdd45f3443fe360eb7c3f600e4b476abdb34533c11e820fcd6073e56df6fc71  harness/results/raw/p3-default/results.csv
+     565 harness/results/raw/p3-default/results.csv
+{
+ "run_id": "p3-default",
+ "started_at": "2026-09-25T09:42:14.753437Z",
+ "git_sha": "c90529e30bc6c5629a9391b38c9ba3e284c6106b",
+ "git_dirty": false,
+ "config_sha256": "e68b1cc20fb48f9d2f3d354a7d8c3acaa62060960a2d1df9c18d3730a8b6d133",
+ "host_label": "unlabelled",
+ "os": "Darwin",
+ "kernel": "25.5.0",
+ "python": "3.11.15",
+ "decoder_mode": "default",
+ "requirements_sha256": null,
+ "zbar_version": "0.23.92-7+deb12u1",
+ "docker_version": "client 29.6.2, server 29.6.2",
+ "sandbox_image": "sha256:e87ea087dc7e1859eb716a0be9c24f2bed4231f6b3fd2e726345c9ab1cbb6dca created 2026-09-25T09:00:34.459561868Z source 7f93f9ef82e3838b5a0d80ad6913335921e1ff63e3b5f84246d66ae879fb22d1",
+ "ollama_version": null,
+ "model_digest": null,
+ "cpu_temp_c_start": null,
+ "cpu_temp_c_end": null,
+ "throttled_start": null,
+ "throttled_end": null
+}
+--- stderr ---
+# sha256-of-above: 3cfdcdf0024fd57ace96e4dbc2b3ab8a6aebc175607080a36f71e8fa1be6f452

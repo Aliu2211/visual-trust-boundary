@@ -1,0 +1,60 @@
+# evidence: E-021
+# captured: 2026-09-25T09:32:54Z
+# code commit: c90529e30bc6c5629a9391b38c9ba3e284c6106b (working tree dirty: no)
+# host label: unlabelled
+# platform: Linux-6.12.76-linuxkit-x86_64-with-glibc2.36 x86_64
+# python: 3.11.16
+# libzbar0: 0.23.92-7+deb12u1
+# docker: n/a (docker not installed)
+# sandbox image: n/a
+# packages: pydantic 2.13.5, pyyaml 6.0.3, pillow 12.3.0, pyzbar 0.1.9, qrcode 8.2, python-barcode 0.16.1, pytest 9.1.1, opencv-python-headless not installed
+# paths normalised: repo root -> <repo>, home and any ~ or ~ -> ~
+# command: sh -c '
+mkdir -p harness/results/raw/decode &&
+python -m decode.capture --run-id p3-default --decoder-mode default replay attacks/out --out harness/results/raw/decode/records-default.jsonl &&
+python -m decode.capture --run-id p3-raw --decoder-mode raw replay attacks/out --out harness/results/raw/decode/records-raw.jsonl &&
+python -m decode.capture --run-id p3-default-2 --decoder-mode default replay attacks/out --out harness/results/raw/decode/records-default-2.jsonl &&
+for f in harness/results/raw/decode/*.meta.json; do echo "-- $f"; cat "$f"; done'
+# exit: 0
+--- stdout ---
+wrote 143 records (default mode) to harness/results/raw/decode/records-default.jsonl
+wrote 143 records (raw mode) to harness/results/raw/decode/records-raw.jsonl
+wrote 143 records (default mode) to harness/results/raw/decode/records-default-2.jsonl
+-- harness/results/raw/decode/records-default-2.jsonl.meta.json
+{
+ "created": "2026-09-25T09:32:53Z",
+ "decoder": "pyzbar",
+ "decoder_mode": "default",
+ "image_dir": "attacks/out",
+ "libzbar0": "0.23.92-7+deb12u1",
+ "python": "3.11.16",
+ "pyzbar": "0.1.9",
+ "records": 143,
+ "run_id": "p3-default-2"
+}
+-- harness/results/raw/decode/records-default.jsonl.meta.json
+{
+ "created": "2026-09-25T09:32:50Z",
+ "decoder": "pyzbar",
+ "decoder_mode": "default",
+ "image_dir": "attacks/out",
+ "libzbar0": "0.23.92-7+deb12u1",
+ "python": "3.11.16",
+ "pyzbar": "0.1.9",
+ "records": 143,
+ "run_id": "p3-default"
+}
+-- harness/results/raw/decode/records-raw.jsonl.meta.json
+{
+ "created": "2026-09-25T09:32:52Z",
+ "decoder": "pyzbar",
+ "decoder_mode": "raw",
+ "image_dir": "attacks/out",
+ "libzbar0": "0.23.92-7+deb12u1",
+ "python": "3.11.16",
+ "pyzbar": "0.1.9",
+ "records": 143,
+ "run_id": "p3-raw"
+}
+--- stderr ---
+# sha256-of-above: f8c41de8d6dd48bdf2b36b4b8229f5ce017f36bd8e0eb65a520b409beea8e2d1

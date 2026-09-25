@@ -1,0 +1,17 @@
+# evidence: E-029
+# captured: 2026-09-25T10:28:01Z
+# code commit: f03af06a934abf313fe72b2c5d3b5436587dbd76 (working tree dirty: no)
+# host label: unlabelled
+# platform: macOS-26.5.2-x86_64-i386-64bit x86_64
+# python: 3.11.15
+# libzbar0: n/a (no dpkg on this platform)
+# docker: client 29.6.2, server 29.6.2
+# sandbox image: sha256:311e6c5aa56e15b2eb19bc7404b7485bfa04db4fff2b7f63e5cfd3a714077c71 created 2026-09-25T10:00:44.035582902Z source a38f0f0f23378b3d6c90f45c42c162d781fd8d2b361052dc357b46dfefbfb334
+# packages: pydantic 2.13.5, pyyaml 6.0.3, pillow 12.3.0, pyzbar 0.1.9, qrcode 8.2, python-barcode 0.16.1, pytest 9.1.1, opencv-python-headless not installed
+# paths normalised: repo root -> <repo>, home and any ~ or ~ -> ~
+# command: .venv/bin/python -m harness.compare harness/results/raw/p3b-default/results.csv harness/results/raw/p3b-default-2/results.csv
+# exit: 0
+--- stdout ---
+0 differences (ignoring handle_ns, defense_ns, run_id)
+--- stderr ---
+# sha256-of-above: 78bccedad747bf532c09fa2b8877c86bfe6b00a4b71cf5f309d384215af9938b

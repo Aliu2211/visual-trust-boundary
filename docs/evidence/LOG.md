@@ -42,6 +42,17 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 | E-018 | Full host suite with the sandbox required | dev-observation | Methods, D12 |
 | E-019 | The payload set through the real decoder, before any fix | dev-observation | D5, D7, P3 |
 | E-020 | The payload set through the real decoder, after the fix | dev-observation | D5, D7, P3 |
+| E-021 | The payload set decoded into records files | dev-observation | P3 |
+| E-022 | First Tier 1 run, default condition, before the timeout fix | dev-observation | P3.3 |
+| E-023 | First Tier 1 run, raw condition, before the timeout fix | dev-observation | P3.3 |
+| E-024 | Re-run of the default condition, before the fix | dev-observation | P3 |
+| E-025 | The reproducibility check finds a defect | dev-observation | P3 acceptance |
+| E-026 | Tier 1 run, default condition, after the fix | dev-observation | P3.3 |
+| E-027 | Re-run of the default condition, after the fix | dev-observation | P3 |
+| E-028 | Tier 1 run, raw condition, after the fix | dev-observation | P3.3 |
+| E-029 | The reproducibility check passes | dev-observation | P3 acceptance |
+| E-030 | Summary of the final default run | dev-observation | D7, D14 |
+| E-031 | Summary of the final raw run | dev-observation | D5, D7 |
 
 ## Entries
 
@@ -245,6 +256,116 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 - **Caveats:** one zbar build. PNG file hashes were not compared across environments, by design. Pixel equality was shown for one platform pair (macOS x86_64 and Linux x86_64); the Pi (aarch64) is unchecked. The decoder rewrote `mal-utf8-001` and `mal-utf8-002` in the default condition but not `mal-unicode-001`: one payload each, so this shows that rewriting depends on the content, not a rule for which content.
 - **Paper use:** Methods (payload set validation and image reproducibility); Threats to validity (default-mode rewriting is content-dependent).
 
+### E-021 The payload set decoded into records files
+
+- **Date and step:** 2026-09-25, P3 (the decode stage of the pipeline).
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** the 143 generated images decode inside the dev image into three records files (default condition, raw condition, and a second default decode), each with a metadata sidecar naming the decoder build.
+- **Result:** `wrote 143 records (default mode)`, `wrote 143 records (raw mode)` and a second `wrote 143 records (default mode)`. The sidecar records `decoder` `pyzbar`, `pyzbar` `0.1.9`, `libzbar0` `0.23.92-7+deb12u1`, `python` `3.11.16`, `image_dir` `attacks/out` and `records` `143`.
+- **Evidence:** [raw/E-021.txt](raw/E-021.txt), sha256 `f8c41de8d6dd48bdf2b36b4b8229f5ce017f36bd8e0eb65a520b409beea8e2d1`. Code commit `c90529e30bc6c5629a9391b38c9ba3e284c6106b`, working tree dirty: no. Linux x86_64 container.
+- **Caveats:** the records carry decode timestamps and decode times, so two decodes of the same images differ in those fields by design; E-020 shows the decode outcomes, statuses and bytes agree. Both sets of runs below read these records files; records depend only on the images and the decoder, not on the tier code.
+- **Paper use:** Methods (the pipeline's decode stage and its provenance record).
+
+### E-022 First Tier 1 run, default decoder condition, before the timeout fix
+
+- **Date and step:** 2026-09-25, P3.3 (the first CSV from Tier 1 on the laptop).
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** the pipeline produced a schema-valid CSV of 564 rows (141 payloads by 4 modes).
+- **Result:** verdicts per mode: `off`: benign_ok 110, crossed 15, fault 4, no_effect 10, not_delivered 2; `validate_only`: benign_ok 110, blocked 29, not_delivered 2; `parameterise_only`: benign_ok 110, no_effect 29, not_delivered 2; `full`: benign_ok 110, blocked 29, not_delivered 2. `results.csv` has 565 lines (a header and 564 rows), sha256 `cfdd45f3443fe360eb7c3f600e4b476abdb34533c11e820fcd6073e56df6fc71`.
+- **Evidence:** [raw/E-022.txt](raw/E-022.txt), sha256 `3cfdcdf0024fd57ace96e4dbc2b3ab8a6aebc175607080a36f71e8fa1be6f452`. Code commit `c90529e30bc6c5629a9391b38c9ba3e284c6106b`, working tree dirty: no. macOS host, Python 3.11.15, Docker client and server 29.6.2, three sandbox calls in parallel. The run metadata is in the capture.
+- **Caveats:** superseded for reproducibility by E-026 to E-029: E-025 found that this run and E-024 differ in one non-timing cell. The results file is a local, git-ignored output; its hash fingerprints it. Timing columns were recorded on a heavily loaded machine with parallel calls and are not results.
+- **Paper use:** Methods (the first end-to-end run). Not Results.
+
+### E-023 First Tier 1 run, raw decoder condition, before the timeout fix
+
+- **Date and step:** 2026-09-25, P3.3.
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** the raw decoder condition adds the two invalid-UTF-8 payloads to the matrix: 572 rows (143 payloads by 4 modes).
+- **Result:** verdicts per mode: `off`: benign_ok 110, crossed 15, fault 4, no_effect 12, not_delivered 2; `validate_only`: benign_ok 110, blocked 31, not_delivered 2; `parameterise_only`: benign_ok 110, no_effect 31, not_delivered 2; `full`: benign_ok 110, blocked 31, not_delivered 2. `results.csv` sha256 `526025ea325d10d1e5a465963ff249fb96d636d18073284eb1f35fa0a0ad9ced`, 573 lines.
+- **Evidence:** [raw/E-023.txt](raw/E-023.txt), sha256 `dac75953f441a7dab1cbfbe4b1e0763c2950cc3e4048bb3dbf181145b6f3523e`. Code commit `c90529e30bc6c5629a9391b38c9ba3e284c6106b`, working tree dirty: no.
+- **Caveats:** as E-022. Superseded by E-028, whose verdict counts are identical.
+- **Paper use:** Methods.
+
+### E-024 Re-run of the default condition, before the timeout fix
+
+- **Date and step:** 2026-09-25, P3 (the reproducibility check).
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** a second independent run of the default condition gives the same verdict counts as the first.
+- **Result:** the same 564 rows and the same verdict counts as E-022. `results.csv` sha256 `59d8c94cda3ddce1da4a99cc5c9c76373bc1f25b27dea3f0f05924ef03400c3e`, which differs from E-022's because timing columns and the run id differ; E-025 compares the cells.
+- **Evidence:** [raw/E-024.txt](raw/E-024.txt), sha256 `4502af8cf5334aa9dc8ac5b2b578c31c9af77f1d67b0f9df4d951e72a49abce4`. Code commit `c90529e30bc6c5629a9391b38c9ba3e284c6106b`, working tree dirty: no.
+- **Caveats:** see E-025.
+- **Paper use:** Methods.
+
+### E-025 The reproducibility check finds a defect
+
+- **Date and step:** 2026-09-25, P3 acceptance ("a re-run reproduces every non-timing column exactly").
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** the comparison of E-022 with E-024 found exactly one differing non-timing cell out of 564 rows, so the acceptance check failed until the tier was fixed.
+- **Result:** exit code 1, output: `('tier1', 'off', 'default', 'inj-sleep-001', 0): detail differs` between `Command 'echo x; sleep 30 >> /audit/audit.log' timed out after 4.999930853999103 seconds` and `... after 4.99997205100226 seconds`, then `1 differences (ignoring handle_ns, defense_ns, run_id)`. No verdict, signal, error or other cell differed.
+- **Evidence:** [raw/E-025.txt](raw/E-025.txt), sha256 `80d8aa80c73ffbe0e822a232b6bca9476b087e59db4a1fb8d80f5e3f717daebd`. Code commit `c90529e30bc6c5629a9391b38c9ba3e284c6106b`, working tree dirty: no.
+- **Caveats:** the cause is that `subprocess.TimeoutExpired`'s message embeds the measured elapsed seconds, which the tier copied into `detail`. Fixed in commit `f03af06`: the tier reports a fixed description, and a test feeds three elapsed values and requires the same text. The check found it because timing columns are the only ones excluded from comparison; any other measured value leaking into a text column would be found the same way.
+- **Paper use:** Methods (reproducibility check and what it caught).
+
+### E-026 Tier 1 run, default decoder condition, after the fix
+
+- **Date and step:** 2026-09-25, P3.3.
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** at the fixed commit the pipeline produces a schema-valid CSV of 564 rows with the same verdict counts as before the fix.
+- **Result:** verdicts per mode: `off`: benign_ok 110, crossed 15, fault 4, no_effect 10, not_delivered 2; `validate_only`: benign_ok 110, blocked 29, not_delivered 2; `parameterise_only`: benign_ok 110, no_effect 29, not_delivered 2; `full`: benign_ok 110, blocked 29, not_delivered 2. `results.csv` sha256 `5bfa954e7c98da5bca01308b879155d0d45269187a8b75ca7bf733a5d1b52a7c`.
+- **Evidence:** [raw/E-026.txt](raw/E-026.txt), sha256 `bdddfd076bf4a9ca3f80da2e31faa904c58cd4b7f395690e67174c35f183c4e3`. Code commit `f03af06a934abf313fe72b2c5d3b5436587dbd76`, working tree dirty: no. The run metadata in the capture records the sandbox image and its source hash.
+- **Caveats:** naive payloads only, Tier 1 only, one repetition per cell on a deterministic tier. Laptop timing columns are not results.
+- **Paper use:** Methods (worked run). Not Results.
+
+### E-027 Re-run of the default condition, after the fix
+
+- **Date and step:** 2026-09-25, P3.
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** an independent second run at the fixed commit.
+- **Result:** the same 564 rows and verdict counts as E-026. `results.csv` sha256 `c59f8094a8d14d6f8a028061d966588df2c3319456ee9332113dd298e8df797f`.
+- **Evidence:** [raw/E-027.txt](raw/E-027.txt), sha256 `9d9c8e51b6323ddc0255cf7e1127f5dc7e91d7d1f1efa93a2d85df4ba0f3a5e4`. Code commit `f03af06a934abf313fe72b2c5d3b5436587dbd76`, working tree dirty: no.
+- **Caveats:** as E-026.
+- **Paper use:** Methods.
+
+### E-028 Tier 1 run, raw decoder condition, after the fix
+
+- **Date and step:** 2026-09-25, P3.3.
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** the raw condition at the fixed commit: 572 rows, with the two invalid-UTF-8 payloads delivered and refused by validation.
+- **Result:** verdicts per mode: `off`: benign_ok 110, crossed 15, fault 4, no_effect 12, not_delivered 2; `validate_only`: benign_ok 110, blocked 31, not_delivered 2; `parameterise_only`: benign_ok 110, no_effect 31, not_delivered 2; `full`: benign_ok 110, blocked 31, not_delivered 2. `results.csv` sha256 `b710739d6ff19eb071cb5553d094bb257e0f1fd78ac271722780dfc8e059c40b`.
+- **Evidence:** [raw/E-028.txt](raw/E-028.txt), sha256 `cdf76101bd3c014372976b80e28f76bce23b654ad3e2563931a04352f223d621`. Code commit `f03af06a934abf313fe72b2c5d3b5436587dbd76`, working tree dirty: no.
+- **Caveats:** as E-026.
+- **Paper use:** Methods.
+
+### E-029 The reproducibility check passes
+
+- **Date and step:** 2026-09-25, P3 acceptance, laptop half.
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** two independent runs of the default condition at the fixed commit agree on every non-timing column of all 564 rows.
+- **Result:** exit code 0, output `0 differences (ignoring handle_ns, defense_ns, run_id)`.
+- **Evidence:** [raw/E-029.txt](raw/E-029.txt), sha256 `78bccedad747bf532c09fa2b8877c86bfe6b00a4b71cf5f309d384215af9938b`. Code commit `f03af06a934abf313fe72b2c5d3b5436587dbd76`, working tree dirty: no. Compares the results of E-026 and E-027.
+- **Caveats:** the acceptance criterion also requires a schema-valid CSV from the Pi; that half is not met. `run_id` is ignored because the decode step names it. One pair of runs is one sample of reproducibility, not a proof.
+- **Paper use:** Methods (reproducibility of the pipeline).
+
+### E-030 Summary of the final default run
+
+- **Date and step:** 2026-09-25, P3.
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** across the four Tier 1 modes and 141 payloads, in the default decoder condition: with no control the SQL, disclosure and shell payloads cross; validation blocks every deliverable attack, and parameterisation alone neutralises every one; no benign payload is refused.
+- **Result:** with no control (`off`), signal A fired for `inj-sql-001` to `inj-sql-006`, signals A and C for `inj-union-001` and `inj-union-002`, and signal D for `inj-shell-001` to `inj-shell-007` (15 crossed); `inj-stack-001` and `mal-nul-001` were `fault ProgrammingError`, `mal-quote-001` `fault OperationalError` and `inj-sleep-001` `fault TimeoutExpired` (4 faults); the two truncated symbols were `not_delivered` in every mode. Verdict counts per mode: off benign_ok 110, crossed 15, fault 4, no_effect 10, not_delivered 2; validate_only benign_ok 110, blocked 29, not_delivered 2; parameterise_only benign_ok 110, no_effect 29, not_delivered 2; full benign_ok 110, blocked 29, not_delivered 2. Validation blocked for `refused: length` 20 and `refused: charset` 9. Benign rows: 440, all `benign_ok`, 0 refused by the boundary.
+- **Evidence:** [raw/E-030.txt](raw/E-030.txt), sha256 `7bcb40f69d5ddf54e05f2aeda1bb163d9bbf64301661c6acffbb708291df549e`. Code commit `4de0f96322a627d46dba47c2289262e1a635908e`, working tree dirty: no. Summarises the results of E-026.
+- **Caveats:** the payloads are the author's naive ones, so validation and parameterisation each stopping all of them is expected by construction (decision D7) and does not say which control does the work: that needs the adaptive and held-out subsets (P6). Zero false positives in 110 benign payloads per mode bounds the rate at roughly 3% (rule of three); decision D14 needs 1000 or more. Signal B never fired (E-012). `inj-kill-001` had no effect because the tier is PID 1 (E-015).
+- **Paper use:** Methods (a worked example). Not Results.
+
+### E-031 Summary of the final raw run
+
+- **Date and step:** 2026-09-25, P3.
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** in the raw decoder condition the boundary's encoding control is exercised, which the default condition cannot do.
+- **Result:** verdict counts per mode: off benign_ok 110, crossed 15, fault 4, no_effect 12, not_delivered 2; validate_only benign_ok 110, blocked 31, not_delivered 2; parameterise_only benign_ok 110, no_effect 31, not_delivered 2; full benign_ok 110, blocked 31, not_delivered 2. The two extra payloads, `mal-utf8-001` and `mal-utf8-002`, were `no_effect` with no control and blocked with `refused: encoding` by validation. Benign rows: 440, all `benign_ok`.
+- **Evidence:** [raw/E-031.txt](raw/E-031.txt), sha256 `5086e4190e9897be788080566b3b8819f034f174ea454727ab20205d1b1f1f53`. Code commit `4de0f96322a627d46dba47c2289262e1a635908e`, working tree dirty: no. Summarises the results of E-028.
+- **Caveats:** as E-030. Two encoding cases are an illustration that the control is reachable, not a measurement of it.
+- **Paper use:** Methods.
+
 ## Corrections and tooling notes
 
 - **2026-09-24, commit `3dc1270`:** the first version of `--verify` read files in text mode, which rewrites CRLF line endings, so it reported a false `HASH MISMATCH` for E-002 (curl's `-D` output contains `\r\n`). The file was intact: its byte-exact SHA-256 matched the recorded one before the fix, and all six captures verify after it. No capture was redone. Regression tests cover CR and non-UTF-8 output.
@@ -254,6 +375,8 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 - **2026-09-24, E-010 and E-011 were each captured twice.** The first captures cited commits in the local, unpublished history. That history was rewritten before the first push so a host path (the E-007 redaction above) never entered a published commit, which changed those commits' hashes. Both captures were therefore redone at the rewritten commits (E-010 at `92b2f4f`, E-011 at `9204be4`) under the same ids; the first captures were never published and are discarded. E-010's test count rose from 160 to 168 only because the rewritten tip includes tests added after the first capture; E-011's figures were identical. Commits `a6d9470` and earlier keep their hashes, so E-001 to E-009 are unaffected.
 
 - **2026-09-24, E-016 captured twice.** The first attempt used a malformed `docker image inspect` format string (`.Config.Entrypoint` does not exist on this image), so it exited 1 with no output. That capture was never committed; it was discarded and redone under the same id, as with E-010 and E-011.
+
+- **2026-09-25, E-022 to E-025 captured twice.** The first attempt ran the harness with a bare `python` inside `sh -c`, which does not exist on the host (only the virtualenv's interpreter does), so all four exited immediately with nothing but that error. None was committed; they were discarded and redone under the same ids. E-021 succeeded the first time and is unchanged.
 
 ## Pending evidence
 

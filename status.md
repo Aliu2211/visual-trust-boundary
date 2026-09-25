@@ -290,3 +290,37 @@ The three open items from the previous entry were not answered, so the plan's de
 **Not verified:** the Pi (aarch64, its own zbar package, `systemd-run` sandbox); the join between image decoding and the tiers (P3 builds the harness that does it); false-positive rate beyond three benign cases (decision D14 needs 1000 or more); anything about Tier 2 and Tier 3.
 
 **Next, P3:** `payloads.yaml` with a per-payload decoder-condition field, the seeded generator, the harness loop that decodes each image and drives the tiers, and the first CSV. Track H (the Pi) still needs the hardware.
+
+
+---
+
+## 2026-09-25: P3 complete on the laptop
+
+**Actor:** Claude, under the approved gates (none is involved in P3). **Evidence:** E-019 to E-031 (see `docs/evidence/LOG.md`). Nothing has been pushed since `b5bdb10`; the local commits wait for an explicit yes.
+
+**Acceptance (plan P3):** "a schema-valid CSV from the Pi; a re-run reproduces every non-timing column exactly". **The laptop half is met**: two independent default runs at the fixed commit agree on every non-timing column of all 564 rows (E-029, 0 differences), and the raw condition gives 572 rows (E-028). **The Pi half is not met**: it needs the hardware.
+
+**Built:** `attacks/payloads.yaml` (33 hand-written naive payloads, with a lab-only lint that fails the build on a dangerous program or URL), `attacks/payload_set.py` (benign payloads derived from the seeded ground truth: 110), `attacks/generate.py` and its committed manifest; a records file plus metadata sidecar joining the decode stage to the tier stage; `harness/metrics.py` (schema-checked CSV), `harness/run_experiments.py`, `harness/compare.py`, `harness/summarize.py`.
+
+**Results (all `dev-observation`, laptop, Tier 1, naive payloads):** in the default decoder condition, with no control 15 payloads cross (SQL: signal A; disclosure: A and C; shell: D), 4 fault and 10 have no effect; validation blocks all 29 deliverable attacks (20 on length, 9 on charset); parameterisation alone neutralises all 29; the two truncated symbols are not delivered; 440 benign rows, 0 refused (E-030). The raw condition adds two invalid-UTF-8 payloads, both refused with `refused: encoding` (E-031).
+
+**Errors that real data exposed, each found by a check I built and each fixed:**
+1. A truncated Code 128 still decoded, because a linear barcode reads along any row: its damage now cuts the width (E-019, E-020).
+2. Regenerated PNG files differ in bytes between macOS and Linux with identical library versions; the manifest now identifies images by pixel content (143 of 143 equal across the two, E-020) and compares file hashes only within one environment.
+3. The reproducibility check found one differing cell: the tier copied a measured elapsed time into a text column (E-025). Fixed, and re-run (E-029).
+4. The sandbox image bakes the code in, so after editing `contracts.py` 41 sandbox tests failed against the old contract, looking like a bug. The image now carries a hash of its source and the fixture refuses a mismatch.
+
+**Amendments (plan.md unchanged):**
+- **A15, contracts.** `PayloadRecord.decoder_mode` (required, so a row's condition comes from the record); `PayloadSpec.decoder_modes` and `damage`; `ResultRow.signals` (a crossed row must name one; `no_effect` and `benign_ok` cannot); `RunMetadata` records the container runtime and sandbox image.
+- **A16, two-stage pipeline.** The decode CLI writes a JSONL records file and a sidecar naming the decoder build; the harness reads it; one run covers one decoder condition.
+- **A17, image identity.** The manifest carries a pixel hash and the platform; see error 2.
+- **A18, stale-image guard.** `python -m harness.sandbox build` labels the image with a source hash; capture headers record it; see error 4.
+- **A19, deferred: `psutil` sampling.** The plan lists it for the runner. It is not added: the tier runs in a per-call container on the laptop and under `systemd-run` on the Pi, so process-level CPU and memory readings would not be comparable, and laptop timings are not results anyway. It belongs to the Pi timing runs (P7), where the sampling method can be chosen against the real sandbox. A new dependency was avoided until then.
+
+**What the results do not show:** the naive payloads are stopped by each control alone, so this run cannot say which control does the work (decision D7; that needs the adaptive and held-out subsets, P6). Zero false positives in 110 benign payloads bounds the rate at about 3%; decision D14 needs 1000 or more. Signal T1-B has still never fired.
+
+**Unexplained, disclosed:** one full-suite run stalled for over 20 minutes and was killed while the host's load average was 75 (723 processes, low free memory, mostly Chrome and editor helpers). Run separately afterwards, the same tests took 21 seconds (containment), 104 seconds (Tier 1 demonstration) and 15 seconds (everything else), so no single test is slow. The cause of that one stall is not identified; it is most likely Docker Desktop under host memory pressure, but that is a guess. A full-suite re-run is recorded as evidence below if it completes normally.
+
+**Not verified:** the Pi (aarch64, its own zbar and Python, the `systemd-run` sandbox); Tier 2 and Tier 3; the join with a live camera; results beyond three-run samples.
+
+**Next:** P4 (Tier 2, a FastAPI service with a log-integrity sink and a second-order query), Track H on the Pi, and the adaptive and held-out subsets (P6). None needs a gate except G4 for Tier 3.
