@@ -1,0 +1,32 @@
+# evidence: E-020
+# captured: 2026-09-25T09:31:36Z
+# code commit: 5d9c783db5990f9da1540f46db9453c28d44bad2 (working tree dirty: no)
+# host label: unlabelled
+# platform: Linux-6.12.76-linuxkit-x86_64-with-glibc2.36 x86_64
+# python: 3.11.16
+# libzbar0: 0.23.92-7+deb12u1
+# docker: n/a (docker not installed)
+# sandbox image: n/a
+# packages: pydantic 2.13.5, pyyaml 6.0.3, pillow 12.3.0, pyzbar 0.1.9, qrcode 8.2, python-barcode 0.16.1, pytest 9.1.1, opencv-python-headless not installed
+# paths normalised: repo root -> <repo>, home and any ~ or ~ -> ~
+# command: python tools/probes/decode_payload_set.py
+# exit: 0
+--- stdout ---
+libraries here: {'platform': 'Linux x86_64', 'python': '3.11.16', 'pillow': '12.3.0', 'qrcode': '8.2', 'python-barcode': '0.16.1'}
+manifest built with: {'pillow': '12.3.0', 'platform': 'Darwin x86_64', 'python': '3.11.15', 'python-barcode': '0.16.1', 'qrcode': '8.2'}
+same environment as the manifest: False; compared: pixel content only (PNG bytes differ between platforms)
+images regenerated here match the committed manifest: True
+pixel hashes equal to the manifest's: 143 of 143
+images on disk: 143; file and pixel hashes equal to the manifest's: True
+--- decoder condition: default
+records: 143; statuses: {'no_symbol': 2, 'ok': 141}
+payloads applicable in this condition: 141
+unexpected decode outcomes (id, expected, got): none
+payloads whose decoded bytes differ from the rendered bytes: ['mal-utf8-001', 'mal-utf8-002']
+--- decoder condition: raw
+records: 143; statuses: {'invalid_utf8': 2, 'no_symbol': 2, 'ok': 139}
+payloads applicable in this condition: 143
+unexpected decode outcomes (id, expected, got): none
+payloads whose decoded bytes differ from the rendered bytes: none
+--- stderr ---
+# sha256-of-above: efb28e6a16bb43f2b609d426d811f42bb72237b53602a4e8c09cdc9a7ac38e6d

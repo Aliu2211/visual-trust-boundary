@@ -40,6 +40,8 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 | E-016 | The sandbox image E-015 ran in | dev-observation | D12, reproducibility |
 | E-017 | Full suite in the Bookworm dev image after Tier 1 | dev-observation | Methods |
 | E-018 | Full host suite with the sandbox required | dev-observation | Methods, D12 |
+| E-019 | The payload set through the real decoder, before any fix | dev-observation | D5, D7, P3 |
+| E-020 | The payload set through the real decoder, after the fix | dev-observation | D5, D7, P3 |
 
 ## Entries
 
@@ -222,6 +224,26 @@ Confidence is `verified` (re-runnable, and the capture is the check) or `source-
 - **Evidence:** [raw/E-018.txt](raw/E-018.txt), sha256 `2bb73043564625a96a95ab58698a3944545109313f07d2bc47da3df8de35dee6`. Code commit `48aac9d28d6b634db41a8601a064c5474c4db63f`, working tree clean. macOS x86_64 host, Python 3.11.15, Docker client and server 29.6.2. The header records the sandbox image: `sha256:8f31726dbfd1f2cea6729055e73f512932c210a92dbacd5684d7ed3bbca1f831`, the same as in E-016, so the image was unchanged across this stage.
 - **Caveats:** Docker Desktop on macOS, not the Pi. The battery, the demonstration and the decoder tests never run in one environment together, because Docker is on the host and `libzbar` is in the dev image; the two captures together cover them. The test count changes as tests are added, so the paper should cite the release-commit capture.
 - **Paper use:** Methods (software quality and sandbox reproducibility), only via the release-commit capture.
+
+### E-019 The payload set through the real decoder, before any fix
+
+- **Date and step:** 2026-09-25, P3 (the first real decode of the generated payload set).
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** the first real decode of the payload set exposed two errors in my generator, both invisible to its own tests: a truncated Code 128 still decodes, and regenerated PNG files are not byte-identical across the two environments.
+- **Result:** 143 images decoded in each condition. Default: statuses `{'no_symbol': 1, 'ok': 142}`; unexpected outcome `('mal-trunc-002', 'fail', 'ok')`; decoded bytes differ from rendered bytes for `mal-utf8-001` and `mal-utf8-002`. Raw: `{'invalid_utf8': 2, 'no_symbol': 1, 'ok': 140}`; the same unexpected outcome; no byte differences. Images regenerated in the container did not match the manifest built on the host: `False (144 differences)`, which is 143 image file hashes plus the library-version line (container Python 3.11.16, manifest Python 3.11.15; pillow 12.3.0, qrcode 8.2 and python-barcode 0.16.1 identical). The images already on disk did match the manifest's hashes (`True`).
+- **Evidence:** [raw/E-019.txt](raw/E-019.txt), sha256 `b9f844939604fb91b16612b828d3fcb838e14f7e67ef1d6c7f8b1d3619abce30`. Code commit `093fa49c63ec50d24674b31b893400ca08712c2c`, working tree clean. Linux x86_64 container, Python 3.11.16, `libzbar0 0.23.92-7+deb12u1`. Probe: `tools/probes/decode_payload_set.py`.
+- **Caveats:** the manifest at that commit did not record the platform, so the comparison attributed the difference to library versions; which of the platform or the Python patch version changes the PNG bytes was not isolated. The reason a truncated Code 128 decodes (a linear barcode is readable along any row, so cutting its height leaves every bar) is my explanation, supported by the fix in E-020 but not separately tested. Fixed in commit `5d9c783`.
+- **Paper use:** Methods (validation of the payload set, and a reminder that image identity should be pixel content).
+
+### E-020 The payload set through the real decoder, after the fix
+
+- **Date and step:** 2026-09-25, P3.
+- **Class:** dev-observation. **Confidence:** verified.
+- **Claim:** after the fixes, every payload decodes as designed in both decoder conditions, and the images are pixel-identical across macOS and Linux even though their PNG bytes are not.
+- **Result:** libraries here: platform `Linux x86_64`, Python `3.11.16`, pillow `12.3.0`, qrcode `8.2`, python-barcode `0.16.1`; the manifest was built on `Darwin x86_64` with Python `3.11.15`. `pixel hashes equal to the manifest's: 143 of 143`; `images regenerated here match the committed manifest: True` (pixel content compared, since the environment differs). Default condition: `{'no_symbol': 2, 'ok': 141}`, 141 payloads applicable, `unexpected decode outcomes: none`, decoded bytes differ from rendered only for `mal-utf8-001` and `mal-utf8-002`. Raw condition: `{'invalid_utf8': 2, 'no_symbol': 2, 'ok': 139}`, 143 applicable, `unexpected decode outcomes: none`, no byte differences. `mal-unicode-001` (fullwidth digits, valid UTF-8) came back exact in the default condition.
+- **Evidence:** [raw/E-020.txt](raw/E-020.txt), sha256 `efb28e6a16bb43f2b609d426d811f42bb72237b53602a4e8c09cdc9a7ac38e6d`. Code commit `5d9c783db5990f9da1540f46db9453c28d44bad2`, working tree clean. Linux x86_64 container, Python 3.11.16, `libzbar0 0.23.92-7+deb12u1`.
+- **Caveats:** one zbar build. PNG file hashes were not compared across environments, by design. Pixel equality was shown for one platform pair (macOS x86_64 and Linux x86_64); the Pi (aarch64) is unchecked. The decoder rewrote `mal-utf8-001` and `mal-utf8-002` in the default condition but not `mal-unicode-001`: one payload each, so this shows that rewriting depends on the content, not a rule for which content.
+- **Paper use:** Methods (payload set validation and image reproducibility); Threats to validity (default-mode rewriting is content-dependent).
 
 ## Corrections and tooling notes
 

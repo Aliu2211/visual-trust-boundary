@@ -1,0 +1,39 @@
+# evidence: E-019
+# captured: 2026-09-25T09:10:46Z
+# code commit: 093fa49c63ec50d24674b31b893400ca08712c2c (working tree dirty: no)
+# host label: unlabelled
+# platform: Linux-6.12.76-linuxkit-x86_64-with-glibc2.36 x86_64
+# python: 3.11.16
+# libzbar0: 0.23.92-7+deb12u1
+# docker: n/a (docker not installed)
+# sandbox image: n/a
+# packages: pydantic 2.13.5, pyyaml 6.0.3, pillow 12.3.0, pyzbar 0.1.9, qrcode 8.2, python-barcode 0.16.1, pytest 9.1.1, opencv-python-headless not installed
+# paths normalised: repo root -> <repo>, home and any ~ or ~ -> ~
+# command: python tools/probes/decode_payload_set.py
+# exit: 0
+--- stdout ---
+libraries here: {'python': '3.11.16', 'pillow': '12.3.0', 'qrcode': '8.2', 'python-barcode': '0.16.1'}
+images regenerated here match the committed manifest: False (144 differences)
+   library versions differ (committed {'pillow': '12.3.0', 'python': '3.11.15', 'python-barcode': '0.16.1', 'qrcode': '8.2'}, here {'python': '3.11.16', 'pillow': '12.3.0', 'qrcode': '8.2', 'python-barcode': '0.16.1'}); image hashes are not comparable across versions
+   ben-a-001: sha256 differs ('6d5430cc6d75b02307ac111c9fc45ea826cfceef555fc155621e54403afd4956' committed, 'c11c5c59ffe0baa694828b9b7cbdc1cc955704bea974e47c1fa4ffeb592a4c7d' here)
+   ben-a-002: sha256 differs ('a7fa08dfaf107cb300c904c59a4e70234d574eb0989be2973140a727c2bd9ca5' committed, '9b3692d4fcd48c11c5055f28c22477490008b15ca5fb874f30b09218054f5b3d' here)
+   ben-a-003: sha256 differs ('9a9afec8d96a967e187251c0562bcc84439d4e378cc72568ea179586655c860b' committed, 'ff2991d7f5177c60ce4d9d4daad97176db774c7be0c1701596a6e163e60a40c0' here)
+   ben-a-004: sha256 differs ('59c54ed00eb20897cbd70208ca3274513a7dcddf022063c83eb05016631123f2' committed, '0bf23692a846e864f7fb8c10f0628f32b9ce57510e6dbaa8c96f6fcba2cb32ae' here)
+   ben-a-005: sha256 differs ('1244178fcaf89a1c3a0beaac6589a6151909b69a2a2b12616cd0e08ec754d041' committed, 'f0e00711f46384c07c67279f01fe7d81d8f73c55e98384c416fb8ca4ed3d7a79' here)
+   ben-a-006: sha256 differs ('a6d0b9738523a05c93b5f9dd5c2a4fc0fc881f6e12af55f33ed389d1ac831db1' committed, '2ec1dfadb66bda88dd9c7e0377796067fc6103c7944b754ad80edd757307c5f2' here)
+   ben-a-007: sha256 differs ('1a559b4036175f4ca9de473ac8422947fde2b2d3f3bc80602147eb310501188a' committed, '0513867d91e6dbacd5491ea0664ca1c5fda0b4d7ac31e04d4c7687a27e62be7f' here)
+   ben-a-008: sha256 differs ('a6d3cce8cb30f2d8094a82875fb1bb800aa4e6b19225a4e2b9f36bdba15580ce' committed, '8a6097aa17fe19257cf9b4b3b814872c5d72eff0a144145f051931b473bc020d' here)
+   ben-a-009: sha256 differs ('ef564ce757650a7f38c8ab3f4460a684c542edefdce0bfa31ff4f60842e1df36' committed, 'cb95f9a7b2826c24ed49eb917248c8cd2a8abd84609b13833769f9fe2a1861d2' here)
+images on disk: 143; equal to the manifest's hashes: True
+--- decoder condition: default
+records: 143; statuses: {'no_symbol': 1, 'ok': 142}
+payloads applicable in this condition: 141
+unexpected decode outcomes (id, expected, got): [('mal-trunc-002', 'fail', 'ok')]
+payloads whose decoded bytes differ from the rendered bytes: ['mal-utf8-001', 'mal-utf8-002']
+--- decoder condition: raw
+records: 143; statuses: {'invalid_utf8': 2, 'no_symbol': 1, 'ok': 140}
+payloads applicable in this condition: 143
+unexpected decode outcomes (id, expected, got): [('mal-trunc-002', 'fail', 'ok')]
+payloads whose decoded bytes differ from the rendered bytes: none
+--- stderr ---
+# sha256-of-above: b9f844939604fb91b16612b828d3fcb838e14f7e67ef1d6c7f8b1d3619abce30
