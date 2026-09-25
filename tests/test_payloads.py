@@ -151,22 +151,26 @@ def test_the_error_correction_level_is_the_smallest_that_fits(generated):
     assert by_id["ben-c128-01"]["ecc"] == "-"
 
 
-def test_a_truncated_image_is_exactly_the_upper_half_of_the_undamaged_one(generated, tmp_path):
+def test_a_truncated_qr_keeps_the_upper_half_and_a_truncated_barcode_the_left_half(generated, tmp_path):
     from attacks.render import render_code128, render_qr
     out, manifest = generated
     render_qr(b"B-000001", tmp_path / "whole-qr.png")
     render_code128("B-000001", tmp_path / "whole-c128.png")
-    for damaged_id, whole_path in (("mal-trunc-001", "whole-qr.png"), ("mal-trunc-002", "whole-c128.png")):
-        with Image.open(out / f"{damaged_id}.png") as damaged, Image.open(tmp_path / whole_path) as whole:
-            assert damaged.size == (whole.width, whole.height // 2), damaged_id
-            assert damaged.tobytes() == whole.crop((0, 0, whole.width, whole.height // 2)).tobytes(), damaged_id
-    hashes = {p["id"]: p["sha256"] for p in manifest["payloads"]}
+    with Image.open(out / "mal-trunc-001.png") as damaged, Image.open(tmp_path / "whole-qr.png") as whole:
+        assert damaged.size == (whole.width, whole.height // 2)
+        assert damaged.tobytes() == whole.crop((0, 0, whole.width, whole.height // 2)).tobytes()
+    # A linear barcode reads along any row, so cutting its height would leave it decodable (E-019): cut its width.
+    with Image.open(out / "mal-trunc-002.png") as damaged, Image.open(tmp_path / "whole-c128.png") as whole:
+        assert damaged.size == (whole.width // 2, whole.height)
+        assert damaged.tobytes() == whole.crop((0, 0, whole.width // 2, whole.height)).tobytes()
+    hashes = {p["id"]: p["pixel_sha256"] for p in manifest["payloads"]}
     assert hashes["mal-trunc-001"] != hashes["mal-trunc-002"]
 
 
 def test_the_manifest_records_versions_and_the_decoder_conditions(generated):
     manifest = generated[1]
-    assert set(manifest["generated_with"]) == {"python", "pillow", "qrcode", "python-barcode"}
+    assert set(manifest["generated_with"]) == {"platform", "python", "pillow", "qrcode", "python-barcode"}
+    assert all(len(p["pixel_sha256"]) == 64 and len(p["sha256"]) == 64 for p in manifest["payloads"])
     by_id = {p["id"]: p for p in manifest["payloads"]}
     assert by_id["mal-utf8-001"]["decoder_modes"] == ["raw"] and by_id["inj-sql-001"]["decoder_modes"] == ["default", "raw"]
     assert by_id["mal-trunc-001"]["expected_decode"] == "fail" and by_id["mal-trunc-001"]["damage"] == "truncate"
@@ -184,19 +188,41 @@ def test_a_payload_too_big_for_any_qr_code_is_an_error(tmp_path):
 
 
 def test_the_committed_manifest_matches_a_fresh_generation(generated):
-    committed = json.loads(gen.DEFAULT_MANIFEST.read_text())
-    if committed["generated_with"] != gen.library_versions():
-        pytest.skip(f"library versions differ from the manifest's ({committed['generated_with']}); hashes are not comparable")
-    assert gen.compare(committed, generated[1]) == []
+    # Pixel content is always compared; PNG file hashes only if this environment matches the manifest's (E-019).
+    assert gen.compare(json.loads(gen.DEFAULT_MANIFEST.read_text()), generated[1]) == []
 
 
-def test_compare_reports_each_kind_of_difference():
-    base = {"generated_with": {"pillow": "1"}, "payloads": [{"id": "a", "sha256": "x"}, {"id": "b", "sha256": "y"}]}
-    assert gen.compare(base, base) == []
-    changed = {"generated_with": {"pillow": "2"}, "payloads": [{"id": "a", "sha256": "z"}, {"id": "c", "sha256": "y"}]}
-    text = " | ".join(gen.compare(base, changed))
-    assert "library versions differ" in text and "b: in the committed manifest" in text
-    assert "c: generated, not in the committed manifest" in text and "a: sha256 differs" in text
+def test_pixel_hashes_ignore_how_the_png_is_compressed_and_file_hashes_do_not(tmp_path):
+    from attacks.render import render_qr
+    render_qr(b"B-000001", tmp_path / "a.png")
+    with Image.open(tmp_path / "a.png") as img:
+        img.save(tmp_path / "b.png", compress_level=0)  # same pixels, different compressor setting
+        changed = img.copy()
+        changed.putpixel((5, 5), 0 if changed.getpixel((5, 5)) else 255)  # the QR image is 1-bit: flip a pixel
+        changed.save(tmp_path / "c.png")
+    a, b, c = (tmp_path / f"{n}.png" for n in "abc")
+    assert a.read_bytes() != b.read_bytes() and gen.pixel_sha256(a) == gen.pixel_sha256(b)
+    assert gen.pixel_sha256(a) != gen.pixel_sha256(c)
+
+
+def _manifest(env, **payload):
+    return {"generated_with": env, "payloads": [{"id": "a", "sha256": "f1", "pixel_sha256": "p1", "ecc": "M", **payload}]}
+
+
+def test_compare_ignores_file_hashes_across_environments_but_not_pixel_content():
+    linux, mac = {"platform": "Linux x86_64"}, {"platform": "Darwin x86_64"}
+    assert gen.compare(_manifest(mac), _manifest(linux, sha256="f2")) == []  # different compressor, same pixels
+    problems = gen.compare(_manifest(mac), _manifest(linux, sha256="f2", pixel_sha256="p2"))
+    assert len(problems) == 1 and "pixel_sha256 differs" in problems[0]
+
+
+def test_compare_checks_file_hashes_within_one_environment_and_reports_missing_and_extra_payloads():
+    env = {"platform": "Darwin x86_64"}
+    assert "sha256 differs" in " ".join(gen.compare(_manifest(env), _manifest(env, sha256="f2")))
+    old = {"generated_with": env, "payloads": [{"id": "a"}, {"id": "b"}]}
+    new = {"generated_with": env, "payloads": [{"id": "a"}, {"id": "c"}]}
+    text = " | ".join(gen.compare(old, new))
+    assert "b: in the committed manifest" in text and "c: generated, not in the committed manifest" in text
 
 
 def test_check_mode_reports_a_match_and_a_mismatch(tmp_path, capsys):

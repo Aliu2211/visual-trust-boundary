@@ -1,6 +1,7 @@
 {
  "generated_with": {
   "pillow": "12.3.0",
+  "platform": "Darwin x86_64",
   "python": "3.11.15",
   "python-barcode": "0.16.1",
   "qrcode": "8.2"
@@ -17,6 +18,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-001",
+   "pixel_sha256": "aaede7104cc2a6e4deffb6fc4e1e5d2d2bedb2f611210dcd451406d4be61ca43",
    "sha256": "6d5430cc6d75b02307ac111c9fc45ea826cfceef555fc155621e54403afd4956",
    "subset": "benign",
    "symbology": "qr"
@@ -32,6 +34,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-002",
+   "pixel_sha256": "3578ee074f30836177e206f820ad6f3b5f7b73a7d2b15e9e33cdc86fa0b5e8a4",
    "sha256": "a7fa08dfaf107cb300c904c59a4e70234d574eb0989be2973140a727c2bd9ca5",
    "subset": "benign",
    "symbology": "qr"
@@ -47,6 +50,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-003",
+   "pixel_sha256": "7c88730031f7839c8ec8ba140bd0ab7682527afd2ef4c698aa26096bf9f92422",
    "sha256": "9a9afec8d96a967e187251c0562bcc84439d4e378cc72568ea179586655c860b",
    "subset": "benign",
    "symbology": "qr"
@@ -62,6 +66,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-004",
+   "pixel_sha256": "5944737371466042f7b529aa505300cd9b5bcb150c3ce02042e2aa38e2c2e945",
    "sha256": "59c54ed00eb20897cbd70208ca3274513a7dcddf022063c83eb05016631123f2",
    "subset": "benign",
    "symbology": "qr"
@@ -77,6 +82,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-005",
+   "pixel_sha256": "f1b0d724409d268a05d7f368d18fffc8d552d56c39910dd82dc6d1aa7631e12d",
    "sha256": "1244178fcaf89a1c3a0beaac6589a6151909b69a2a2b12616cd0e08ec754d041",
    "subset": "benign",
    "symbology": "qr"
@@ -92,6 +98,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-006",
+   "pixel_sha256": "a76b2faa058ee56b2404fdd3afdf83c26377a4443d78a7160edf7a42dc5b2f3a",
    "sha256": "a6d0b9738523a05c93b5f9dd5c2a4fc0fc881f6e12af55f33ed389d1ac831db1",
    "subset": "benign",
    "symbology": "qr"
@@ -107,6 +114,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-007",
+   "pixel_sha256": "4e2b2799a2d0810ed06d051aea28c74d436528c246bc32864fab866def4ee851",
    "sha256": "1a559b4036175f4ca9de473ac8422947fde2b2d3f3bc80602147eb310501188a",
    "subset": "benign",
    "symbology": "qr"
@@ -122,6 +130,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-008",
+   "pixel_sha256": "f031fa08ae4b10b76f3b97ba15121d4d8a4ee087a1deb6ef886eb754ddc07fbf",
    "sha256": "a6d3cce8cb30f2d8094a82875fb1bb800aa4e6b19225a4e2b9f36bdba15580ce",
    "subset": "benign",
    "symbology": "qr"
@@ -137,6 +146,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-009",
+   "pixel_sha256": "61b0d88626b97f933b67490efccc523b74885e0dc5b6d2ed592e279f7dc700e7",
    "sha256": "ef564ce757650a7f38c8ab3f4460a684c542edefdce0bfa31ff4f60842e1df36",
    "subset": "benign",
    "symbology": "qr"
@@ -152,6 +162,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-010",
+   "pixel_sha256": "b9ecc6ffea66a5624b7cc9ff1313b49f6c194d11727976413cd322aed4cf3a9f",
    "sha256": "be08426c238a422e64a7bd302da26fa6d324bdfd42844eb7a706b6d1e43fa970",
    "subset": "benign",
    "symbology": "qr"
@@ -167,6 +178,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-011",
+   "pixel_sha256": "89e49d08512f0cfbe48e338b91e4b605ed641fc458d1324f74c9705e1010804a",
    "sha256": "5a39340fa7a54621c23f112c6d0d0fb2b4cfb7d897f17e4c74c108875718d7b5",
    "subset": "benign",
    "symbology": "qr"
@@ -182,6 +194,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-012",
+   "pixel_sha256": "fdc91049d2e963fa7aaf3cea7150d8265a557e5f218608ca3ff4b04efd3df0bb",
    "sha256": "713d6dce009b39602f78245755850ffaf566f2a7c0a454e64003e206b8fed49c",
    "subset": "benign",
    "symbology": "qr"
@@ -197,6 +210,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-013",
+   "pixel_sha256": "a80b40faf95c639150a3f296089580f439a339a85901967ee8aa4b4b750805ae",
    "sha256": "bec4b6132bcc1231641ee7dfe67202e962643ea077edc28102f9bc357475f245",
    "subset": "benign",
    "symbology": "qr"
@@ -212,6 +226,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-014",
+   "pixel_sha256": "6e50e7c1755d76053b1f1ba7565c2e7dab8ead3eb63af02eb04e750da8833561",
    "sha256": "354b950755908b577e3e13f0503146bc7ea967c1328bc8fdad99c26e8471aa15",
    "subset": "benign",
    "symbology": "qr"
@@ -227,6 +242,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-015",
+   "pixel_sha256": "c790f03653ecfb6c914dbfd527237abd7947282700cb410672a0ece9dc42ae32",
    "sha256": "c8d2a9bed355763660c634a03321a949aaa94941651bd81ce8bb93212a4f2235",
    "subset": "benign",
    "symbology": "qr"
@@ -242,6 +258,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-016",
+   "pixel_sha256": "7b449597674e622a065c3bd669ce4413b38edab141a9bf1b7d88129eaf0b0202",
    "sha256": "600de208da88fdc9f89756ec1211186c54226f29158c4e71533e7ca980e781cc",
    "subset": "benign",
    "symbology": "qr"
@@ -257,6 +274,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-017",
+   "pixel_sha256": "47442926e7ae3a4f4fe995d6b7109a5570ef26a10195a1a3c842e3d4dc63f934",
    "sha256": "5353c91303006324dc1a5e599da5c120a1cd28cddf384906a79d6b98c986d30c",
    "subset": "benign",
    "symbology": "qr"
@@ -272,6 +290,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-018",
+   "pixel_sha256": "03f97c5ada590bace05922c74ef2e0dbe5f53fd2599488a84957af06b1e81b12",
    "sha256": "c1d060a804e12d11501f6958fc36c4b8b377d3f51dfffa406b08601968d264c6",
    "subset": "benign",
    "symbology": "qr"
@@ -287,6 +306,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-019",
+   "pixel_sha256": "0a0e7c715a4545af983e35f98cd2af33c7397b1007e2245c42c5e7cc0f82e24a",
    "sha256": "4ead9a4707e9be207651636d2e8e7e7cbf13ff72d28589a56949b3d92eb14abb",
    "subset": "benign",
    "symbology": "qr"
@@ -302,6 +322,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-020",
+   "pixel_sha256": "bb34e6e14210978b094ce779f9ebb55c6c55cf774a3ab765720a370ce18a216c",
    "sha256": "887694c4a36e84fcfa39c43e0b2eeab3f35c2b73c10dd4f45873302d5959434f",
    "subset": "benign",
    "symbology": "qr"
@@ -317,6 +338,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-021",
+   "pixel_sha256": "5e6916a16519445e93b508c212b0067aec059e6aa37be01601b93dca7b080edb",
    "sha256": "9ed9c4fcfcdb75b51428042ff241c8079edd46f6ff54e809ec5a8dd4d748435a",
    "subset": "benign",
    "symbology": "qr"
@@ -332,6 +354,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-022",
+   "pixel_sha256": "a8a6402c79173b97e1a71176f2426bb997d13403474cbabf94549278ae48bfad",
    "sha256": "f8614b7020c49ee097f2954396f1102c98f3c6f66b6d40a8b36dca905ba41d34",
    "subset": "benign",
    "symbology": "qr"
@@ -347,6 +370,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-023",
+   "pixel_sha256": "bc19a2179875535a35f2dd096c625d467492de040f54885438e9cc0c4314b6fd",
    "sha256": "47998b56312fe52d530b721472029ba63b53357a72524bae81410364c35cb063",
    "subset": "benign",
    "symbology": "qr"
@@ -362,6 +386,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-024",
+   "pixel_sha256": "9e9f3b727e8a7406ec7d29c87d07b722fc594e4bbfabcdb7e45280cf7487afe4",
    "sha256": "7ec4da5378d035a4f83ac04ad74f6ffc5cb513bf94933eace4a145cd1cea8ba0",
    "subset": "benign",
    "symbology": "qr"
@@ -377,6 +402,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-025",
+   "pixel_sha256": "488757bab43c42ecf23f2e650c298ef536f77c4bae78c51bb026a78b44d6925e",
    "sha256": "31ef780e850d5f2dca1ad0f1a10c08a23013326cb41df5b0f817c8e249a2fb67",
    "subset": "benign",
    "symbology": "qr"
@@ -392,6 +418,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-026",
+   "pixel_sha256": "e11b297962f4e33093e7d2f3835a52de8b82abdb6e7ef4e6f383a23dc898cba1",
    "sha256": "715682675f2d80a8ec1ada46464e33b6576e400a85e40825f84d4881af990d2f",
    "subset": "benign",
    "symbology": "qr"
@@ -407,6 +434,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-027",
+   "pixel_sha256": "6656dcb891a571c02de029183a311afa976c485d7d3183c129c049cbb227c86e",
    "sha256": "8c40420b15710d52eefe78f51be38bff48c2c16c2bbf1dd790c818424584e117",
    "subset": "benign",
    "symbology": "qr"
@@ -422,6 +450,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-028",
+   "pixel_sha256": "312c6fe28ea6d0bac1d87f21062c0a22ce10f95d2dd1a6a6af6839dfe6284838",
    "sha256": "d806b1c64ffa941b7eecdb842e2ffcc26a0ca7d2edd124c8119c3c1bcb608355",
    "subset": "benign",
    "symbology": "qr"
@@ -437,6 +466,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-029",
+   "pixel_sha256": "bf01f31f862cc38bd28a90e6c59dd2894409684b5cfd2a177e852a8d96cec533",
    "sha256": "9f8a8f3ef64dbc6de83cd0c03afc221b03efd671c310a7db035d834b7b455bcf",
    "subset": "benign",
    "symbology": "qr"
@@ -452,6 +482,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-030",
+   "pixel_sha256": "2d188fc7939cc215cc3cfa7d74ab04c54aa745b684a609377673e326bf468bd1",
    "sha256": "17c73c2da3731ceeb2594b8049d74434b77660bfb638d08b813d51f635befd37",
    "subset": "benign",
    "symbology": "qr"
@@ -467,6 +498,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-031",
+   "pixel_sha256": "7340bd6496ebe61d898028658b002f3e15deddcc7f65d0423439913fcfb783bc",
    "sha256": "d863829516b91ae10a6fa64b451abeaed1eb4c0594ab01625a908061f14755ce",
    "subset": "benign",
    "symbology": "qr"
@@ -482,6 +514,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-032",
+   "pixel_sha256": "4df7c9437652193775920c06a468529d1b52248450795f060fffe339dd299ed5",
    "sha256": "c41f9f7fd8c006832810ffc16098add60c9c9d9fab0d60a614221e5d67a0c729",
    "subset": "benign",
    "symbology": "qr"
@@ -497,6 +530,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-033",
+   "pixel_sha256": "ffbb3d90ea6b1c641dcbddf6074b3fd0f4cdcc3a8902761b069e9967f5f99b2c",
    "sha256": "bc927d834146b7bcc9473e46c2fe283916cc0e6dff7422de59899a20635a8a01",
    "subset": "benign",
    "symbology": "qr"
@@ -512,6 +546,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-034",
+   "pixel_sha256": "7a58fdb88966444a5f10cf96cf473edf372396233f998148b40ede6a46ecc787",
    "sha256": "af48320793b2f7941eb9ca917b9dc2ffd9c570f6c41d3c3373ee69a5f5d9727c",
    "subset": "benign",
    "symbology": "qr"
@@ -527,6 +562,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-035",
+   "pixel_sha256": "45fd57623a208d27f43d6d7a2b93e7a60a31a8281d29389971a3d1d3f0c55adb",
    "sha256": "97870eb3441f27a9d49975ee70b212a95a0c43d0aca589f8ba4ee98c84526d10",
    "subset": "benign",
    "symbology": "qr"
@@ -542,6 +578,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-036",
+   "pixel_sha256": "1a6f58c1d88175bad8fec3e9fec40e4ea953f24ff7a290df576a9b7c66bd82a7",
    "sha256": "d2062baab3a79691d92cd33a839e787ad1215fd2bda8df542b83ebe4434b6a10",
    "subset": "benign",
    "symbology": "qr"
@@ -557,6 +594,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-037",
+   "pixel_sha256": "819d71f8e4cf2e168d013ec0a422b7e88495b9a7d2f8e36ced5dd923c2aabdfd",
    "sha256": "fab81fa7b5281496373796070d67244508c01dbf42da8926bd90d9727d43eccf",
    "subset": "benign",
    "symbology": "qr"
@@ -572,6 +610,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-038",
+   "pixel_sha256": "6005a27b64b5d9aad78df1676f99434d35a9f991a7564c791c7df2d35ddd8ac6",
    "sha256": "0718f2a65f6a71fb6c4bcefe25017b797f85ab5f6811d0b97c996e4c0bab3c64",
    "subset": "benign",
    "symbology": "qr"
@@ -587,6 +626,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-039",
+   "pixel_sha256": "d95677553f499da7d24e0888051bd816b60804e8c6899ba20853f6b8d6138fa1",
    "sha256": "f01ae0ab290634cc1da9dc14ae7c558d762e034d90cb0c4a7104720c647a416b",
    "subset": "benign",
    "symbology": "qr"
@@ -602,6 +642,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-040",
+   "pixel_sha256": "250fd351da2b4eb72f120a8799c76ba85f36524f1418298ccbfd03e05b8b8ec6",
    "sha256": "8630c3bed696feb2972e74d4b5a3537ddfb08ce6a46da9144c7317034629be41",
    "subset": "benign",
    "symbology": "qr"
@@ -617,6 +658,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-041",
+   "pixel_sha256": "81229319419fb22755c618bf1b7a7605b15a1f6a72daf274242a2d518c332478",
    "sha256": "9f7d585683d0f48c9a46d5574bce779b856a620b82de651f13156c3f7700a9b8",
    "subset": "benign",
    "symbology": "qr"
@@ -632,6 +674,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-042",
+   "pixel_sha256": "2e923605a6858d62bc41e95577e39446f9087a0efac03dc9fa6b0d0db1c60622",
    "sha256": "cdbd54b4e260dd66a69122e6e1a618253e2e5bd5756215367e9fad585aa027d7",
    "subset": "benign",
    "symbology": "qr"
@@ -647,6 +690,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-043",
+   "pixel_sha256": "042320b5d4e48849aae8d0f53a100fd5d5b3d24436f3018d9aff1d1e4c401e9c",
    "sha256": "faccbe168a9b5e84caa2960d1168e402790b4854b948fe32630a27b86788404d",
    "subset": "benign",
    "symbology": "qr"
@@ -662,6 +706,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-044",
+   "pixel_sha256": "fa1d0fcb02931f21a85d242198e2b1b4cb5eb065f1d3321c0d249d12dc9582db",
    "sha256": "35b1aefc4153de8bf50f974c2624c1de4e493de28d9e3efe8f92ba39f0d05c7b",
    "subset": "benign",
    "symbology": "qr"
@@ -677,6 +722,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-045",
+   "pixel_sha256": "c8ea2213337978aa090f7dd2b1ac8dc379c42f020f37ea59e7a1934d2d4ef649",
    "sha256": "1b80f319699d15dd9b53c8c7df92cecdf46203d961f1af8362394cc950ab5522",
    "subset": "benign",
    "symbology": "qr"
@@ -692,6 +738,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-046",
+   "pixel_sha256": "f8597138d4831ad06aaaa393093b56e502e7dea8d0a98749b9792ab0f7a901c9",
    "sha256": "51e239902d24780a8c60363856e53b7697b9b98e98772543eefbbb369284fc6a",
    "subset": "benign",
    "symbology": "qr"
@@ -707,6 +754,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-047",
+   "pixel_sha256": "8002d2fe97adb87db871e419fcd1c73b94fae6a083c2f50e3b7e93944de5f623",
    "sha256": "eb6d2c89ceed45e51e28583adfe9791f7bad010758507f267b593703985c99ad",
    "subset": "benign",
    "symbology": "qr"
@@ -722,6 +770,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-048",
+   "pixel_sha256": "bf71651bda18b0a6eeec9ca6204503cf439246a6352a716ca45b2df7d5ea7636",
    "sha256": "afd4e645532721d9a69d377fad46c7c64fec91aef9fc61077a5bad22c5d8b45d",
    "subset": "benign",
    "symbology": "qr"
@@ -737,6 +786,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-049",
+   "pixel_sha256": "963a4a28638a793015d7c6f63cfb75be6818586c8f75a8fe8adcb73226ebb47c",
    "sha256": "d7b2fe85cce932ec3b255732add590cdc0509d5d489bf38f0d23260a763779b6",
    "subset": "benign",
    "symbology": "qr"
@@ -752,6 +802,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-a-050",
+   "pixel_sha256": "66e01d6e14c359dd47bbca36d610787ba3e801a8da04b71b3ebb978c951b7278",
    "sha256": "0ea46975c433eba2a37aa02d020a936ee8e544e62e3b191a2e0c4cd909f06a06",
    "subset": "benign",
    "symbology": "qr"
@@ -767,6 +818,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-c128-01",
+   "pixel_sha256": "83fde66a5f81a628279a2da81d6451a0f2fc33994ef12c258a3416b471dcff36",
    "sha256": "1856e653e7f3d8ad1229360f646437f0c410af946d7f388d3da0219ade981690",
    "subset": "benign",
    "symbology": "code128"
@@ -782,6 +834,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-c128-02",
+   "pixel_sha256": "1a47a622c0b8d9abb2e8ed191075327bf35b180a710d10e9fa6aa91e0d326519",
    "sha256": "f041e72aeeeb4b5467ef47a35f24f7304ee959a04d9a11d546f465058bb60a24",
    "subset": "benign",
    "symbology": "code128"
@@ -797,6 +850,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-c128-03",
+   "pixel_sha256": "6b39e4f5444fcac2cddf6a0bc8716044ecc75085a3896a2d21fe73230c1e5a1a",
    "sha256": "1b843b55da340058689de0a8463a35517719de6cbc9ffc2d09985e39c61f4409",
    "subset": "benign",
    "symbology": "code128"
@@ -812,6 +866,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-c128-04",
+   "pixel_sha256": "094d0dc2a431ab86c3d6ad914243940ea41420d640acb79691d39c0b0cc66b3b",
    "sha256": "0608bfbfca036e8c0fea142057cf8b4e41a1ce51051c2d4dcaf95ed1675f2b1d",
    "subset": "benign",
    "symbology": "code128"
@@ -827,6 +882,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-c128-05",
+   "pixel_sha256": "951c7d7510672bcee1c59fa0db49755419833404534162c31101d1ed65cc5385",
    "sha256": "ab37fb07ecc36bf86e6296ae05ac5d5029c260190b1b5b7634a4b27f9d199e71",
    "subset": "benign",
    "symbology": "code128"
@@ -842,6 +898,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-c128-06",
+   "pixel_sha256": "c18c9ebd134138b110cc355b3f40d06361e1d3e2348ec67f5d917b06abc0fd11",
    "sha256": "89837a84cb8d7eecfdec4aba2fdf0dff2e6b2eea83022be6ff519493dad1a595",
    "subset": "benign",
    "symbology": "code128"
@@ -857,6 +914,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-c128-07",
+   "pixel_sha256": "be698251025f4f47a9e02d5e71e405303a7c2d068f1428e785e6bf1055a55ade",
    "sha256": "30370edeffd6bb229b394555daa1485ed0b1dd6622b69c8eca1a1283e60d2ff7",
    "subset": "benign",
    "symbology": "code128"
@@ -872,6 +930,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-c128-08",
+   "pixel_sha256": "68f5acdbc37454a4838f2dfb8b6ffa88ceb9aefda0cf79fb05482876b897e58f",
    "sha256": "0b3f76da539ce85236355a2a38e09da10a69adb767da539dd6e1872e9bb9705d",
    "subset": "benign",
    "symbology": "code128"
@@ -887,6 +946,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-c128-09",
+   "pixel_sha256": "030ef5395d80876b53e6a2b0469620c35694dd64d70552f33ad024a275fc5a3a",
    "sha256": "a2cc1ffdb47a5415448ac7d9f051a6a2dc065b39d03057446e6cd55166c26c49",
    "subset": "benign",
    "symbology": "code128"
@@ -902,6 +962,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-c128-10",
+   "pixel_sha256": "f4cfea5d8d8e7399da42fb11a074fcf7cc195b200f6907809dcc70cad65a462b",
    "sha256": "9c810c16ae2e0c7ad6cdb4cff9f2cff811a54f5fa345581d7efd7d3297d940a4",
    "subset": "benign",
    "symbology": "code128"
@@ -917,6 +978,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-r-001",
+   "pixel_sha256": "560b40e2fc74f68f5142813d3f352e8c432c8ef8cfa23165f76f3b560579294f",
    "sha256": "89b10f0838b4046121a87bf0fd5743ff8fcc7ad60da8da1cb30ba013519e02cb",
    "subset": "benign",
    "symbology": "qr"
@@ -932,6 +994,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-r-002",
+   "pixel_sha256": "7a056e00e47ba5f03fd93659ddf369c471a36d52b4c32c3722fbdf3dde859bbd",
    "sha256": "01f43a3965730d8b9ce1c331844057ce322c40d2382c07a3eb42ace7811aaa16",
    "subset": "benign",
    "symbology": "qr"
@@ -947,6 +1010,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-r-003",
+   "pixel_sha256": "26e8438f731d2a561fd287871ced25dc45bd81723e1824b32cae8a6e35790811",
    "sha256": "238963c171221e1406afcb5b55dd7ae5d54b8404ee42c460f12230dcc7ac4c59",
    "subset": "benign",
    "symbology": "qr"
@@ -962,6 +1026,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-r-004",
+   "pixel_sha256": "45bb63ee1fd9740136ddfcbebc9717ec77d1bd91327a5964ed7e979a2ef59c4d",
    "sha256": "c698a5377b9807a28b92a90f5095a1e9fe82fbf82f7eab8f604ad9c9631c05cc",
    "subset": "benign",
    "symbology": "qr"
@@ -977,6 +1042,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-r-005",
+   "pixel_sha256": "e7618a47e75f54b2df5f881570ce8b3b64d552a652c584ef3ae0dc42f2e90996",
    "sha256": "c339023454afb018a44101dda6dba308d724c3e051618f2b72749035599975d6",
    "subset": "benign",
    "symbology": "qr"
@@ -992,6 +1058,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-r-006",
+   "pixel_sha256": "4e9990209e428d2f8f5b479895492537dea69802d00268b572f681d1fcfc311a",
    "sha256": "fc455eccf82bfb46ddbe6d6093d02406fec2b8b26c150403ff910517e9d4ef3d",
    "subset": "benign",
    "symbology": "qr"
@@ -1007,6 +1074,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-r-007",
+   "pixel_sha256": "f0e2ea276db1a994926cecd26ad1bd871b7b00abf84b572c0ceb14487bd57b26",
    "sha256": "db733c115c092d427c267978d9cc5a46c99fa66b3b7c12ffec9b48e67d849b5b",
    "subset": "benign",
    "symbology": "qr"
@@ -1022,6 +1090,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-r-008",
+   "pixel_sha256": "9abd28139ad12f7be7d296bb767665764593246cdb549d2d7a4c2aebcfddb923",
    "sha256": "76217cbc2f9bf907bfd38da59a1141c9a27786b39eb4d9e14f95f324d3214c28",
    "subset": "benign",
    "symbology": "qr"
@@ -1037,6 +1106,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-r-009",
+   "pixel_sha256": "87de373f7447ea38059c1883f478a15052c85ce7e0ee5f67f150922fc608ab37",
    "sha256": "778242007b8959c0fe84371ac29ef3fabbaa9246a52daf08e3862f5f2de9cb5d",
    "subset": "benign",
    "symbology": "qr"
@@ -1052,6 +1122,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-r-010",
+   "pixel_sha256": "0e12cbbb27b68f89772f18ebe150815d48112bd908016b9dac995120939c5280",
    "sha256": "eab6fb839508f6d1c984fd9818add785eac04df6e54d43cbeaad4d3dfe2fb9ea",
    "subset": "benign",
    "symbology": "qr"
@@ -1067,6 +1138,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-001",
+   "pixel_sha256": "7286ca55360491fd293b598218a92f7695daa278bdd1280c53839a59fc941864",
    "sha256": "78d6661734be4fb8c816395d708c71fc6339e50264b8d9ceb08a2bd79123a512",
    "subset": "benign",
    "symbology": "qr"
@@ -1082,6 +1154,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-002",
+   "pixel_sha256": "333adf95556e7f09ccbc6d20852e07109be107caca3ccdc9194f4e5a40a27cde",
    "sha256": "3cb0088c315353a52a91c4dec1f12a0e7b0167d737825c84f459485fd42313c3",
    "subset": "benign",
    "symbology": "qr"
@@ -1097,6 +1170,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-003",
+   "pixel_sha256": "1a94fa8f18450fe45675a30cd3b907a5bd191f7fc2e71135691595c584bc4d80",
    "sha256": "79b2893a298acaf094c875943e9bca835c7899aeac62ee89dd5af9b69c914c5d",
    "subset": "benign",
    "symbology": "qr"
@@ -1112,6 +1186,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-004",
+   "pixel_sha256": "a8425cd8d7772dc44ea07da35e93effd95ae82f0dfac37f3d9b467f104aaffa7",
    "sha256": "a1b01793a6490f05c2b8a78271905519d9d6f2574d2251302792e84c29c3fc2f",
    "subset": "benign",
    "symbology": "qr"
@@ -1127,6 +1202,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-005",
+   "pixel_sha256": "4c553d2d12b2ec7f027e35c6088befa53a80e70e33c66209a36734c58d5a5429",
    "sha256": "baff30ab19a424754012e4436cc19ad0c29d67afaa592ac4e4b51bfdb76ce40b",
    "subset": "benign",
    "symbology": "qr"
@@ -1142,6 +1218,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-006",
+   "pixel_sha256": "bd4a1cf00ac586d3868023a480e4ea943f1682cec4470dc193f8718847f51abe",
    "sha256": "8be52323d88e86e983fcf7ab2f8caf92d79270fe8be7f40faacb92bfc184fb50",
    "subset": "benign",
    "symbology": "qr"
@@ -1157,6 +1234,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-007",
+   "pixel_sha256": "7d3bca3b0bef936f59e730f2632ef8560ef453417b08100555a91ebd48da0dec",
    "sha256": "11480f094e9a92bb8ef1d491da3df08ca384ec0aab437a121fa000b2804e37b6",
    "subset": "benign",
    "symbology": "qr"
@@ -1172,6 +1250,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-008",
+   "pixel_sha256": "922cff07931ef50ec79b5f338a8f2f0b0af29ed18c455f2b6c554a97167d3baf",
    "sha256": "1bcf3df801554c6d0f9003319d8a59d9c3a7a30465f133cbb0cf854b8b310fdd",
    "subset": "benign",
    "symbology": "qr"
@@ -1187,6 +1266,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-009",
+   "pixel_sha256": "c8bd740b5faaf619c620c116481f29725da499b3710eb0238b36dbeaa8afa2de",
    "sha256": "b8594b858c7767aa8ea14c4288c09e7ba014c38289c3332506dae08db16eda93",
    "subset": "benign",
    "symbology": "qr"
@@ -1202,6 +1282,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-010",
+   "pixel_sha256": "399fce7534e63c375eff3707bddb3f5c7dca4285de6e7535e647e3a79e81cfcb",
    "sha256": "be1e126d10d8c6a9107deca7c20ca2442fa99caa0d023cd70fc597251ac01b17",
    "subset": "benign",
    "symbology": "qr"
@@ -1217,6 +1298,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-011",
+   "pixel_sha256": "b808d18b0e281ba2b4bb825f105e8882aeee4ef04812c1bb57621c50b8143e11",
    "sha256": "284739d34fb216dab8d1029f5dd4a7d31e48e795753f32bf52f10a97813f3aff",
    "subset": "benign",
    "symbology": "qr"
@@ -1232,6 +1314,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-012",
+   "pixel_sha256": "cd6288a84251ebc69c4f21bd7fcf9edad9708b945b28d430773b299fdbd1d3dc",
    "sha256": "c69ad1a5f0e0606ea29ff1bca3f7151fb7fbd47579bfa185a65a57b820d406dd",
    "subset": "benign",
    "symbology": "qr"
@@ -1247,6 +1330,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-013",
+   "pixel_sha256": "449523c0cf22dd4926cd06775a84d3a356329ae1189e45c915a0a21b1855f378",
    "sha256": "cc631876dd7c80633debe4de168296c3c43fd034667ae15d4021b323c891e3c2",
    "subset": "benign",
    "symbology": "qr"
@@ -1262,6 +1346,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-014",
+   "pixel_sha256": "61d45fc6b3fa22aa48ffc7a0b435934f412cb4d833263d840035709bdd4b98d9",
    "sha256": "0f75d286eca43ea4bd9f7617f095a8dfe0f8bb39cb6e74ab0e75e24aac092c39",
    "subset": "benign",
    "symbology": "qr"
@@ -1277,6 +1362,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-015",
+   "pixel_sha256": "8a4c6b07e68a18fa166f6d0c29be3a26c8a692607719c9fe173425571d30c36c",
    "sha256": "dc85d4c3a079974f6d8b4ae9bb649916d774d00a73de8f6d0b7c91c3296e2808",
    "subset": "benign",
    "symbology": "qr"
@@ -1292,6 +1378,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-016",
+   "pixel_sha256": "d4f56a7c4eb51afb74653c330be83ffcc6d81e4a58d5b095d16f0a66aea8f741",
    "sha256": "67d87d40aa2655d4d8efdcb905067097440d86014df35ba0005d6ee93c6185ed",
    "subset": "benign",
    "symbology": "qr"
@@ -1307,6 +1394,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-017",
+   "pixel_sha256": "10c65c6a42771abcd15fa7e1a9b49cab5ec778e9e91273859e0e28e0a6514dcf",
    "sha256": "0bcf035ffcb6879a01cf4ac7ff2d5c0d09fc8e2464974889fde431224542d29b",
    "subset": "benign",
    "symbology": "qr"
@@ -1322,6 +1410,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-018",
+   "pixel_sha256": "799f26621f41a3346848037f283c175ceb7ef4731cac0663d21c3cd386435982",
    "sha256": "148af1f0acd58cd5eb86d9e8e702c229dcd9558c16fd55312476991ed96eff92",
    "subset": "benign",
    "symbology": "qr"
@@ -1337,6 +1426,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-019",
+   "pixel_sha256": "44808132457dbc7294e438017299e88ee25ef451852ec272e884b72b4cacbe88",
    "sha256": "030d51250cc9e019d203f9af2efec36d086ab6307301ecf076b38fe2f8876916",
    "subset": "benign",
    "symbology": "qr"
@@ -1352,6 +1442,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-020",
+   "pixel_sha256": "489f4887b5f5fc4f286d2eda68086ee664c734905608ef68f9c0787ab47a55f7",
    "sha256": "d82be973727e27ddbf1fd1178115e68ab4c7a594daf9ea7741f39012f45e138e",
    "subset": "benign",
    "symbology": "qr"
@@ -1367,6 +1458,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-021",
+   "pixel_sha256": "c6b7df9815ed93ac926861bef609673f6f35c778c5b3f7fe373f631f48e16776",
    "sha256": "b12c3d7553cfc277dc5ec756abdb37ec41beab95abbb81281dd114dceb4760fc",
    "subset": "benign",
    "symbology": "qr"
@@ -1382,6 +1474,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-022",
+   "pixel_sha256": "116d53595c88d9b7aa17bb75fc90e55f5ef838a928fdd4c59a81bd9ce59f1d55",
    "sha256": "696f8cfecaaea3f152522c9f92e7483e86ee7978f0a9361035fde6d2784abb0c",
    "subset": "benign",
    "symbology": "qr"
@@ -1397,6 +1490,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-023",
+   "pixel_sha256": "a878c346b69ae6d1c21b7b727021e48fa2693151cf871d650c8fd25ecd33902c",
    "sha256": "d76708128bbb7a0c594c53e0462acbf997f852da42db3a376d8f262ba8d5fb48",
    "subset": "benign",
    "symbology": "qr"
@@ -1412,6 +1506,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-024",
+   "pixel_sha256": "5fc26b9c885f5dc8e40a2e7c1b3d118e6d290b3d994b861b4b8c1d45f1fbe744",
    "sha256": "2d2187d95be4086cccd1137e34cf0d4dead75f5d1d8168950ccb9ab1688683bc",
    "subset": "benign",
    "symbology": "qr"
@@ -1427,6 +1522,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-025",
+   "pixel_sha256": "f3a8502b2125d5ee94cdab54d4811f708061fa935f2240f8f0f98827dd0d5f8d",
    "sha256": "bca2ef0f8b110f68dba6d8220faf507d3ca4045478a158d832e71246aca90009",
    "subset": "benign",
    "symbology": "qr"
@@ -1442,6 +1538,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-026",
+   "pixel_sha256": "acc195ef240a8862606fbb4f55b2b1c6869bb9a883f9054eb12ec1aeb4f72cb7",
    "sha256": "7b0fd8ac45a771c654ed289ad31db2979cff63d773cb76ed52405978509e411a",
    "subset": "benign",
    "symbology": "qr"
@@ -1457,6 +1554,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-027",
+   "pixel_sha256": "4a481b8d23c4e2d7b84095edead2c8c8b29be630a00a006b86c5275c78f2f5d1",
    "sha256": "d14309bfb224530831ac92cc9a0328e1f739620a4bf9b820d0738b0efffe118c",
    "subset": "benign",
    "symbology": "qr"
@@ -1472,6 +1570,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-028",
+   "pixel_sha256": "cf7a3a7557e951eb82ba744a12ae8f4bfab38bd389aa2ffaa97574a964b6d95d",
    "sha256": "9e90a6f13bbacccb6c89024e0ee0e9d4cf6704130718ee8aab50ff513cd588a1",
    "subset": "benign",
    "symbology": "qr"
@@ -1487,6 +1586,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-029",
+   "pixel_sha256": "2db772e422fd5e54d7ad9ab4a6d45d642f4bb182d3566791549249faa4dc5ca2",
    "sha256": "6c9149e4fd28c9d28ba04fbfa7df093fc2eec39d005082146388e89a1d42245c",
    "subset": "benign",
    "symbology": "qr"
@@ -1502,6 +1602,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-030",
+   "pixel_sha256": "c11e11438a54f4e33a34c3189b842da2f0326a2a3e04077f0c36ec1337fef17c",
    "sha256": "97f3e35a5aa2a1520df699902cb800d49d00e773dd54e232152af2b3897821e5",
    "subset": "benign",
    "symbology": "qr"
@@ -1517,6 +1618,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-031",
+   "pixel_sha256": "ce29748cd28e1584dfce3484a2e07f41a4ad4660f307303cf2cb929fd63956a9",
    "sha256": "435ae16b4ec8c2d54d98405848df86805472ed54946b36e40b889d3e53876c9e",
    "subset": "benign",
    "symbology": "qr"
@@ -1532,6 +1634,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-032",
+   "pixel_sha256": "9e065f6173a133b40d86fbb1bcf264b7b62524bb4e896e40ed1444d8ee46c277",
    "sha256": "d986b63dbfaa5663d785ad7d46d7b3c838d0c0f891b2be22d71a5b1f424cc303",
    "subset": "benign",
    "symbology": "qr"
@@ -1547,6 +1650,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-033",
+   "pixel_sha256": "41c62abe69779daeb975eede792db018217da35deca16556544c15038db0592d",
    "sha256": "9f56789bd3d0322b8ceba30d766b017fe59d035b0324acc08ff74c103940a1e0",
    "subset": "benign",
    "symbology": "qr"
@@ -1562,6 +1666,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-034",
+   "pixel_sha256": "11a23e6ccd3b80889f105ce3fba86194d52f846f92be6f1be59cf715cd4f15f9",
    "sha256": "f894f28fe9402694b252b9bbb4fa7eca1201b52a55119add485bce8190d75418",
    "subset": "benign",
    "symbology": "qr"
@@ -1577,6 +1682,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-035",
+   "pixel_sha256": "b6e53a74e877209926c8d61994d3a38aa94ab9b80529b9bd4cd850811a60a8ae",
    "sha256": "ce752196165c7e14e7e40141ce18da6a8c20c0e2c5d8fddb2ba1effbed244186",
    "subset": "benign",
    "symbology": "qr"
@@ -1592,6 +1698,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-036",
+   "pixel_sha256": "1cdbfb8b7301430e9838b506b4d2ba6c06a41ff245e581034226053ecdedc99c",
    "sha256": "a3b5436c9f150a9770debb20d70f570ac6e776a9647762a0b5289b110f7700c8",
    "subset": "benign",
    "symbology": "qr"
@@ -1607,6 +1714,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-037",
+   "pixel_sha256": "558ba640b2c9b67f61f88443bef3336012ea134d4be86270fe3d84c8355ab964",
    "sha256": "a7846e8ae8fd43f6ad4561f8c4b5b4cadc2470bd3bb699d0c79315ce019335a7",
    "subset": "benign",
    "symbology": "qr"
@@ -1622,6 +1730,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-038",
+   "pixel_sha256": "b86067de7e855243fecf929bf7781ab211d7dc44bc1fd5f7ad1cb04dc2ebc920",
    "sha256": "ed511165b992cead610168566b7c1221ba7ce4b7bbdbade583bd370ef8110da6",
    "subset": "benign",
    "symbology": "qr"
@@ -1637,6 +1746,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-039",
+   "pixel_sha256": "252c1a25bd4cd3fc0765f1c476ee2f8b31ef49e8988d12c38531a609da3396fc",
    "sha256": "4969aa5cafe180edf6b27b7999d7ae94ac33e5a9e60f1fb8c2a11e9bced4a090",
    "subset": "benign",
    "symbology": "qr"
@@ -1652,6 +1762,7 @@
    "expected_decode": "ok",
    "family": "benign",
    "id": "ben-u-040",
+   "pixel_sha256": "1421255c8926b2a03e03198e441d7d8a47b5f1c5587bfc8e4212e7de20965088",
    "sha256": "a509980252ab6349f756f33f7d1b0c8a6f61396c957072155ac07d41b60bb68e",
    "subset": "benign",
    "symbology": "qr"
@@ -1667,6 +1778,7 @@
    "expected_decode": "ok",
    "family": "injection",
    "id": "inj-kill-001",
+   "pixel_sha256": "633d45975e3a1985dde96fc14cfe79bf1243918100515e5e8a4b40c6c21c0493",
    "sha256": "0506d8c9fc8a26fbfbcc500e810efbf02f789511c9b748f730d7bc069ae73a1d",
    "subset": "naive",
    "symbology": "qr"
@@ -1682,6 +1794,7 @@
    "expected_decode": "ok",
    "family": "injection",
    "id": "inj-path-001",
+   "pixel_sha256": "9c661bf0adc7234350f1b71146f6934a222e4ccc4de91ebb67c494974adedf04",
    "sha256": "29da113ba8919ed60471fc7df61c7740b4b9b0d58673bb4998532bef77cd676f",
    "subset": "naive",
    "symbology": "qr"
@@ -1697,6 +1810,7 @@
    "expected_decode": "ok",
    "family": "injection",
    "id": "inj-path-002",
+   "pixel_sha256": "d9be4bcef571600520d89723e4cb4761058a61460c5ee678352429f7d1c29de8",
    "sha256": "aa107bb2ae735ff18b4666f1eaf352f872584df463c3b8097c1bf24a9a05fcad",
    "subset": "naive",
    "symbology": "qr"
@@ -1712,6 +1826,7 @@
    "expected_decode": "ok",
    "family": "injection",
    "id": "inj-shell-001",
+   "pixel_sha256": "c7cffe53616c9cc0127a0f468d64df6669b95daa6e4ada43f935d27babda3c30",
    "sha256": "a41c981a2099afe37d0ef5f058e791f877160451da4b56f472e54038764b58db",
    "subset": "naive",
    "symbology": "qr"
@@ -1727,6 +1842,7 @@
    "expected_decode": "ok",
    "family": "injection",
    "id": "inj-shell-002",
+   "pixel_sha256": "0a24a2f2801fe3d3ef0edc8d7c7959c4d751a753f3707f7ff9d50bfad3aa66d5",
    "sha256": "16d59698150f0119560fd4833da6933530f69c03180e039220979672b3499661",
    "subset": "naive",
    "symbology": "qr"
@@ -1742,6 +1858,7 @@
    "expected_decode": "ok",
    "family": "injection",
    "id": "inj-shell-003",
+   "pixel_sha256": "bda3ea9d8da61848ee51c7faab2de12b955eb70f7858dcb93c8567903a50a5b6",
    "sha256": "e05cbba287c8ff234291cf09a7ea7671c0869fad5544556a45785552297678b5",
    "subset": "naive",
    "symbology": "qr"
@@ -1757,6 +1874,7 @@
    "expected_decode": "ok",
    "family": "injection",
    "id": "inj-shell-004",
+   "pixel_sha256": "87b6b546ee166ee707794b4df0e1c7b7961386cf1ed13dcec2cefa9d2cab326a",
    "sha256": "2e2b08ceab605687f83a5d609c36d0c5285673c0807579c993283f3fe6d1d35a",
    "subset": "naive",
    "symbology": "qr"
@@ -1772,6 +1890,7 @@
    "expected_decode": "ok",
    "family": "injection",
    "id": "inj-shell-005",
+   "pixel_sha256": "f9ded1146f55564211e091285daf6b16cbbeb2470e616824cc57c0c67e72b124",
    "sha256": "a81dc6b436a779a5be1f146633df0fc676edfeab78df97df77b929d89b87bff8",
    "subset": "naive",
    "symbology": "qr"
@@ -1787,6 +1906,7 @@
    "expected_decode": "ok",
    "family": "injection",
    "id": "inj-shell-006",
+   "pixel_sha256": "d98b9a14006f61825c0d8f000c6dabcac66758c7c2a96170ea0e9da17e73dbcb",
    "sha256": "34d96c369d0c3001c45273d582ad468b9bdc0c1887d222f35fe1ed1ebd4f502d",
    "subset": "naive",
    "symbology": "qr"
@@ -1802,6 +1922,7 @@
    "expected_decode": "ok",
    "family": "injection",
    "id": "inj-shell-007",
+   "pixel_sha256": "c2b28bccc9635aecb0bbd39dc62d33a0371e3ab02e224b02375d024722cef2a6",
    "sha256": "f95af5580f64ffc80281edc4f8355ca84d55b871094f21238ca6173afff6cc54",
    "subset": "naive",
    "symbology": "qr"
@@ -1817,6 +1938,7 @@
    "expected_decode": "ok",
    "family": "injection",
    "id": "inj-sleep-001",
+   "pixel_sha256": "1a698ee669e8628dfe8827022046325b55f4a09cf3f1bd7d9214cc7e19afac3b",
    "sha256": "523bbe2b3c10bf414aee78740a71e7a24b373c7eade9ae1452847ae67024714f",
    "subset": "naive",
    "symbology": "qr"
@@ -1832,6 +1954,7 @@
    "expected_decode": "ok",
    "family": "injection",
    "id": "inj-sql-001",
+   "pixel_sha256": "049b46889cfaf8aa3ac7046808e0c32242ff9ac8a91f2cbafd4d5a081b92d956",
    "sha256": "e929a3e730f83902082b5d1f5033949cc7dac9bab873e0d1641ea730c846c10d",
    "subset": "naive",
    "symbology": "qr"
@@ -1847,6 +1970,7 @@
    "expected_decode": "ok",
    "family": "injection",
    "id": "inj-sql-002",
+   "pixel_sha256": "bbb89c0a6113da710a37e6e4d0f2957f59d89e959317c6afc2495fc141b2c48f",
    "sha256": "d06d15328eca2e51455aa9356e95cd28f9f0fc8f5dc0b9560b73be5cdd7d30f8",
    "subset": "naive",
    "symbology": "qr"
@@ -1862,6 +1986,7 @@
    "expected_decode": "ok",
    "family": "injection",
    "id": "inj-sql-003",
+   "pixel_sha256": "075358148c7b7b117e79ec35dac726b4399de5f87cb6ebd61f8d2b01ec331f33",
    "sha256": "6c752ff7102f40b7a96c21e1a19341e622c23f8963d9bbd22a72dc57c7bc4be8",
    "subset": "naive",
    "symbology": "qr"
@@ -1877,6 +2002,7 @@
    "expected_decode": "ok",
    "family": "injection",
    "id": "inj-sql-004",
+   "pixel_sha256": "bf8ad82aeb934eff032a2087c0f09b19e5f1ceee410ee9953a543756a73a5e7c",
    "sha256": "5f9d44a09ea7d791c187cfd6d5e90dade97cdf9da251a7e6b501ea39d279624e",
    "subset": "naive",
    "symbology": "qr"
@@ -1892,6 +2018,7 @@
    "expected_decode": "ok",
    "family": "injection",
    "id": "inj-sql-005",
+   "pixel_sha256": "eaaf79bfdcb28e6693354cd978d32c4b627acc324dbe29801074f2547f3cc012",
    "sha256": "70b07c136e2d88797bf336c85132ee62ca87dd69b35f07926f06f8adedaee5c3",
    "subset": "naive",
    "symbology": "qr"
@@ -1907,6 +2034,7 @@
    "expected_decode": "ok",
    "family": "injection",
    "id": "inj-sql-006",
+   "pixel_sha256": "c3e71bda0703230608fd78d479de42fc797ef870c1ffdc584418c504a37a012d",
    "sha256": "a528af7ddc8b85b041caed021ee76601c4220417bb3c027dece7ed11e8d89a02",
    "subset": "naive",
    "symbology": "qr"
@@ -1922,6 +2050,7 @@
    "expected_decode": "ok",
    "family": "injection",
    "id": "inj-stack-001",
+   "pixel_sha256": "9b4289b0aedd83dbf812cc34e3d5d2e923d97b6f50d690614f97937bd9d0b966",
    "sha256": "f8eb1e3808578e65381858ab2c25883f42567cf28f62a1048379f5a5a111019b",
    "subset": "naive",
    "symbology": "qr"
@@ -1937,6 +2066,7 @@
    "expected_decode": "ok",
    "family": "injection",
    "id": "inj-union-001",
+   "pixel_sha256": "a62337db7cdcaa53657c8de17a5b1c069d234f059e5b46309bd7ebe90a97c188",
    "sha256": "38d11f61b8eacd24e56f4ba298b8282922a93cea2e56246250c26c8e7367a8c7",
    "subset": "naive",
    "symbology": "qr"
@@ -1952,6 +2082,7 @@
    "expected_decode": "ok",
    "family": "injection",
    "id": "inj-union-002",
+   "pixel_sha256": "03faadec839d720b470e2e06c47c05fcbbd2e1b3840b96b8a8db1aa36f380229",
    "sha256": "b9846091f770881bc9a791195b39071b3d4b277ea2735fe85b66a488fd5d14e2",
    "subset": "naive",
    "symbology": "qr"
@@ -1967,6 +2098,7 @@
    "expected_decode": "ok",
    "family": "malformed",
    "id": "mal-ctrl-001",
+   "pixel_sha256": "3e59fac719a5021af9c6b1ed0a66a92c46f8890659fffad556d42ed1d1ea2a58",
    "sha256": "e7253d6cac07335dddf132ab0f504f82effbc85247c17be32816a2b7c9ba1a30",
    "subset": "naive",
    "symbology": "qr"
@@ -1982,6 +2114,7 @@
    "expected_decode": "ok",
    "family": "malformed",
    "id": "mal-ctrl-002",
+   "pixel_sha256": "4dc9f99605f56bd3c3273886727094780de050d49ec09659f2f7d2dfd20fb987",
    "sha256": "9cd93acc781e7179feeb8b0d6e688968580196bd77851cc6c7a1726f4679c7c3",
    "subset": "naive",
    "symbology": "qr"
@@ -1997,6 +2130,7 @@
    "expected_decode": "ok",
    "family": "malformed",
    "id": "mal-empty-001",
+   "pixel_sha256": "459bcfb035f04be0cfce5c9b82cba6a383680f2d7931131e87d6377181aa7c6d",
    "sha256": "7e1527271dd7ffcfe583dae840e64f8532ebe0361103522dd7c964b41401df0f",
    "subset": "naive",
    "symbology": "qr"
@@ -2012,6 +2146,7 @@
    "expected_decode": "ok",
    "family": "malformed",
    "id": "mal-long-001",
+   "pixel_sha256": "760c93e59b7d51bee76aad6f60734f9b726f9631821f5e28b13802d35402e5bb",
    "sha256": "def5cf768ab0262a74757f3b7e4ddde5172b5951c63d846d4c92c1c9c26b413b",
    "subset": "naive",
    "symbology": "qr"
@@ -2027,6 +2162,7 @@
    "expected_decode": "ok",
    "family": "malformed",
    "id": "mal-long-002",
+   "pixel_sha256": "181cccf2707c6e4bda2e858aff7fac3106574799dc811f426fb20eb0343c641e",
    "sha256": "473c5baee6cec09e0e76f15efc90ee46dd90625a299b7bec49e74b4dd0a133d8",
    "subset": "naive",
    "symbology": "qr"
@@ -2042,6 +2178,7 @@
    "expected_decode": "ok",
    "family": "malformed",
    "id": "mal-long-003",
+   "pixel_sha256": "24c17b03e6f0ffab8a3f81d7d2bd7faf826de8e4b8cc51e578ec2618b620ed2a",
    "sha256": "0935599f77aa564c1da1122de45fcc68a4ad6b24a2941cba8f09db5789207790",
    "subset": "naive",
    "symbology": "qr"
@@ -2057,6 +2194,7 @@
    "expected_decode": "ok",
    "family": "malformed",
    "id": "mal-nul-001",
+   "pixel_sha256": "eec8a475e3d4ece85446a3c563f8d2d3f16d7cf36c6cc7bfdbf3dcb39c4e4e02",
    "sha256": "3dc7846a5b09d528a7f1bedbc2f45673c8b54350cf477f68ca0b569745121f8c",
    "subset": "naive",
    "symbology": "qr"
@@ -2072,6 +2210,7 @@
    "expected_decode": "ok",
    "family": "malformed",
    "id": "mal-quote-001",
+   "pixel_sha256": "f5c2e16b0843854db02f951b29ddc54045c3adffc74b90e9985ff423b8ebe2f9",
    "sha256": "1329cec0b337f71998fa65a63ef738db051811bd30e707386828181c07a738d7",
    "subset": "naive",
    "symbology": "qr"
@@ -2087,6 +2226,7 @@
    "expected_decode": "fail",
    "family": "malformed",
    "id": "mal-trunc-001",
+   "pixel_sha256": "47819db1c6cee8414c6ac4d65d4c6088a83f80cc74efd994580abaa3de432f0d",
    "sha256": "851f1080ce4a33ad48305e21928c71d7aec8b330bc967e384c110e9f0c029ce0",
    "subset": "naive",
    "symbology": "qr"
@@ -2102,7 +2242,8 @@
    "expected_decode": "fail",
    "family": "malformed",
    "id": "mal-trunc-002",
-   "sha256": "5c50de84b7484e75a81599138a06939607f32dcf5596e0319e58c707648f3672",
+   "pixel_sha256": "5668b4a393acfb57911066e913326bdcf0fb0e910e635b02546cd9d99c8b7f09",
+   "sha256": "23b024fbed22df8adac9ce677207c92c0b20447d10111fb9637da715cc984734",
    "subset": "naive",
    "symbology": "code128"
   },
@@ -2117,6 +2258,7 @@
    "expected_decode": "ok",
    "family": "malformed",
    "id": "mal-unicode-001",
+   "pixel_sha256": "59d10b0e2b7da94430dcae9729b0b1c871ca92a22b5f4552a90f814c22058d82",
    "sha256": "8b00fb6f7b79fd4c3e40cc5ac788bca6d2adeba65aca1452cacf9bd870a4fc02",
    "subset": "naive",
    "symbology": "qr"
@@ -2131,6 +2273,7 @@
    "expected_decode": "ok",
    "family": "malformed",
    "id": "mal-utf8-001",
+   "pixel_sha256": "baa08a8fb4851d700b16b1dc6ba50be99fd099a0f5de469d8cc52dcca668bbf5",
    "sha256": "00d8a72e7eb279ae247e5b345261ea25a31ba480e1b0c018794fb8d774fd281a",
    "subset": "naive",
    "symbology": "qr"
@@ -2145,6 +2288,7 @@
    "expected_decode": "ok",
    "family": "malformed",
    "id": "mal-utf8-002",
+   "pixel_sha256": "940c5d863313cbfe6b2085e5069b27550e3b58986253d5683fe69bc223d170e5",
    "sha256": "8ce1e3cc582ae62f36e9605d858fa6d9668334dfe1d141da3ada15ab4786f833",
    "subset": "naive",
    "symbology": "qr"

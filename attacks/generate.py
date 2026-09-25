@@ -5,7 +5,9 @@
     python -m attacks.generate --check         # regenerate in a temp folder and compare with the committed manifest
 
 The images are not committed; the manifest is. `--check` is how another machine, the Pi included, confirms it
-rebuilt the same images, or learns that its library versions differ and the hashes are not comparable.
+rebuilt the same images. Each image is identified by its pixel content, which does not depend on the platform, and
+by its PNG file hash, which does (the compressor differs between platforms, E-019), so file hashes are compared only
+when the environment matches.
 """
 
 import argparse
@@ -29,8 +31,15 @@ DEFAULT_MANIFEST = ROOT / "attacks" / "manifest.json"
 DEFAULT_SEED = 1337
 
 
+def pixel_sha256(path: Path) -> str:
+    """Hash of what the image shows (size, mode and pixel bytes), not of how the PNG happens to be compressed."""
+    with Image.open(path) as img:
+        return hashlib.sha256(f"{img.width}x{img.height}:{img.mode}:".encode() + img.tobytes()).hexdigest()
+
+
 def library_versions() -> dict[str, str]:
     return {
+        "platform": f"{platform.system()} {platform.machine()}",
         "python": platform.python_version(),
         **{name: metadata.version(name) for name in ("pillow", "qrcode", "python-barcode")},
     }
@@ -53,9 +62,12 @@ def render_spec(spec: PayloadSpec, path: Path) -> str:
                 ecc = "L"
             except ValueError as exc:
                 raise ValueError(f"{spec.id}: {len(spec.content_bytes)} bytes do not fit in any QR code") from exc
-    if spec.damage == "truncate":  # keep the upper half, so the symbol is incomplete and cannot decode
+    if spec.damage == "truncate":
+        # A QR code needs its whole area, so keep the upper half. A linear barcode can be read along any single row,
+        # so cutting its height leaves it decodable (E-019); cut its width instead, keeping the left half.
         with Image.open(path) as img:
-            cropped = img.crop((0, 0, img.width, img.height // 2))
+            box = (0, 0, img.width // 2, img.height) if spec.symbology.value == "code128" else (0, 0, img.width, img.height // 2)
+            cropped = img.crop(box)
         cropped.save(path)
     return ecc
 
@@ -76,28 +88,30 @@ def generate(specs: list[PayloadSpec], out_dir: Path, seed: int) -> dict:
             "decoder_modes": list(spec.decoder_modes),
             "expected_decode": spec.expected_decode,
             "damage": spec.damage,
+            "pixel_sha256": pixel_sha256(path),
             "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
         })
     return {"seed": seed, "generated_with": library_versions(), "payloads": entries}
 
 
+def same_environment(committed: dict, fresh: dict) -> bool:
+    return committed["generated_with"] == fresh["generated_with"]
+
+
 def compare(committed: dict, fresh: dict) -> list[str]:
-    """Differences between two manifests, worded so a version mismatch is not mistaken for a bug."""
+    """Real differences between two manifests. Pixel content is always compared; the PNG file hash only when both
+    were generated in the same environment, because the compressed bytes differ between platforms (E-019)."""
     problems: list[str] = []
-    if committed["generated_with"] != fresh["generated_with"]:
-        problems.append(
-            f"library versions differ (committed {committed['generated_with']}, here {fresh['generated_with']}); "
-            "image hashes are not comparable across versions"
-        )
     old = {p["id"]: p for p in committed["payloads"]}
     new = {p["id"]: p for p in fresh["payloads"]}
     for pid in sorted(old.keys() - new.keys()):
         problems.append(f"{pid}: in the committed manifest, not generated")
     for pid in sorted(new.keys() - old.keys()):
         problems.append(f"{pid}: generated, not in the committed manifest")
+    skip = set() if same_environment(committed, fresh) else {"sha256"}
     for pid in sorted(old.keys() & new.keys()):
         for key in old[pid]:
-            if old[pid][key] != new[pid].get(key):
+            if key not in skip and old[pid][key] != new[pid].get(key):
                 problems.append(f"{pid}: {key} differs ({old[pid][key]!r} committed, {new[pid].get(key)!r} here)")
     return problems
 
@@ -114,9 +128,13 @@ def main(argv: list[str] | None = None) -> int:
     if args.check:
         with tempfile.TemporaryDirectory() as tmp:
             fresh = generate(specs, Path(tmp), args.seed)
-        problems = compare(json.loads(Path(args.manifest).read_text()), fresh)
+        committed = json.loads(Path(args.manifest).read_text())
+        problems = compare(committed, fresh)
         for problem in problems:
             print(problem)
+        if not same_environment(committed, fresh):
+            print(f"environment differs (committed {committed['generated_with']}, here {fresh['generated_with']}): "
+                  "PNG file hashes were not compared; pixel content was")
         print(f"{len(specs)} payloads: {'MATCH' if not problems else 'MISMATCH'}")
         return 1 if problems else 0
 

@@ -33,12 +33,19 @@ def main() -> int:
         fresh = gen.generate(list(specs.values()), Path(tmp), SEED)
     problems = gen.compare(committed, fresh)
     print(f"libraries here: {gen.library_versions()}")
+    print(f"manifest built with: {committed['generated_with']}")
+    same_env = gen.same_environment(committed, fresh)
+    print(f"same environment as the manifest: {same_env}; compared: pixel content{' and PNG file hashes' if same_env else ' only (PNG bytes differ between platforms)'}")
     print(f"images regenerated here match the committed manifest: {not problems}" + (f" ({len(problems)} differences)" if problems else ""))
     for problem in problems[:10]:
         print("  ", problem)
+    fresh_pixels = {p["id"]: p["pixel_sha256"] for p in fresh["payloads"]}
+    same_pixels = sum(fresh_pixels[p["id"]] == p["pixel_sha256"] for p in committed["payloads"])
+    print(f"pixel hashes equal to the manifest's: {same_pixels} of {len(committed['payloads'])}")
 
-    on_disk = {p.stem: hashlib.sha256(p.read_bytes()).hexdigest() for p in gen.DEFAULT_OUT.glob("*.png")}
-    print(f"images on disk: {len(on_disk)}; equal to the manifest's hashes: {on_disk == {p['id']: p['sha256'] for p in committed['payloads']}}")
+    on_disk = {p.stem: (hashlib.sha256(p.read_bytes()).hexdigest(), gen.pixel_sha256(p)) for p in gen.DEFAULT_OUT.glob("*.png")}
+    manifest_hashes = {p["id"]: (p["sha256"], p["pixel_sha256"]) for p in committed["payloads"]}
+    print(f"images on disk: {len(on_disk)}; file and pixel hashes equal to the manifest's: {on_disk == manifest_hashes}")
 
     for mode in ("default", "raw"):
         records = list(replay_records(gen.DEFAULT_OUT, f"probe-{mode}", PyzbarDecoder(raw=mode == "raw")))
